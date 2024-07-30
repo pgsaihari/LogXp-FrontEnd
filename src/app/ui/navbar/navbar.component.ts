@@ -8,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  activeIndex = 2; // Set the default active index
 
+  setActive(index: number) {
+    this.activeIndex = index;
+  }
 }
