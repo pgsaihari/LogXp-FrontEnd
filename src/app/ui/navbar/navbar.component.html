@@ -1,12 +1,24 @@
 <div class="navbar">
     <ul>
-      <li [class.active]="activeIndex === 0" (click)="setActive(0)"><i class="fas fa-th"></i></li>
-      <li [class.active]="activeIndex === 1" (click)="setActive(1)"><i class="fas fa-network-wired"></i></li>
-      <li [class.active]="activeIndex === 2" (click)="setActive(2)"><i class="fas fa-chart-bar"></i></li>
-      <li [class.active]="activeIndex === 3" (click)="setActive(3)"><i class="fas fa-calendar-alt"></i></li>
-      <li [class.active]="activeIndex === 4" (click)="setActive(4)"><i class="fas fa-cogs"></i></li>
-      <li [class.active]="activeIndex === 5" (click)="setActive(5)"><i class="fas fa-shield-alt"></i></li>
-      <li [class.active]="activeIndex === 6" (click)="setActive(6)"><i class="fas fa-sign-out-alt"></i></li>
+      <li *ngIf="role === 'user' || role === 'trainer' || role === 'admin'" [class.active]="activeIndex === 0" (click)="setActive(0)">
+        <i class="fas fa-th"></i>
+      </li>
+      <li *ngIf=" role === 'trainer' || role === 'admin'" [class.active]="activeIndex === 1" (click)="setActive(1)">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </li>
+      <li *ngIf="role === 'user'" [class.active]="activeIndex === 1" (click)="setActive(1)">
+        <i class="fa-solid fa-user"></i>
+      </li>
+      <li *ngIf="role === 'admin'" [class.active]="activeIndex === 2" (click)="setActive(2)">
+        <i class="fa-solid fa-user-plus"></i>
+      </li>
+      <li *ngIf="role === 'admin'" [class.active]="activeIndex === 3" (click)="setActive(3)">
+        <i class="fa-solid fa-calendar-plus"></i>
+      </li>
+      <hr>
+      <li [class.active]="activeIndex === 6" (click)="setActive(6)">
+        <i class="fas fa-sign-out-alt"></i>
+      </li>
     </ul>
   </div>
   
