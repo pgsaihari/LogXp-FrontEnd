@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { WidgetCardComponent } from "../widget-card/widget-card.component";
 
 @Component({
   selector: 'app-widget-cards',
   standalone: true,
-  imports: [WidgetCardComponent],
+  imports: [],
   templateUrl: './widget-cards.component.html',
   styleUrl: './widget-cards.component.css'
 })
