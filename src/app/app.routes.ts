@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
+import { HomeComponent } from './page/home/home.component';
 
 export const routes: Routes = [
-    {path:"homepage", loadComponent:()=>import('./pages/admin/homepage/homepage.component').then((m)=> m.HomepageComponent)},
+{path:'',component:HomeComponent}
 ];
