@@ -24,18 +24,17 @@
     font-family: 'Poppins',sans-serif;
   }
 
-.employee-icon{
+.icon > i{
     font-size: 24px;
     margin-bottom: -30px;
+    display: flex;
+    justify-content: end;
 }
 
-.fa-solid.fa-users{
-   display: flex;
-   justify-content: end;
-}
 
 .card-header{
-    
+    margin-top: 5px;
+    margin-bottom: 0;
     font-weight: 900;
     font-size: 16px;
 }
@@ -46,12 +45,8 @@
 }
 
 .card-container{
-    margin: 50px 120px;
-}
-
-.card-header{
-    margin-top: 10px;
-    margin-bottom: 0;
+    margin: 10px;
+    width: 250px;
 }
 
 .flex-footer{
@@ -63,8 +58,4 @@
 .footer-text{
     font-weight: bold;
     color: rgb(176, 176, 176);
-}
-
-.card-container{
-    width: 250px;
 }
