@@ -2,14 +2,12 @@ import { Component, Renderer2, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { NavbarComponent } from './ui/navbar/navbar.component';
-import { TestPageComponent } from "./page/test-page/test-page.component";
-
 import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ButtonModule, NavbarComponent, NgStyle,TestPageComponent],
+  imports: [RouterOutlet, ButtonModule, NavbarComponent, NgStyle],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
