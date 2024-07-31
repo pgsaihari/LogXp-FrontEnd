@@ -1,9 +1,8 @@
-.mainContent{
-    margin-left: 60px;
+body{
+    background-color: red;
 }
-
-@media (max-width: 768px) {
-    .mainContent{
-        margin-left: 0;
-    }
-}
+.main-container {
+    margin-left: 60px; /* Leave space for the fixed navbar */
+    padding: 20px;
+    
+  }
