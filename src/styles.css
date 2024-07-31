@@ -3,15 +3,3 @@ body{
     margin: 0;
     padding: 0;
 }
-
-.card-container .card {
-    font-family: 'Poppins' !important;
-  }
-
-  .p-card .p-card-content{
-    padding: 0 !important;
-  }
-  
-  .p-card .p-card-footer {
-    padding-top: 10px !important;
-}
