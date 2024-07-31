@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
 })
 export class NavbarComponent {
   activeIndex = 2; // Set the default active index
-  role:string='trainer'
+  role:string='admin'
   setActive(index: number) {
     this.activeIndex = index;
   }
