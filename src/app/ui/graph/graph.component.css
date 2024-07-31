@@ -1,3 +1,31 @@
-/* graphContainer{
+.graphContainer{
+    width: 90vw;
+    margin: auto;
+    /* height: 400px; */
+}
 
+.graphHeading{
+    display: flex;
+    justify-content: space-between;
+    
+}
+p{
+    font-weight: 700;
+    font-size: larger;
+}
+/* .monthPicker{
+    border: 2px solid #EA454C;
 } */
+
+@media (max-width: 768px) {
+    p{
+        font-size: medium;
+        font-weight: 500;
+    }
+}
+@media (max-width: 435px) {
+    p{
+        font-size: small;
+        font-weight: 500;
+    }
+}
