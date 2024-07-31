@@ -1,1 +1,24 @@
-<p>current-date works!</p>
+<div class="card-container">
+    <div class="card flex justify-content-center">
+        <p-card styleClass="p-card">
+            <div class="card-content">
+              <div class="logo-time">
+                <i [ngClass]="timeIcon"></i>
+                <span>{{ currentTime | date:'h:mm:ss a' }}</span>
+              </div>
+              <div class="realtime-insight">
+                Realtime Insight
+              </div>
+              <div class="today">
+                <span>{{ currentDate | date:'d MMMM yyyy' }}</span>
+              </div>
+              <div class="greeting">
+                Good {{timeOfDay}}, Admin!
+              </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+
+
+  

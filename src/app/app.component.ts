@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { NavbarComponent } from './ui/navbar/navbar.component';
 import { NgStyle } from '@angular/common';
+import { CurrentDateComponent } from "./ui/current-date/current-date.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ButtonModule, NavbarComponent, NgStyle],
+  imports: [RouterOutlet, ButtonModule, NavbarComponent, NgStyle, CurrentDateComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
