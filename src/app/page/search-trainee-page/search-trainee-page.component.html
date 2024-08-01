@@ -40,8 +40,8 @@
                 </p-dropdown>
             </div>
         </div>
-        <div class="card">
-            <p-table [value]="trainees" [paginator]="true" [rows]="10" [sortMode]="'single'">
+        <div class="card table-container">
+          <p-table [value]="filteredTrainees" [paginator]="true" [rows]="5" [sortMode]="'single'">
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
@@ -56,18 +56,17 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-trainee>
                     <tr>
-                        <td>{{ trainee.id }}</td>
-                        <td>{{ trainee.employee }}</td>
-                        <td>{{ trainee.ilp }}</td>
-                        <td>{{ trainee.date }}</td>
-                        <td><span [ngClass]="getStatusClass(trainee.status)">{{trainee.status}}</span></td>
-                        <td><span [ngClass]="getTimeClass(trainee.checkin)">{{trainee.checkin}}</span></td>
-                        <td><span [ngClass]="getTimeClass(trainee.checkout)">{{trainee.checkout}}</span></td>
-                        <td>{{ trainee.workhours }}</td>
+                        <td><strong>{{ trainee.id }}</strong></td>
+                        <td><strong>{{ trainee.employee }}</strong></td>
+                        <td><strong>{{ trainee.ilp }}</strong></td>
+                        <td><strong>{{ trainee.date }}</strong></td>
+                        <td><strong><span [ngClass]="getStatusClass(trainee.status)">{{trainee.status}}</span></strong></td>
+                        <td><strong><span [ngClass]="getTimeClass(trainee.checkin)">{{trainee.checkin}}</span></strong></td>
+                        <td><strong><span [ngClass]="getTimeClass(trainee.checkout)">{{trainee.checkout}}</span></strong></td>
+                        <td><strong>{{ trainee.workhours }}</strong></td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
     </div>
 </div>
-
