@@ -1,3 +1,7 @@
+.card{
+    width: 100%;
+}
+
 .custom-calendar .p-datepicker .p-datepicker-group {
     width: 100%;
 }
@@ -56,4 +60,3 @@
 ::ng-deep  .sunday {
  color: red !important; /* Ensure that Sundays are styled in red */
   }
-  
