@@ -26,18 +26,6 @@
     margin-right: 20px;
 }
 
-/* Custom style for the dropdown with a red background */
-.red-background-dropdown .p-dropdown-label {
-    background-color: red;
-    color: white;
-    padding: 2px 4px;
-    border-radius: 3px;
-}
-
-.red-background-dropdown .p-dropdown-panel {
-    background-color: red;
-    color: white;
-}
 
 /* Make all table data bold */
 p-table td {
@@ -59,7 +47,7 @@ p-table td {
 }
 
 .status-absent {
-    color: red;
+    color: #EA454C;
     background-color: #ffe0e0; /* Light red background */
     padding: 2px 4px;
     border-radius: 3px;
@@ -87,7 +75,7 @@ p-table td {
 }
 
 .time-very-late {
-    color: red;
+    color: #EA454C;
     background-color: #ffe0e0; /* Light red background */
     padding: 2px 4px;
     border-radius: 3px;
