@@ -37,10 +37,6 @@ export class SearchTraineePageComponent {
   date2: Date | undefined;
   todayDate: string | undefined;
 
-  ngOnInit() {
-    const today = new Date();
-    this.todayDate = today.toISOString().split('T')[0]; // Format to YYYY-MM-DD
-  }
 
   selectedOption: any;
   options = [
@@ -56,18 +52,39 @@ export class SearchTraineePageComponent {
     { id: '1001', employee: 'Samvrutha', ilp: 'Batch 4', date: '30-07-2024',  status: 'Work from Home',checkin:'09:00',checkout:'18:00',workhours:'9h' },
     { id: '1002', employee: 'vijin', ilp: 'Batch 4', date: '30-07-2024',  status: 'Absent',checkin:'00:00',checkout:'00:00',workhours:'9h' },
     { id: '1003', employee: 'Saii', ilp: 'Batch 3', date: '31-07-2024',  status: 'Late Arrival',checkin:'10:30',checkout:'18:00',workhours:'9h'},
-    { id: '1004', employee: 'Afthab', ilp: 'Batch 2', date: '10-07-2024',  status: 'Work from Office',checkin:'09:00',checkout:'18:00',workhours:'9h' }
+    { id: '1004', employee: 'Afthab', ilp: 'Batch 2', date: '10-07-2024',  status: 'Work from Office',checkin:'09:00',checkout:'18:00',workhours:'9h' },
+    { id: '1005', employee: 'flip', ilp: 'Batch 2', date: '10-07-2024',  status: 'Work from Office',checkin:'09:00',checkout:'18:00',workhours:'9h' }
 ];
 
 
 
+filteredTrainees: Trainee[] = [];
+
 constructor() {}
 
+ngOnInit() {
+  const today = new Date();
+  this.todayDate = today.toISOString().split('T')[0]; // Format to YYYY-MM-DD
+  this.filteredTrainees = this.trainees; // Initialize filtered trainees
+}
 
+search(event: AutoCompleteCompleteEvent) {
+  this.suggestions = [...Array(10).keys()].map(item => event.query + '-' + item);
+  this.filterTrainees(event.query); // Call the filter method
+}
 
-  search(event: AutoCompleteCompleteEvent) {
-      this.suggestions = [...Array(10).keys()].map(item => event.query + '-' + item);   
+filterTrainees(query: string): void {
+  if (query) {
+    this.filteredTrainees = this.trainees.filter(trainee =>
+      Object.values(trainee).some(value =>
+        value?.toString().toLowerCase().includes(query.toLowerCase())
+      )
+    );
+  } else {
+    this.filteredTrainees = this.trainees;
   }
+}
+
 
   getStatusClass(status: string): string {
     switch (status) {
@@ -99,5 +116,6 @@ constructor() {}
       return 'time-very-late';
     }
   }
+  
 
 }
