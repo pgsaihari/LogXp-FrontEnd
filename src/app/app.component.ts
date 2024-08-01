@@ -8,7 +8,7 @@ import { CurrentDateComponent } from "./ui/current-date/current-date.component";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ButtonModule, NavbarComponent, NgStyle, CurrentDateComponent],
+  imports: [RouterOutlet, ButtonModule, NavbarComponent, NgStyle],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
