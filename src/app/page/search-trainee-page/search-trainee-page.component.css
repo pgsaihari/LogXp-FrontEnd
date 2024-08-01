@@ -1,0 +1,94 @@
+.container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#search-bar {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.right-filters {
+    display: flex;
+    align-items: center;
+}
+
+#datepick {
+    margin-right: 20px;
+}
+
+/* Custom style for the dropdown with a red background */
+.red-background-dropdown .p-dropdown-label {
+    background-color: red;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.red-background-dropdown .p-dropdown-panel {
+    background-color: red;
+    color: white;
+}
+
+/* Make all table data bold */
+p-table td {
+    font-weight: bold;
+}
+
+.status-work-from-office {
+    color: green;
+    background-color: #e0f7e9; /* Light green background */
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.status-work-from-home {
+    color: blue;
+    background-color: #e0f0ff; /* Light blue background */
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.status-absent {
+    color: red;
+    background-color: #ffe0e0; /* Light red background */
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.status-late-arrival {
+    color: orange;
+    background-color: #fff4e0; /* Light orange background */
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.time-on-time {
+    color: green;
+    background-color: #e0f7e9; /* Light green background */
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.time-late {
+    color: orange;
+    background-color: #fff4e0; /* Light orange background */
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.time-very-late {
+    color: red;
+    background-color: #ffe0e0; /* Light red background */
+    padding: 2px 4px;
+    border-radius: 3px;
+}
