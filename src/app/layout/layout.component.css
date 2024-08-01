@@ -18,11 +18,6 @@ body {
     box-sizing: border-box; /* Ensure padding is included in width calculation */
 }
 
-/* Optional: If you have a fixed navbar, you might want to adjust margin-top to prevent overlap */
-.main-container {
-    margin-top: 60px !important; /* Adjust as needed based on your navbar height */
-}
-
 /* Responsive adjustments */
 @media (max-width: 1200px) {
     .main-container {
