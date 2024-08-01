@@ -1,4 +1,6 @@
+
 .card-container{
+    font-family: "Poppins", sans-serif;
     margin: 10px;
     width: 250px;
 }
@@ -47,6 +49,7 @@
 }
   
 .greeting {
+    color: var(--primary-color);
     font-size: 17px;
-    font-weight: bold;
+    font-weight: bolder;
 }

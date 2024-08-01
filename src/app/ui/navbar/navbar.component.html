@@ -6,7 +6,7 @@
       <li *ngIf=" role === 'trainer' || role === 'admin'" [routerLink]="['/search']" [class.active]="activeIndex === 1" (click)="setActive(1)">
         <i class="fa-solid fa-magnifying-glass"></i>
       </li>
-      <li *ngIf="role === 'user'" [routerLink]="['/user']" [class.active]="activeIndex === 1" (click)="setActive(1)">
+      <li *ngIf="role === 'user'" [routerLink]="['/user-profile:id']" [class.active]="activeIndex === 1" (click)="setActive(1)">
         <i  class="fa-solid fa-user"></i>
       </li>
       <li *ngIf="role === 'admin'" [routerLink]="['/add-user']"  [class.active]="activeIndex === 2" (click)="setActive(2)">
