@@ -1,31 +1,49 @@
-.graphContainer{
+
+.graphContainer {
     width: 90vw;
+    max-width: 1140px; /* Same max-width as container-xl for large screens */
     margin: auto;
-    /* height: 400px; */
+    background-color: white; 
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.4);
 }
 
-.graphHeading{
+.graphHeading {
     display: flex;
     justify-content: space-between;
-    
 }
-p{
+
+p {
     font-weight: 700;
     font-size: larger;
 }
-/* .monthPicker{
-    border: 2px solid #EA454C;
-} */
+
+@media (max-width: 1200px) {
+    .graphContainer {
+        width: 95vw; /* Slightly smaller width for medium to large screens */
+    }
+}
 
 @media (max-width: 768px) {
-    p{
+    p {
         font-size: medium;
         font-weight: 500;
     }
+    .graphContainer {
+        width: 100vw; /* Full width for small screens */
+    }
 }
+
 @media (max-width: 435px) {
-    p{
+    p {
         font-size: small;
         font-weight: 500;
+    }
+}
+
+@media (min-width: 1200px) {
+    .graphContainer {
+        width: 80vw; /* Larger width for extra-large screens */
     }
 }
