@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { WidgetCardComponent } from "../widget-card/widget-card.component";
 
 @Component({
@@ -9,5 +9,6 @@ import { WidgetCardComponent } from "../widget-card/widget-card.component";
   styleUrl: './widget-cards.component.css'
 })
 export class WidgetCardsComponent {
+
 
 }
