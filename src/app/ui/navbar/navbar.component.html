@@ -1,6 +1,6 @@
 <div class="navbar">
     <ul>
-      <li *ngIf="role === 'user' || role === 'trainer' || role === 'admin'" [routerLink]="['/']" [class.active]="activeIndex === 0" (click)="setActive(0)">
+      <li *ngIf="role === 'user' || role === 'trainer' || role === 'admin'" [routerLink]="['/home']" [class.active]="activeIndex === 0" (click)="setActive(0)">
         <i class="fas fa-th"></i>
       </li>
       <li *ngIf=" role === 'trainer' || role === 'admin'" [routerLink]="['/search']" [class.active]="activeIndex === 1" (click)="setActive(1)">

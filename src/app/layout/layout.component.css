@@ -1,0 +1,38 @@
+body {
+    background-color: red;
+    margin: 0; /* Ensure there's no default margin on the body */
+    display: flex;
+    justify-content: center; /* Center the main content horizontally */
+}
+
+.main {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Center the content within main */
+}
+
+.main-container {
+    padding: 20px;
+    max-width: 1140px;
+    width: 100%; /* Make sure the container takes full width available */
+    box-sizing: border-box; /* Ensure padding is included in width calculation */
+}
+
+/* Optional: If you have a fixed navbar, you might want to adjust margin-top to prevent overlap */
+.main-container {
+    margin-top: 60px !important; /* Adjust as needed based on your navbar height */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .main-container {
+        max-width: 95vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        max-width: 100vw;
+        padding: 10px; /* Adjust padding for smaller screens */
+    }
+}
