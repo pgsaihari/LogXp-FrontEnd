@@ -1,0 +1,62 @@
+.card{
+    width: 100%;
+}
+
+.custom-calendar .p-datepicker .p-datepicker-group {
+    width: 100%;
+}
+
+.custom-calendar .p-datepicker td {
+    position: relative;
+    text-align: center;
+    padding: 0.5em;
+    cursor: pointer;
+}
+
+::ng-deep .custom-calendar .p-datepicker td.holiday {
+    background-color: #FFD6D6;
+    border-radius: 50%;
+}
+
+::ng-deep .custom-calendar .p-datepicker td.partial-leave {
+    background-color: #FFF8CD;
+    border-radius: 50%;
+}
+
+::ng-deep .custom-calendar .p-datepicker td.full-leave {
+    background-color: #FFCDCD;
+    border-radius: 50%;
+}
+::ng-deep .custom-calendar .p-datepicker td.sunday {
+    background-color: #FFDDDD; 
+    border-radius: 50%;/* Light red for Sundays */
+}
+
+
+
+.custom-calendar .p-datepicker td span.icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+}
+
+.p-dialog .p-dialog-header {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.p-dialog .p-dialog-content {
+    text-align: center;
+}
+
+.p-dialog .p-footer {
+    display: flex;
+    justify-content: center;
+}
+/* calendar.component.css */
+::ng-deep  .sunday {
+ color: red !important; /* Ensure that Sundays are styled in red */
+  }

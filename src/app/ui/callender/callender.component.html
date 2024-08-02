@@ -1,1 +1,22 @@
-<p>callender works!</p>
+<div class="card flex justify-content-center">
+    <p-calendar 
+        class="custom-calendar max-w-full" 
+        [(ngModel)]="date" 
+        [inline]="true" 
+        [showWeek]="false" 
+        (onSelect)="onDateSelect($event)"
+        (onMonthChange)="onMonthChange($event)">
+    </p-calendar>
+</div>
+
+<p-dialog header="{{ selectedDate | date:'yyyy mm dd' }}" [(visible)]="displayDialog" [modal]="true" [closable]="true">
+    <div class="p-fluid">
+        <div class="p-field">
+            <p>Add this date as a holiday?</p>
+        </div>
+    </div>
+    <p-footer>
+        <button type="button" pButton label="No, cancel" (click)="cancel()" class="p-button-secondary"></button>
+        <button type="button" pButton label="Yes, Confirm" (click)="confirm()"></button>
+    </p-footer>
+</p-dialog>
