@@ -16,7 +16,7 @@
         <i class="fa-solid fa-calendar-plus"></i>
       </li>
       <hr>
-      <li [class.active]="activeIndex === 6" [routerLink]="['/add-user']" (click)="setActive(6)">
+      <li [class.active]="activeIndex === 6" [routerLink]="['/add-user']" (click)="setActive(6)" (click)="signOut()">
         <i class="fas fa-sign-out-alt"></i>
       </li>
     </ul>
