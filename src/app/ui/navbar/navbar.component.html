@@ -9,7 +9,7 @@
       <li *ngIf="role === 'user'" [routerLink]="['/user-profile:id']" [class.active]="activeIndex === 1" (click)="setActive(1)">
         <i  class="fa-solid fa-user"></i>
       </li>
-      <li *ngIf="role === 'admin'" [routerLink]="['/add-user']"  [class.active]="activeIndex === 2" (click)="setActive(2)">
+      <li *ngIf="role === 'admin'" [routerLink]="['/add-trainee']"  [class.active]="activeIndex === 2" (click)="setActive(2)">
         <i  routerLinkActive="router-link-active"  class="fa-solid fa-user-plus"></i>
       </li>
       <li *ngIf="role === 'admin'" [routerLink]="['/edit-callender']" [class.active]="activeIndex === 3" (click)="setActive(3)">

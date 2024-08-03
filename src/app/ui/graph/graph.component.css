@@ -44,6 +44,6 @@ p {
 
 @media (min-width: 1200px) {
     .graphContainer {
-        width: 80vw; /* Larger width for extra-large screens */
+        width: 85vw; /* Larger width for extra-large screens */
     }
 }
