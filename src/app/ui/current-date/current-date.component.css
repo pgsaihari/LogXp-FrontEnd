@@ -2,7 +2,7 @@
 .card-container{
     font-family: "Poppins", sans-serif;
     margin-top: 10px;
-    width: 300px;
+    /* width: 300px; */
 }
 
 
@@ -65,6 +65,13 @@
     font-size: 17px;
     font-weight: bolder;
 }
+
+@media only screen and (min-width: 820px) {
+
+    .card-container{
+        width: 280px;
+    }
+}
 @media (max-width: 768px) {
     .card-container {
         margin: auto;
@@ -77,9 +84,9 @@
         gap: 20px;
     }
 
-    .card-container{
-
-        /* width: 80%; */
+    .logo-time{
+        display: flex;
+        align-items: center;
     }
     
     
@@ -97,5 +104,10 @@
         display: flex;
         flex-direction: column;
         /* justify-content: space-around; */
+    }
+
+    .logo-time{
+        display: flex;
+        align-items: center;
     }
 }
