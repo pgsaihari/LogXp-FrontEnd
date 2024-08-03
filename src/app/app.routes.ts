@@ -10,13 +10,13 @@ import { LayoutComponent } from './layout/layout.component';
 import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   {
     path:'',
-    component: LayoutComponent,
+    component: LayoutComponent ,canActivate:[authGuard],
     children: [
-        {path:"home",component:HomeComponent},
+        {path:"home",component:HomeComponent,canActivate:[authGuard]},
       { path: 'search', component: SearchTraineePageComponent,canActivate:[authGuard] },
 
       { path: 'add-trainee', component: AddTraineesPageComponent, canActivate:[authGuard] },

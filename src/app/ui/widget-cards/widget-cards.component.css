@@ -1,19 +1,30 @@
 /* .widget-cards-container{
-    width: 70%;
+    display: flex;
+    justify-content: center;
+    width: 80%;
 } */
 .widget-cards{
     display: flex;
     flex-wrap: wrap;
 }
 
+
+
+
+
 @media (max-width: 768px) {
-    .widget-cards app-widget-card {
+    app-widget-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         flex: 1 1 calc(50% - 16px); /* Two cards per row */
     }
 }
 
 @media (max-width: 480px) {
-    .widget-cards app-widget-card {
-        margin: auto;
+    .widget-cards{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 }
