@@ -24,4 +24,7 @@ export class NavbarComponent implements OnInit {
   setActive(index: number) {
     this.activeIndex = index;
   }
+  signOut(){
+    localStorage.removeItem('logintoken');
+  }
 }
