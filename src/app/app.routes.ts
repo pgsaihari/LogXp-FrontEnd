@@ -7,7 +7,7 @@ import { UserProfilePageComponent } from './page/user-profile-page/user-profile-
 import { TestPageComponent } from './page/test-page/test-page.component';
 import { LoginComponent } from './page/login/login.component';
 import { LayoutComponent } from './layout/layout.component';
-import { authGuard } from './auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },

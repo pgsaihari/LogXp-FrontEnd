@@ -5,15 +5,25 @@ import { ButtonModule } from 'primeng/button';
 import { NgStyle } from '@angular/common';
 import { NavbarComponent } from '../ui/navbar/navbar.component';
 import { TopHeaderComponent } from "../ui/top-header/top-header.component";
+import { LoginComponent } from "../page/login/login.component";
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, TopHeaderComponent],
+  imports: [RouterOutlet, NavbarComponent, TopHeaderComponent, LoginComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent implements OnInit {
+isLoggedIn():Boolean {
+  const localData = localStorage.getItem("logintoken");
+  if(localData!=null){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
   title = 'FrontEnd';
   role: string = 'trainee';
 
