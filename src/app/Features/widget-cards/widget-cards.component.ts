@@ -1,5 +1,5 @@
 import { Component, Input} from '@angular/core';
-import { WidgetCardComponent } from "../widget-card/widget-card.component";
+import { WidgetCardComponent } from "../../ui/widget-card/widget-card.component";
 
 @Component({
   selector: 'app-widget-cards',
