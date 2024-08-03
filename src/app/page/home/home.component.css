@@ -1,3 +1,15 @@
 .app-cards{
     display: flex;
 }
+
+@media (max-width: 768px) {
+    .app-cards {
+        /* margin: auto; */
+        display: block;
+    }
+    .dashboard{
+        display: flex;
+        flex-direction: column;
+
+    }
+}

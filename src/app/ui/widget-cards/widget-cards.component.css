@@ -5,3 +5,15 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+@media (max-width: 768px) {
+    .widget-cards app-widget-card {
+        flex: 1 1 calc(50% - 16px); /* Two cards per row */
+    }
+}
+
+@media (max-width: 480px) {
+    .widget-cards app-widget-card {
+        margin: auto;
+    }
+}
