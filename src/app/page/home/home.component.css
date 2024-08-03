@@ -1,3 +1,23 @@
-.app-cards{
+.dashboard {
     display: flex;
-}
+    flex-direction: column;
+    
+  }
+  
+  .app-cards {
+    display: flex;
+ 
+  }
+  
+  .graph-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* Media query for mobile devices */
+  @media (max-width: 768px) {
+    .app-cards {
+      flex-direction: column;
+    }
+  }
+  
