@@ -1,1 +1,16 @@
-<p>graph works!</p>
+<div class="card graphContainer">
+    <div class="graphHeading">
+        <p>Montly Attendance Graph</p>
+        <div class="card monthPicker">
+            <p-calendar 
+                [(ngModel)]="graphDataMonth" 
+                view="month" 
+                dateFormat="mm/yy" 
+                [readonlyInput]="true"
+                (onSelect)="monthSelection()"
+                [maxDate]="maxDate"  />
+        </div>
+    </div>
+    
+    <p-chart type="line" height="400" [data]="data" [options]="options" class="mychart"/>
+</div>

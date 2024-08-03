@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input} from '@angular/core';
+import { WidgetCardComponent } from "../../ui/widget-card/widget-card.component";
 
 @Component({
   selector: 'app-widget-cards',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './widget-cards.component.css'
 })
 export class WidgetCardsComponent {
+
 
 }

@@ -1,0 +1,85 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(to bottom right, #DB0000 50%, white 50%);
+    height: 100vh;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+  }
+  
+  .contents {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 50px;
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+  }
+  
+  .header {
+    text-align: left;
+  }
+  
+  .title {
+    font-size: 48px;
+    color: white;
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  .subtitle {
+    font-size: 18px;
+    color: white;
+    margin: 5px 0 0;
+  }
+  
+  .login-buttons {
+    display: flex;
+    
+    gap: 10px;
+    align-items: flex-end;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .btn.trainee {
+    background-color: #DB0000;
+    color: white;
+  }
+  
+  .btn.admin {
+    background-color: #f1f1f1;
+    color: gray;
+  }
+  
+  .btn.trainer {
+    background-color: black;
+    color: white;
+  }
+  
+  .btn:hover {
+    opacity: 0.8;
+  }
+  
+  .footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    bottom: 20px;
+  }
+  
+  .logo {
+    width: 200px;
+  }
+  

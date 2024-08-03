@@ -1,0 +1,61 @@
+
+/* .card-container .card {
+    font-family: 'Poppins' !important;
+  } */
+
+  :host ::ng-deep .p-card .p-card-content{
+    padding: 10px !important;
+  }
+  
+  :host ::ng-deep .p-card-body{
+    padding: 10px !important;
+  }
+
+  .p-card .p-card-footer {
+    padding-top: 10px !important;
+}
+
+/* .p-card{
+    height: 134px;
+    width: 250px;
+} */
+
+:host ::ng-deep .p-card {
+    font-family: 'Poppins',sans-serif;
+  }
+
+.icon > i{
+    font-size: 24px;
+    margin-bottom: -30px;
+    display: flex;
+    justify-content: end;
+}
+
+
+.card-header{
+    margin-top: 35px;
+    margin-bottom: 0;
+    font-weight: 900;
+    font-size: 18px;
+}
+
+.card-number{
+    font-weight: bolder;
+    font-size: 38px;
+}
+
+.card-container{
+    margin: 10px;
+    width: 250px;
+}
+
+.flex-footer{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.footer-text{
+    font-weight: bold;
+    color: rgb(176, 176, 176);
+}

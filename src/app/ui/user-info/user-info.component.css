@@ -1,0 +1,29 @@
+.card{
+    width: 250px;
+}
+
+.profile-card{
+    width: 250px;
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    /* margin-bottom: 20px; */
+}
+
+.profile-name, .profile-batch {
+    font-size: 20px;
+    font-weight: bolder;
+    color: #252C58;
+    margin: 5px 0;
+    text-align: center;
+}
+
+.profile-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
