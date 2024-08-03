@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { WidgetCardComponent } from "../../ui/widget-card/widget-card.component";
-import { WidgetCardsComponent } from "../../ui/widget-cards/widget-cards.component";
+import { WidgetCardsComponent } from "../../Features/widget-cards/widget-cards.component";
 import { CalendarModule } from 'primeng/calendar';
 import { CallenderComponent } from '../../ui/callender/callender.component';
 import { FormComponent } from '../../ui/form/form.component';
