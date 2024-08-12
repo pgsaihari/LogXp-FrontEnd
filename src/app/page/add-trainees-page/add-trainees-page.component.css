@@ -1,0 +1,31 @@
+.enter-trainee-details {
+    /* background-color: #f0f0f0; */
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .upload-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .upload-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .upload-button i {
+    margin-right: 5px;
+  }
+  .formui{
+    gap: 10px;
+  }
