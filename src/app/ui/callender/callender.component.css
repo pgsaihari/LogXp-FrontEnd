@@ -24,7 +24,7 @@
       align-items: center;
     }
     
-    .full-size-calendar {
+    ::ng-deep.full-size-calendar {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -109,4 +109,3 @@
   .holiday-dialog .cancel-btn:hover {
       background-color: #0056b3; /* Darker blue on hover */
   }
-  

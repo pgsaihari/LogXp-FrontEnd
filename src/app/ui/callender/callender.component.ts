@@ -8,7 +8,7 @@ import { DialogModule } from 'primeng/dialog';
 @Component({
   selector: 'app-callender',
   standalone: true,
-  imports: [FormsModule, CalendarModule,NgClass,DialogModule,CommonModule,ButtonModule],
+  imports: [FormsModule, CalendarModule,NgClass,DialogModule,CommonModule,ButtonModule,NgClass],
   templateUrl: './callender.component.html',
   styleUrl: './callender.component.css'
 })
