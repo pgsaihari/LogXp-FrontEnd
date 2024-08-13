@@ -1,14 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { TopHeaderComponent } from "../../ui/top-header/top-header.component";
 import { CallenderComponent } from '../../ui/callender/callender.component';
-import { DateSelectorComponent } from "../../ui/date-selector/date-selector.component";
-import { UserInfoComponent } from "../../ui/user-info/user-info.component";
-import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+
 
 @Component({
   selector: 'app-edit-callender-page',
   standalone: true,
-  imports: [TopHeaderComponent, CallenderComponent, DateSelectorComponent, UserInfoComponent, CardModule],
+  imports: [ CommonModule,          
+
+  CallenderComponent,   
+ 
+  ButtonModule  ],
   templateUrl: './edit-callender-page.component.html',
   styleUrl: './edit-callender-page.component.css'
 })
