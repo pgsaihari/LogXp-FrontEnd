@@ -1,13 +1,21 @@
+<p-toast></p-toast>
+
 <div class="enter-trainee-details">
-    <h3>Enter Trainee Details</h3>
-    <div class="upload-container">
-      <p>Upload an Excel sheet with the trainee data for bulk entry.</p>
-      <button class="upload-button">
-        <i class="pi pi-upload"></i> Upload Sheet
-      </button>
-    </div>
-    <div class="formui">
-        <app-form></app-form>
-    </div>
-   
+  <h3>Enter Trainee Details</h3>
+  <div class="upload-container">
+    <p>Upload an Excel sheet with the trainee data for bulk entry.</p>
+    <input
+      type="file"
+      id="fileInput"
+      accept=".xlsx, .xls"
+      (change)="onFileSelected($event)"
+      style="display: none;"
+    />
+    <button class="upload-button" (click)="triggerFileInput()">
+      <i class="pi pi-upload"></i> Upload Sheet
+    </button>
   </div>
+  <div class="formui">
+    <app-form></app-form>
+  </div>
+</div>
