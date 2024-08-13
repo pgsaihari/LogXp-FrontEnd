@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, Input} from '@angular/core';
+import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.component';
+
 
 @Component({
   selector: 'app-widget-cards',
   standalone: true,
-  imports: [],
+  imports: [WidgetCardComponent],
   templateUrl: './widget-cards.component.html',
   styleUrl: './widget-cards.component.css'
 })
 export class WidgetCardsComponent {
+
 
 }

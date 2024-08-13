@@ -1,1 +1,30 @@
-<p>callender works!</p>
+<div class="calendar-wrapper">
+    <p-calendar 
+        class="full-size-calendar" 
+        [(ngModel)]="date" 
+        [inline]="true" 
+        [showWeek]="false" 
+        (onSelect)="onDateSelect($event)">
+      <ng-template pTemplate="date" let-date>
+        <span [ngClass]="[getHolidayClass(date), isSunday(date) ? 'sunday-holiday' : '']">
+          {{ date.day }}
+        </span>
+      </ng-template>
+    </p-calendar>
+  
+    <p-dialog header="Manage Holiday" [(visible)]="displayHolidayDialog" [modal]="true" [closable]="false">
+      <div class="holiday-dialog" *ngIf="selectedDate">
+        <p>{{ selectedDate | date:'dd MMMM yyyy' }}</p>
+        <p *ngIf="!isHoliday">Add this date as a holiday?</p>
+        <p *ngIf="isHoliday">This date is already marked as a holiday. What would you like to do?</p>
+        
+        <button *ngIf="!isHoliday" pButton type="button" label="Full Holiday" class="full-holiday-btn" (click)="setHoliday('full')"></button>
+        <button *ngIf="!isHoliday" pButton type="button" label="Half Holiday" class="half-holiday-btn" (click)="setHoliday('half')"></button>
+        <button *ngIf="isHoliday" pButton type="button" label="Remove Holiday" class="remove-holiday-btn" (click)="removeHoliday()"></button>
+        
+        <button pButton type="button" label="Cancel" class="cancel-btn" (click)="displayHolidayDialog = false"></button>
+      </div>
+    </p-dialog>
+    
+  </div>
+  

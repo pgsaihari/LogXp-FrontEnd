@@ -1,0 +1,7 @@
+/* .widget-cards-container{
+    width: 70%;
+} */
+.widget-cards{
+    display: flex;
+    flex-wrap: wrap;
+}

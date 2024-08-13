@@ -1,22 +1,22 @@
 <div class="navbar">
     <ul>
-      <li *ngIf="role === 'user' || role === 'trainer' || role === 'admin'" [class.active]="activeIndex === 0" (click)="setActive(0)">
+      <li *ngIf="role === 'user' || role === 'trainer' || role === 'admin'" [routerLink]="['/home']" [class.active]="activeIndex === 0" (click)="setActive(0)">
         <i class="fas fa-th"></i>
       </li>
-      <li *ngIf=" role === 'trainer' || role === 'admin'" [class.active]="activeIndex === 1" (click)="setActive(1)">
+      <li *ngIf=" role === 'trainer' || role === 'admin'" [routerLink]="['/search']" [class.active]="activeIndex === 1" (click)="setActive(1)">
         <i class="fa-solid fa-magnifying-glass"></i>
       </li>
-      <li *ngIf="role === 'user'" [class.active]="activeIndex === 1" (click)="setActive(1)">
-        <i class="fa-solid fa-user"></i>
+      <li *ngIf="role === 'user'" [routerLink]="['/user-profile:id']" [class.active]="activeIndex === 1" (click)="setActive(1)">
+        <i  class="fa-solid fa-user"></i>
       </li>
-      <li *ngIf="role === 'admin'" [class.active]="activeIndex === 2" (click)="setActive(2)">
-        <i class="fa-solid fa-user-plus"></i>
+      <li *ngIf="role === 'admin'" [routerLink]="['/add-trainee']"  [class.active]="activeIndex === 2" (click)="setActive(2)">
+        <i  routerLinkActive="router-link-active"  class="fa-solid fa-user-plus"></i>
       </li>
-      <li *ngIf="role === 'admin'" [class.active]="activeIndex === 3" (click)="setActive(3)">
+      <li *ngIf="role === 'admin'" [routerLink]="['/edit-callender']" [class.active]="activeIndex === 3" (click)="setActive(3)">
         <i class="fa-solid fa-calendar-plus"></i>
       </li>
       <hr>
-      <li [class.active]="activeIndex === 6" (click)="setActive(6)">
+      <li [class.active]="activeIndex === 6" [routerLink]="['/add-user']" (click)="setActive(6)" (click)="signOut()">
         <i class="fas fa-sign-out-alt"></i>
       </li>
     </ul>
