@@ -17,24 +17,33 @@
                     (onSelect)="filterByDate()">
                 </p-calendar>
                 
-                <p-dropdown 
-  [options]="filterOptions"
-  [(ngModel)]="selectedOption"
-  optionLabel="name"
-  [showClear]="true"
-  placeholder="Advanced Filters"
-  (onChange)="filterByStatus($event.value)">
-  <ng-template pTemplate="selectedItem" let-selectedOption>
-    <div class="flex align-items-center gap-2">
-      <div>{{ selectedOption?.name }}</div>
-    </div>
-  </ng-template>
-  <ng-template let-option pTemplate="item">
-    <div class="flex align-items-center gap-2">
-      <div>{{ option.name }}</div>
-    </div>
-  </ng-template>
-</p-dropdown>
+                <p-multiSelect 
+                [options]="filterOptions"
+                [(ngModel)]="selectedOptions"
+                optionLabel="name"
+                [showClear]="true"
+                placeholder="Advanced Filters"
+                (onChange)="filterByStatus($event.value)">
+                <ng-template pTemplate="header">
+                  <div class="status-heading">
+                    <h3>Status</h3>
+                  </div>
+              
+                </ng-template>
+                <ng-template pTemplate="selectedItem" let-selectedOption>
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ selectedOption?.name }}</div>
+                  </div>
+                </ng-template>
+                <ng-template let-option pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+    
+                    <div>{{ option.name }}</div>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
+              
+              
                 
             </div>
         </div>

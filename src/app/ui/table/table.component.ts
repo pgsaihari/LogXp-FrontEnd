@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { TopHeaderComponent } from "../../ui/top-header/top-header.component";
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
-import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { NgClass, NgIf } from '@angular/common';
+import { TopHeaderComponent } from '../top-header/top-header.component';
 
 interface Trainee {
   id?: string;
@@ -21,7 +21,7 @@ interface Trainee {
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [TopHeaderComponent, FormsModule, AutoCompleteModule, CalendarModule, DropdownModule, TableModule, NgClass, NgIf],
+  imports: [TopHeaderComponent, FormsModule, AutoCompleteModule, CalendarModule, MultiSelectModule, TableModule, NgClass, NgIf],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
@@ -31,7 +31,7 @@ export class TableComponent implements OnInit {
   suggestions: any[] = [];
   date2: Date | undefined;
   todayDate: string | undefined;
-  selectedOption: any;
+  selectedOptions: any[] = [];
   
   filterOptions = [
     { name: 'All', code: 'ALL' },
@@ -89,14 +89,14 @@ export class TableComponent implements OnInit {
     this.checkTimeColumnsVisibility();
   }
 
-  filterByStatus(event: any) {
-    const status = event?.code; // Extract code from the selected object
-    console.log('Filter Status:', status); // Debugging log
+  filterByStatus(selectedOptions: any[]) {
+    const statusCodes = selectedOptions.map(option => option.code);
+    console.log('Filter Statuses:', statusCodes); // Debugging log
   
-    if (status === 'ALL' || !status) {
+    if (statusCodes.includes('ALL') || statusCodes.length === 0) {
       this.filteredTrainees = this.trainees;
     } else {
-      this.filteredTrainees = this.trainees.filter(trainee => trainee.status === status);
+      this.filteredTrainees = this.trainees.filter(trainee => statusCodes.includes(trainee.status || ''));
     }
     this.checkTimeColumnsVisibility();
   }

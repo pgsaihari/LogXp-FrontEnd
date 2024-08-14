@@ -80,3 +80,21 @@ p-table td {
     padding: 2px 4px;
     border-radius: 3px;
 }
+/* Add to your component's CSS file */
+.dropdown-header {
+    padding: 8px;
+    background-color: #f0f0f0; /* Light background for the header */
+    border-bottom: 1px solid #ddd; /* Add a border below the header */
+  }
+  
+  .dropdown-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  /* Hide the default search input inside the p-multiSelect dropdown */
+.ui-multiselect .ui-multiselect-filter-container {
+    display: none;
+  }
+  
