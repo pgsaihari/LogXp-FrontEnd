@@ -1,62 +1,112 @@
-.card{
-    width: 100%;
-}
-
-.custom-calendar .p-datepicker .p-datepicker-group {
-    width: 100%;
-}
-
-.custom-calendar .p-datepicker td {
-    position: relative;
-    text-align: center;
-    padding: 0.5em;
-    cursor: pointer;
-}
-
-::ng-deep .custom-calendar .p-datepicker td.holiday {
-    background-color: #FFD6D6;
-    border-radius: 50%;
-}
-
-::ng-deep .custom-calendar .p-datepicker td.partial-leave {
-    background-color: #FFF8CD;
-    border-radius: 50%;
-}
-
-::ng-deep .custom-calendar .p-datepicker td.full-leave {
-    background-color: #FFCDCD;
-    border-radius: 50%;
-}
-::ng-deep .custom-calendar .p-datepicker td.sunday {
-    background-color: #FFDDDD; 
-    border-radius: 50%;/* Light red for Sundays */
-}
-
-
-
-.custom-calendar .p-datepicker td span.icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5em;
-}
-
-.p-dialog .p-dialog-header {
-    text-align: center;
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-.p-dialog .p-dialog-content {
-    text-align: center;
-}
-
-.p-dialog .p-footer {
-    display: flex;
-    justify-content: center;
-}
-/* calendar.component.css */
-::ng-deep  .sunday {
- color: red !important; /* Ensure that Sundays are styled in red */
+.full-holiday {
+    
+    color: red;
+    }
+    
+    .half-holiday {
+      
+      color: yellowgreen;
+     
+    }
+    
+    .sunday-holiday {
+      color: #ff0000; /* Red color for Sundays */
+    }
+    
+    .holiday-dialog {
+      text-align: center;
+    }
+    
+    .calendar-wrapper {
+      
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    ::ng-deep.full-size-calendar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+    .holiday-dialog {
+      text-align: center;
+      padding: 20px;
+  }
+  
+  .holiday-dialog p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #333;
+  }
+  
+  /* Full Holiday Button - Green */
+  .holiday-dialog .full-holiday-btn {
+      background-color: #28a745; /* Green */
+      color: white;
+      margin: 5px 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+  }
+  
+  .holiday-dialog .full-holiday-btn:hover {
+      background-color: #218838; /* Darker green on hover */
+  }
+  
+  /* Half Holiday Button - Yellow */
+  .holiday-dialog .half-holiday-btn {
+      background-color: #ffc107; /* Yellow */
+      color: black;
+      margin: 5px 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+  }
+  
+  .holiday-dialog .half-holiday-btn:hover {
+      background-color: #e0a800; /* Darker yellow on hover */
+  }
+  
+  /* Remove Holiday Button - Red */
+  .holiday-dialog .remove-holiday-btn {
+      background-color: #dc3545; /* Red */
+      color: white;
+      margin: 5px 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+  }
+  
+  .holiday-dialog .remove-holiday-btn:hover {
+      background-color: #c82333; /* Darker red on hover */
+  }
+  
+  /* Cancel Button - Blue */
+  .holiday-dialog .cancel-btn {
+      background-color: #007bff; /* Blue */
+      color: white;
+      margin: 5px 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+  }
+  
+  .holiday-dialog .cancel-btn:hover {
+      background-color: #0056b3; /* Darker blue on hover */
   }

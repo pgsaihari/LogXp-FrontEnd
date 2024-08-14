@@ -1,141 +1,70 @@
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+import { CommonModule, NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-callender',
   standalone: true,
-  imports: [FormsModule,CalendarModule,CommonModule,DialogModule],
+  imports: [FormsModule, CalendarModule,NgClass,DialogModule,CommonModule,ButtonModule,NgClass],
   templateUrl: './callender.component.html',
   styleUrl: './callender.component.css'
 })
-export class CallenderComponent implements AfterViewInit {
-  date: Date | undefined;
-  selectedDate: Date | undefined;
-  displayDialog: boolean = false;
+export class CallenderComponent {
 
-  holidays: Date[] = [new Date(2023, 4, 4), new Date(2023, 4, 18)];
-  partialLeaves: Date[] = [new Date(2023, 4, 22)];
-  fullLeaves: Date[] = [new Date(2023, 4, 18)];
-
-  constructor(private cdr: ChangeDetectorRef) {}
-
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.applyDateStyles();
-      this.applySundayStyles(); // Ensure Sundays are styled when the calendar first loads
-    }, 0);
-  }
-
-  onDateSelect(event: any) {
-    this.selectedDate = event;
-    this.displayDialog = true;
-  }
-
-  confirm() {
-    if (this.selectedDate) {
-      this.holidays.push(new Date(this.selectedDate));
-      console.log(this.holidays);
-      this.applyDateStyles(); // Reapply styles after confirming
+    date: Date[] | undefined;
+    displayHolidayDialog: boolean = false;
+    selectedDate: Date | null = null;
+    holidays: { [key: string]: string } = {};
+    isHoliday: boolean = false;
+  
+    onDateSelect(event: any) {
+      // Check if the event is already a Date object
+      if (event instanceof Date) {
+        this.selectedDate = event;
+      } else {
+        console.error('Invalid date selected:', event);
+        this.selectedDate = null;
+      }
+  
+      if (this.selectedDate) {
+        const dateKey = this.selectedDate.toDateString();
+        this.isHoliday = !!this.holidays[dateKey]; // Check if the selected date is already a holiday
+        this.displayHolidayDialog = true;
+      }
     }
-    this.displayDialog = false;
-  }
-
-  cancel() {
-    this.displayDialog = false;
-  }
-
-  isHoliday(date: Date): boolean {
-    return this.holidays.some(d => d.toDateString() === date.toDateString());
-  }
-
-  isPartialLeave(date: Date): boolean {
-    return this.partialLeaves.some(d => d.toDateString() === date.toDateString());
-  }
-
-  isFullLeave(date: Date): boolean {
-    return this.fullLeaves.some(d => d.toDateString() === date.toDateString());
-  }
-
-  isSunday(date: Date): boolean {
-    return date.getDay() === 0; // Sunday is 0
-  }
-
-  applyDateStyles() {
-    this.addDateAttributesToCells();
-
-    const cells = document.querySelectorAll('.custom-calendar .p-datepicker td');
-
-    cells.forEach(cell => {
-      const dateString = cell.getAttribute('data-date');
-      
-      if (dateString) {
-        const cellDate = new Date(dateString);
-
-        if (isNaN(cellDate.getTime())) {
-          console.error(`Invalid date: ${dateString}`);
-          return;
-        }
-
-        cell.classList.toggle('holiday', this.isHoliday(cellDate));
-        cell.classList.toggle('partial-leave', this.isPartialLeave(cellDate));
-        cell.classList.toggle('full-leave', this.isFullLeave(cellDate));
-      } else {
-        console.warn(`No data-date attribute found on cell`);
+  
+    setHoliday(type: string) {
+      if (this.selectedDate) {
+        const dateKey = this.selectedDate.toDateString();
+        this.holidays[dateKey] = type;
       }
-    });
-  }
-
-  applySundayStyles() {
-    this.addDateAttributesToCells();
-
-    const cells = document.querySelectorAll('.custom-calendar .p-datepicker td');
-
-    cells.forEach(cell => {
-      const dateString = cell.getAttribute('data-date');
-      
-      if (dateString) {
-        const cellDate = new Date(dateString);
-
-        if (isNaN(cellDate.getTime())) {
-          console.error(`Invalid date: ${dateString}`);
-          return;
-        }
-
-        if (this.isSunday(cellDate)) {
-          cell.classList.add('sunday');
-        } else {
-          cell.classList.remove('sunday');
-        }
-      } else {
-        console.warn(`No data-date attribute found on cell`);
+      this.displayHolidayDialog = false;
+    }
+  
+    removeHoliday() {
+      if (this.selectedDate) {
+        const dateKey = this.selectedDate.toDateString();
+        delete this.holidays[dateKey]; // Remove the holiday from the selected date
       }
-    });
-  }
-
-  addDateAttributesToCells() {
-    const cells = document.querySelectorAll('.custom-calendar .p-datepicker td');
-
-    cells.forEach(cell => {
-      const cellText = cell.textContent?.trim();
-      if (cellText) {
-        const day = parseInt(cellText, 10);
-        if (!isNaN(day)) {
-          const cellDate = new Date();
-          cellDate.setDate(day);
-          cellDate.setMonth(this.date?.getMonth() || new Date().getMonth());
-          cellDate.setFullYear(this.date?.getFullYear() || new Date().getFullYear());
-
-          cell.setAttribute('data-date', cellDate.toISOString().split('T')[0]);
-        }
+      this.displayHolidayDialog = false;
+    }
+  
+    getHolidayClass(date: any): string {
+      const dateKey = new Date(date.year, date.month , date.day).toDateString();
+      if (this.holidays[dateKey] === 'full') {
+        return 'full-holiday';
+      } else if (this.holidays[dateKey] === 'half') {
+        return 'half-holiday';
       }
-    });
+      return '';
+    }
+  
+    isSunday(date: any): boolean {
+      const dayOfWeek = new Date(date.year, date.month , date.day).getDay();
+      return dayOfWeek === 0; // 0 represents Sunday
+    }
   }
-
-  onMonthChange(event: any) {
-    this.applyDateStyles();
-    this.applySundayStyles(); // Reapply Sunday styles on month change
-  }
-}
+  

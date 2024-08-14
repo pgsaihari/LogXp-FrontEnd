@@ -1,22 +1,30 @@
-<div class="card flex justify-content-center">
+<div class="calendar-wrapper">
     <p-calendar 
-        class="custom-calendar max-w-full" 
+        class="full-size-calendar" 
         [(ngModel)]="date" 
         [inline]="true" 
         [showWeek]="false" 
-        (onSelect)="onDateSelect($event)"
-        (onMonthChange)="onMonthChange($event)">
+        (onSelect)="onDateSelect($event)">
+      <ng-template pTemplate="date" let-date>
+        <span [ngClass]="[getHolidayClass(date), isSunday(date) ? 'sunday-holiday' : '']">
+          {{ date.day }}
+        </span>
+      </ng-template>
     </p-calendar>
-</div>
-
-<p-dialog header="{{ selectedDate | date:'yyyy mm dd' }}" [(visible)]="displayDialog" [modal]="true" [closable]="true">
-    <div class="p-fluid">
-        <div class="p-field">
-            <p>Add this date as a holiday?</p>
-        </div>
-    </div>
-    <p-footer>
-        <button type="button" pButton label="No, cancel" (click)="cancel()" class="p-button-secondary"></button>
-        <button type="button" pButton label="Yes, Confirm" (click)="confirm()"></button>
-    </p-footer>
-</p-dialog>
+  
+    <p-dialog header="Manage Holiday" [(visible)]="displayHolidayDialog" [modal]="true" [closable]="false">
+      <div class="holiday-dialog" *ngIf="selectedDate">
+        <p>{{ selectedDate | date:'dd MMMM yyyy' }}</p>
+        <p *ngIf="!isHoliday">Add this date as a holiday?</p>
+        <p *ngIf="isHoliday">This date is already marked as a holiday. What would you like to do?</p>
+        
+        <button *ngIf="!isHoliday" pButton type="button" label="Full Holiday" class="full-holiday-btn" (click)="setHoliday('full')"></button>
+        <button *ngIf="!isHoliday" pButton type="button" label="Half Holiday" class="half-holiday-btn" (click)="setHoliday('half')"></button>
+        <button *ngIf="isHoliday" pButton type="button" label="Remove Holiday" class="remove-holiday-btn" (click)="removeHoliday()"></button>
+        
+        <button pButton type="button" label="Cancel" class="cancel-btn" (click)="displayHolidayDialog = false"></button>
+      </div>
+    </p-dialog>
+    
+  </div>
+  
