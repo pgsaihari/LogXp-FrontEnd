@@ -1,10 +1,10 @@
 <div class="widget-cards-container">
     <div class="widget-cards">
         <app-widget-card [card_number]= 452 card_header="Total Employees" header_icon="fa-solid fa-users icon"></app-widget-card>
-        <app-widget-card [card_number]= 360 card_header="On Time" header_icon="fa-solid fa-business-time icon"></app-widget-card>
-        <app-widget-card [card_number]= 30 card_header="Absent" header_icon="fa-solid fa-suitcase-medical"></app-widget-card>
-        <app-widget-card [card_number]= 30 card_header="Late Arrivals" header_icon="fa-solid fa-circle-xmark"></app-widget-card>
-        <app-widget-card [card_number]= 30 card_header="Early Departures" header_icon="fa-solid fa-circle-xmark"></app-widget-card>
+        <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= 360 card_header="On Time" header_icon="fa-solid fa-business-time icon"></app-widget-card>
+        <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= 30 card_header="Absent" header_icon="fa-solid fa-suitcase-medical"></app-widget-card>
+        <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= 30 card_header="Late Arrivals" header_icon="fa-solid fa-circle-xmark"></app-widget-card>
+        <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= 30 card_header="Early Departures" header_icon="fa-solid fa-circle-xmark"></app-widget-card>
         <app-widget-card [card_number]= 30 card_header="Working Days" header_icon="fa-solid fa-circle-xmark"></app-widget-card>
     </div>
 </div>

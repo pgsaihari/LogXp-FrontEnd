@@ -1,4 +1,4 @@
-import { Component, Input} from '@angular/core';
+import { Component, EventEmitter, Input, Output} from '@angular/core';
 import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.component';
 
 
@@ -11,5 +11,14 @@ import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.compone
 })
 export class WidgetCardsComponent {
 
+  @Output() widgetSelected = new EventEmitter<any>();
+  
+clickWidget(data:boolean){
+  if (data) {
+    this.widgetSelected.emit(data);
+    // Implement functionality to communicate with HomeComponent
+    // Use an EventEmitter or a service depending on your preference
+  }
+}
 
 }

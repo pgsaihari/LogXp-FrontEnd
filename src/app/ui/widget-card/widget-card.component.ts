@@ -1,4 +1,4 @@
-import { Component,Input } from '@angular/core';
+import { Component,EventEmitter,Input, Output, output } from '@angular/core';
 import { CardModule } from "primeng/card";
 @Component({
   selector: 'app-widget-card',
@@ -8,7 +8,15 @@ import { CardModule } from "primeng/card";
   styleUrl: './widget-card.component.css'
 })
 export class WidgetCardComponent {
-  @Input() header_icon!: string ;
+
+@Input() header_icon!: string ;
 @Input() card_number!: Number;
 @Input() card_header!: string;
+
+@Output() onBtnClick = new EventEmitter<any>();
+
+onClick(){
+    this.onBtnClick.emit(true);
+}
+
 }

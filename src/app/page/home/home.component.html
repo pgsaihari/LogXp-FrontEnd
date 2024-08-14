@@ -1,10 +1,19 @@
 <div class="dashboard">
     <div class="app-cards">
       <app-current-date></app-current-date>
-      <app-widget-cards></app-widget-cards>
+      <app-widget-cards (widgetSelected)="handleWidgetClick($event)"></app-widget-cards>
+
     </div>
     <div class="graph-container">
-      <app-graph></app-graph>
+      <ng-template #homeTemplate>
+        <div *ngIf="!isVisible">
+          <app-graph></app-graph>
+        </div>
+        <div *ngIf="isVisible">
+          <app-table></app-table>
+        </div>
+      </ng-template>
+      <ng-container *ngTemplateOutlet="homeTemplate"></ng-container>
     </div>
   </div>
   
