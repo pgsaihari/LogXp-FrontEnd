@@ -1,41 +1,27 @@
 <div class="form-container">
-    <h4>Upload individual trainee data.</h4>
-    <form>
-      <div class="form-group image-container">
-        <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg" alt="Traine Image">
-      </div>
-      <div class="form-group">
-        <label for="trainee-id">Trainee Id</label>
-        <input type="text" id="trainee-id" placeholder="Value">
-      </div>
-      <div class="form-group">
-        <label for="first-name">First Name</label>
-        <input type="text" id="first-name" placeholder="Value">
-      </div>
-      <div class="form-group">
-        <label for="last-name">Last Name</label>
-        <input type="text" id="last-name" placeholder="Value">
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="Value">
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Value">
-      </div>
-      <div class="form-group">
-        <label for="batch">Batch</label>
-        <select id="batch">
-          <option value="value">Value</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="year">Year</label>
-        <input type="text" id="year" placeholder="Value">
-      </div>
-      
-      <button type="submit" class="submit-button">Submit</button>
-    </form>
-  </div>
-  
+  <h4>Upload individual trainee data.</h4>
+  <form [formGroup]="traineeForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="employee-code">Employee Code</label>
+      <input type="text" id="employee-code" formControlName="employeeCode" placeholder="Enter Employee Code" required>
+    </div>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name" placeholder="Enter Name">
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" placeholder="Enter Email">
+    </div>
+    <div class="form-group">
+      <label for="batch">Batch</label>
+      <select id="batch" formControlName="batch">
+        @for (batch of batches; track $index) {
+          <option  [value]="batch">{{ batch }}</option>
+        }
+       
+      </select>
+    </div>
+    <button type="submit" class="submit-button">Submit</button>
+  </form>
+</div>

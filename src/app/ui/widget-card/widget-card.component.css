@@ -59,3 +59,9 @@
     font-weight: bold;
     color: rgb(176, 176, 176);
 }
+
+/* @media (max-width: 480px) {
+    :host ::ng-deep .p-card{
+
+    }
+} */
