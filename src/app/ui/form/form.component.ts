@@ -39,16 +39,16 @@ export class FormComponent implements OnInit {
   onSubmit() {
     if (this.traineeForm.valid) {
       // Call the service to add trainee
-      this.traineeService.addTrainee([this.traineeForm.value]).subscribe(
+      this.traineeService.addTrainee(this.traineeForm.value).subscribe(
         response => {
-          console.log('Trainee added successfully', response);
-          this.messageService.add({severity:'success', summary:'Trainee Successfully added', detail:'Via MessageService'}); // Show success toast
+          console.log('Trainee added successfully', response.message);
+          this.messageService.add({severity:'success', summary:`${response.message}`, detail:'LogXp'}); // Show success toast
           this.traineeForm.reset(); // Reset the form
         },
         error => {
-          this.messageService.add({severity:'error', summary:'Something went wrong', detail:'Via MessageService'}); // Show success toast
+          this.messageService.add({severity:'error', summary:`${error.error.message}`, detail:'LogXp'}); // Show success toast
          
-          console.error('Error adding trainee', error);
+          console.error('Error adding trainee', error); 
            // Show error toast
         }
       );

@@ -23,8 +23,12 @@ export class TraineeServiceService {
   }
 
   // Function to add a new trainee
-  addTrainee(trainee: any): Observable<any> {
+  addTrainees(trainee: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, trainee);
+  }
+
+  addTrainee(trainee: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl+"/add-trainee", trainee);
   }
 
   // Function to update an existing trainee
