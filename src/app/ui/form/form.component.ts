@@ -13,7 +13,7 @@ import { MessageService } from 'primeng/api';
   imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule,],
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
-})
+})  
 export class FormComponent implements OnInit {
   // Define the form group
   traineeForm = new FormGroup({
