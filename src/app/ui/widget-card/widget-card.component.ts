@@ -13,10 +13,10 @@ export class WidgetCardComponent {
 @Input() card_number!: Number;
 @Input() card_header!: string;
 
-@Output() onBtnClick = new EventEmitter<any>();
+@Output() onBtnClick = new EventEmitter<{isClicked:boolean, header:string}>();
 
 onClick(){
-    this.onBtnClick.emit(true);
+    this.onBtnClick.emit({isClicked: true,header: this.card_header});
 }
 
 }

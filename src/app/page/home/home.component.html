@@ -10,7 +10,7 @@
           <app-graph></app-graph>
         </div>
         <div *ngIf="isVisible">
-          <app-table></app-table>
+          <app-widget-table [tableHeader]="tableHeader" [toggleField]="toggleField"></app-widget-table>
         </div>
       </ng-template>
       <ng-container *ngTemplateOutlet="homeTemplate"></ng-container>

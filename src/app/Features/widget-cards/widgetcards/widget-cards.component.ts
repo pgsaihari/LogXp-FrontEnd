@@ -11,14 +11,11 @@ import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.compone
 })
 export class WidgetCardsComponent {
 
-  @Output() widgetSelected = new EventEmitter<any>();
-  
-clickWidget(data:boolean){
-  if (data) {
-    this.widgetSelected.emit(data);
-    // Implement functionality to communicate with HomeComponent
-    // Use an EventEmitter or a service depending on your preference
+  @Output() widgetSelected = new EventEmitter<{isClicked: boolean, header: string}>();
+
+clickWidget(dataRecieved: { isClicked: boolean, header: string }){
+  this.widgetSelected.emit(dataRecieved)
+
   }
 }
 
-}
