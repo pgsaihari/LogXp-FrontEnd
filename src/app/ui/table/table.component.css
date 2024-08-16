@@ -3,6 +3,9 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .search-filter {
@@ -15,28 +18,39 @@
 #search-bar {
     flex: 1;
     margin-right: 20px;
+    font-size: 14px; /* Adjust font size */
 }
 
 .right-filters {
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
 #datepick {
     margin-right: 20px;
+    font-size: 14px; /* Adjust font size */
 }
 
-
-/* Make all table data bold */
+/* Make all table data bold and adjust font size */
 p-table td {
     font-weight: bold;
+    font-size: 14px; /* Adjust font size */
 }
 
+/* Table headings styles */
+p-table th {
+    font-weight: bold;
+    font-size: 14px; /* Adjust font size */
+}
+
+/* Status Colors */
 .status-work-from-office {
     color: green;
     background-color: #e0f7e9; /* Light green background */
     padding: 2px 4px;
     border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
 }
 
 .status-work-from-home {
@@ -44,6 +58,7 @@ p-table td {
     background-color: #e0f0ff; /* Light blue background */
     padding: 2px 4px;
     border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
 }
 
 .status-absent {
@@ -51,6 +66,7 @@ p-table td {
     background-color: #ffe0e0; /* Light red background */
     padding: 2px 4px;
     border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
 }
 
 .status-late-arrival {
@@ -58,13 +74,16 @@ p-table td {
     background-color: #fff4e0; /* Light orange background */
     padding: 2px 4px;
     border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
 }
 
+/* Time Colors */
 .time-on-time {
     color: green;
     background-color: #e0f7e9; /* Light green background */
     padding: 2px 4px;
     border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
 }
 
 .time-late {
@@ -72,6 +91,7 @@ p-table td {
     background-color: #fff4e0; /* Light orange background */
     padding: 2px 4px;
     border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
 }
 
 .time-very-late {
@@ -79,22 +99,126 @@ p-table td {
     background-color: #ffe0e0; /* Light red background */
     padding: 2px 4px;
     border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
 }
-/* Add to your component's CSS file */
+
+/* Dropdown Header */
 .dropdown-header {
     padding: 8px;
     background-color: #f0f0f0; /* Light background for the header */
     border-bottom: 1px solid #ddd; /* Add a border below the header */
-  }
-  
-  .dropdown-header h3 {
+}
+
+.dropdown-header h3 {
     margin: 0;
-    font-size: 14px;
+    font-size: 12px; /* Adjust font size */
     font-weight: bold;
-  }
-  
-  /* Hide the default search input inside the p-multiSelect dropdown */
+}
+
+/* Hide default search input inside p-multiSelect dropdown */
 .ui-multiselect .ui-multiselect-filter-container {
     display: none;
-  }
-  
+}
+
+.filter-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.left-filters, .right-filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.right-filters {
+    flex: 1;
+}
+
+.table-container {
+    margin-top: 20px;
+    overflow-x: auto; /* Adds horizontal scrolling if needed */
+}
+
+.p-table {
+    width: 100%; /* Full width of the container */
+    box-sizing: border-box; /* Includes padding and border in width */
+}
+
+.p-table .p-paginator {
+    margin-top: 20px; /* Space above paginator */
+    width: 100%; /* Full width */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column; /* Stack filters vertically */
+    }
+
+    .left-filters, .right-filters {
+        width: 100%; /* Full width on small screens */
+        margin-bottom: 10px; /* Space below each section */
+    }
+
+    #search-bar {
+        margin-right: 0; /* Remove margin on small screens */
+        margin-bottom: 10px; /* Add space below search bar */
+        font-size: 12px; /* Adjust font size for small screens */
+    }
+
+/* Adjust the size of the date picker */
+#datepick {
+    width: 150px; /* Adjust width as needed */
+    font-size: 12px; /* Adjust font size */
+    padding: 5px; /* Adjust padding inside the input */
+}
+
+/* Additional styles to ensure the calendar icon is properly sized */
+.p-calendar .p-calendar .p-inputtext {
+    font-size: 12px; /* Adjust font size inside the input */
+    padding: 5px; /* Adjust padding inside the input */
+}
+
+/* Ensure the calendar icon itself is sized correctly */
+.p-calendar .p-calendar-icon {
+    font-size: 14px; /* Adjust icon size */
+}
+
+/* Adjust the dropdown calendar to fit better */
+.p-calendar .p-calendar-header {
+    font-size: 12px; /* Adjust font size in the calendar header */
+}
+
+.p-calendar .p-calendar-title {
+    font-size: 12px; /* Adjust font size in the calendar title */
+}
+
+.p-calendar .p-calendar-month {
+    font-size: 12px; /* Adjust font size in the calendar month */
+}
+
+.p-calendar .p-calendar-weekday {
+    font-size: 12px; /* Adjust font size in the calendar weekdays */
+}
+
+.p-calendar .p-calendar-day {
+    font-size: 12px; /* Adjust font size in the calendar days */
+}
+
+
+    p-table td {
+        font-size: 12px; /* Adjust font size for small screens */
+    }
+
+    p-table th {
+        font-size: 12px; /* Adjust font size for small screens */
+    }
+
+    .dropdown-header h3 {
+        font-size: 10px; /* Adjust font size for small screens */
+    }
+}

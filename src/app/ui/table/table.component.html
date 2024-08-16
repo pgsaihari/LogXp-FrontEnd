@@ -1,79 +1,82 @@
 <div class="contents">
-    <div class="container">
-        <div class="search-filter">
-            <p-autoComplete id="search-bar"
-                [(ngModel)]="selectedItem" 
-                [suggestions]="suggestions" 
-                (completeMethod)="search($event)"
-                placeholder="Quick Search" />
-            <div class="right-filters">
-                <p-calendar 
-                    id="datepick"
-                    [(ngModel)]="date2" 
-                    [iconDisplay]="'input'" 
-                    [showIcon]="true" 
-                    inputId="icondisplay" 
-                    placeholder="Select Date"
-                    (onSelect)="filterByDate()">
-                </p-calendar>
-                
-                <p-multiSelect 
-                [options]="filterOptions"
-                [(ngModel)]="selectedOptions"
-                optionLabel="name"
-                [showClear]="true"
-                placeholder="Advanced Filters"
-                (onChange)="filterByStatus($event.value)">
-                <ng-template pTemplate="header">
-                  <div class="status-heading">
-                    <h3>Status</h3>
-                  </div>
+  <div class="container">
+      <div class="filter-row">
+          <div class="left-filters">
+              <p-autoComplete id="search-bar"
+                  [(ngModel)]="selectedItem" 
+                  [suggestions]="suggestions" 
+                  (completeMethod)="search($event)"
+                  placeholder="Quick Search" />
+          </div>
+          <div class="right-filters">
+              <p-calendar 
+                  id="datepick"
+                  [(ngModel)]="date2" 
+                  [iconDisplay]="'input'" 
+                  [showIcon]="true" 
+                  inputId="icondisplay" 
+                  placeholder="Select Date"
+                  (onSelect)="filterByDate()">
+              </p-calendar>
               
-                </ng-template>
-                <ng-template pTemplate="selectedItem" let-selectedOption>
-                  <div class="flex align-items-center gap-2">
-                    <div>{{ selectedOption?.name }}</div>
-                  </div>
-                </ng-template>
-                <ng-template let-option pTemplate="item">
-                  <div class="flex align-items-center gap-2">
-    
-                    <div>{{ option.name }}</div>
-                  </div>
-                </ng-template>
+              <p-multiSelect 
+                  [options]="filterOptions"
+                  [(ngModel)]="selectedOptions"
+                  optionLabel="name"
+                  [showClear]="true"
+                  placeholder="Advanced Filters"
+                  (onChange)="filterByStatus($event.value)">
+                  <ng-template pTemplate="header">
+                      <div class="status-heading">
+                          <h3>Status</h3>
+                      </div>
+                  </ng-template>
+                  <ng-template pTemplate="selectedItem" let-selectedOption>
+                      <div class="flex align-items-center gap-2">
+                          <div>{{ selectedOption?.name }}</div>
+                      </div>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                      <div class="flex align-items-center gap-2">
+                          <div>{{ option.name }}</div>
+                      </div>
+                  </ng-template>
               </p-multiSelect>
-              
-              
-                
-            </div>
-        </div>
-        <div class="card table-container">
-            <p-table [value]="filteredTrainees" [paginator]="true" [rows]="5" [sortMode]="'single'" paginatorPosition="top">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
-                        <th pSortableColumn="employee">Employee <p-sortIcon field="employee"></p-sortIcon></th>
-                        <th pSortableColumn="ilp">ILP <p-sortIcon field="ilp"></p-sortIcon></th>
-                        <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
-                        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
-                        <th *ngIf="showTimeColumns" pSortableColumn="checkin">Check-In <p-sortIcon field="checkin"></p-sortIcon></th>
-                        <th *ngIf="showTimeColumns" pSortableColumn="checkout">Check-Out <p-sortIcon field="checkout"></p-sortIcon></th>
-                        <th pSortableColumn="workhours">Work Hours <p-sortIcon field="workhours"></p-sortIcon></th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-trainee>
-                    <tr>
-                        <td><strong>{{ trainee.id }}</strong></td>
-                        <td><strong>{{ trainee.employee }}</strong></td>
-                        <td><strong>{{ trainee.ilp }}</strong></td>
-                        <td><strong>{{ trainee.date }}</strong></td>
-                        <td><strong><span [ngClass]="getStatusClass(trainee.status)">{{ trainee.status }}</span></strong></td>
-                        <td *ngIf="!isAbsent(trainee.status)"><strong><span [ngClass]="getTimeClass(trainee.checkin)">{{ trainee.checkin }}</span></strong></td>
-                        <td *ngIf="!isAbsent(trainee.status)"><strong><span [ngClass]="getTimeClass(trainee.checkout)">{{ trainee.checkout }}</span></strong></td>
-                        <td *ngIf="!isAbsent(trainee.status)"><strong>{{ trainee.workhours }}</strong></td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
-    </div>
+          </div>
+      </div>
+
+      <div class="card table-container">
+          <p-table [value]="filteredTrainees" [paginator]="true" [rows]="5" [sortMode]="'single'" paginatorPosition="top">
+              <ng-template pTemplate="paginatorleft">
+                  <!-- Custom content to the left of the paginator -->
+              </ng-template>
+              <ng-template pTemplate="header">
+                  <tr>
+                      <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+                      <th pSortableColumn="employee">Employee <p-sortIcon field="employee"></p-sortIcon></th>
+                      <th pSortableColumn="ilp">ILP <p-sortIcon field="ilp"></p-sortIcon></th>
+                      <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+                      <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                      <th *ngIf="showTimeColumns" pSortableColumn="checkin">Check-In <p-sortIcon field="checkin"></p-sortIcon></th>
+                      <th *ngIf="showTimeColumns" pSortableColumn="checkout">Check-Out <p-sortIcon field="checkout"></p-sortIcon></th>
+                      <th *ngIf="showTimeColumns" pSortableColumn="workhours">Work Hours <p-sortIcon field="workhours"></p-sortIcon></th>
+                      <th *ngIf="showTimeColumns" pSortableColumn="attendancepercentage">Attendence % <p-sortIcon field="attendancepercentage"></p-sortIcon></th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-trainee>
+                  <tr>
+                      <td><strong>{{ trainee.id }}</strong></td>
+                      <td><strong>{{ trainee.employee }}</strong></td>
+                      <td><strong>{{ trainee.ilp }}</strong></td>
+                      <td><strong>{{ trainee.date }}</strong></td>
+                      <td><strong><span [ngClass]="getStatusClass(trainee.status)">{{ trainee.status }}</span></strong></td>
+                      <td *ngIf="!isAbsent(trainee.status)"><strong><span [ngClass]="getTimeClass(trainee.checkin)">{{ trainee.checkin }}</span></strong></td>
+                      <td *ngIf="!isAbsent(trainee.status)"><strong><span [ngClass]="getTimeClass(trainee.checkout)">{{ trainee.checkout }}</span></strong></td>
+                      <td *ngIf="!isAbsent(trainee.status)"><strong>{{ trainee.workhours }}</strong></td>
+                      <td *ngIf="!isAbsent(trainee.status)"><strong>{{ trainee.attendancepercentage }}</strong></td>
+                  </tr>
+              </ng-template>
+          </p-table>
+      </div>
+  </div>
 </div>

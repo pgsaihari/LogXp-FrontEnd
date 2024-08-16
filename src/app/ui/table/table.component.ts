@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
@@ -16,6 +16,7 @@ interface Trainee {
   checkin?: string;
   checkout?: string;
   workhours?: string;
+  attendancepercentage?: string;
 }
 
 @Component({
@@ -26,6 +27,9 @@ interface Trainee {
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
+
+  @Input() statusFilter: string = '';
+
   items: any[] | undefined;
   selectedItem: any;
   suggestions: any[] = [];
@@ -38,27 +42,56 @@ export class TableComponent implements OnInit {
     { name: 'Present', code: 'Present' },
     { name: 'Half Day', code: 'Half Day' },
     { name: 'Absent', code: 'Absent' },
-    { name: 'Late Arrival', code: 'Late Arrival' }
+    { name: 'Late Arrival', code: 'Late Arrival' },
+    { name: 'Batch 2', code: 'Batch 2' },
+    { name: 'Batch 3', code: 'Batch 3' },
+    { name: 'Batch 4', code: 'Batch 4' },
   ];
 
   trainees: Trainee[] = [
-    { id: '1000', employee: 'faheem', ilp: 'Batch 3', date: '31-07-2024', status: 'Present', checkin: '09:00', checkout: '18:00', workhours: '9h' },
-    { id: '1001', employee: 'Samvrutha', ilp: 'Batch 4', date: '30-07-2024', status: 'Half Day', checkin: '09:00', checkout: '18:00', workhours: '9h' },
-    { id: '1002', employee: 'vijin', ilp: 'Batch 4', date: '30-07-2024', status: 'Absent', checkin: '00:00', checkout: '00:00', workhours: '9h' },
-    { id: '1003', employee: 'Saii', ilp: 'Batch 3', date: '31-07-2024', status: 'Late Arrival', checkin: '10:30', checkout: '18:00', workhours: '9h' },
-    { id: '1004', employee: 'Afthab', ilp: 'Batch 2', date: '10-07-2024', status: 'Present', checkin: '09:00', checkout: '18:00', workhours: '9h' },
-    { id: '1005', employee: 'flip', ilp: 'Batch 2', date: '10-07-2024', status: 'Present', checkin: '09:00', checkout: '18:00', workhours: '9h' }
+    { id: '1000', employee: 'faheem', ilp: 'Batch 3', date: '31-07-2024', status: 'Present', checkin: '09:01', checkout: '18:00', workhours: '9h', attendancepercentage:'90%' },
+    { id: '1001', employee: 'Samvrutha', ilp: 'Batch 4', date: '30-07-2024', status: 'Half Day', checkin: '09:00', checkout: '18:00', workhours: '9h' , attendancepercentage:'96%'},
+    { id: '1002', employee: 'vijin', ilp: 'Batch 4', date: '30-07-2024', status: 'Absent', checkin: '00:00', checkout: '00:00', workhours: '9h',attendancepercentage:'95%' },
+    { id: '1003', employee: 'Saii', ilp: 'Batch 3', date: '31-07-2024', status: 'Late Arrival', checkin: '10:30', checkout: '18:00', workhours: '9h' ,attendancepercentage:'93%'},
+    { id: '1004', employee: 'Afthab', ilp: 'Batch 2', date: '10-07-2024', status: 'Present', checkin: '09:00', checkout: '18:00', workhours: '9h' ,attendancepercentage:'85%'},
+    { id: '1005', employee: 'flip', ilp: 'Batch 2', date: '10-07-2024', status: 'Present', checkin: '09:00', checkout: '18:00', workhours: '9h',attendancepercentage:'89%' }
   ];
 
   filteredTrainees: Trainee[] = [];
   showTimeColumns: boolean = true;
+  
 
   ngOnInit() {
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
     this.filteredTrainees = this.trainees;
+
+    if (this.statusFilter) {
+      this.applyStatusFilter();
+    }
     this.checkTimeColumnsVisibility();
   }
+
+  ngOnChanges() {
+    if (this.statusFilter) {
+      this.applyStatusFilter();
+    } else {
+      this.filteredTrainees = this.trainees;
+    }
+    this.checkTimeColumnsVisibility();
+  }
+
+  applyStatusFilter() {
+    if (this.statusFilter) {
+      this.filteredTrainees = this.trainees.filter(trainee => trainee.status === this.statusFilter);
+    } else {
+      this.filteredTrainees = this.trainees;
+    }
+    this.checkTimeColumnsVisibility();
+  }
+
+
+
 
   search(event: AutoCompleteCompleteEvent) {
     this.suggestions = [...Array(10).keys()].map(item => event.query + '-' + item);
@@ -78,6 +111,10 @@ export class TableComponent implements OnInit {
     this.checkTimeColumnsVisibility();
   }
 
+
+
+
+
   filterByDate() {
     if (this.date2) {
       const selectedDateString = this.date2.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -90,16 +127,19 @@ export class TableComponent implements OnInit {
   }
 
   filterByStatus(selectedOptions: any[]) {
-    const statusCodes = selectedOptions.map(option => option.code);
-    console.log('Filter Statuses:', statusCodes); // Debugging log
+    const statusCodes = selectedOptions.filter(option => !option.code.startsWith('Batch')).map(option => option.code);
+    const batchCodes = selectedOptions.filter(option => option.code.startsWith('Batch')).map(option => option.code);
   
-    if (statusCodes.includes('ALL') || statusCodes.length === 0) {
-      this.filteredTrainees = this.trainees;
+    if ((statusCodes.includes('ALL') || statusCodes.length === 0) && batchCodes.length === 0) {
+        this.filteredTrainees = this.trainees;
     } else {
-      this.filteredTrainees = this.trainees.filter(trainee => statusCodes.includes(trainee.status || ''));
+        this.filteredTrainees = this.trainees.filter(trainee => 
+            (statusCodes.length === 0 || statusCodes.includes(trainee.status || '')) &&
+            (batchCodes.length === 0 || batchCodes.includes(trainee.ilp || ''))
+        );
     }
     this.checkTimeColumnsVisibility();
-  }
+}
 
   isAbsent(status?: string): boolean {
     return status === 'Absent';
