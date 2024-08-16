@@ -1,18 +1,18 @@
 import { Component, Renderer2, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-
-import { NgStyle } from '@angular/common';
 import { NavbarComponent } from '../ui/navbar/navbar.component';
 import { TopHeaderComponent } from "../ui/top-header/top-header.component";
 import { LoginComponent } from "../page/login/login.component";
+import {ToastModule} from 'primeng/toast'
+import {MessageService} from 'primeng/api'
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, TopHeaderComponent, LoginComponent],
+  imports: [RouterOutlet, NavbarComponent, TopHeaderComponent, LoginComponent,ToastModule],
   templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css'
+  styleUrl: './layout.component.css',
+  providers: [MessageService]
 })
 export class LayoutComponent implements OnInit {
 isLoggedIn():Boolean {
