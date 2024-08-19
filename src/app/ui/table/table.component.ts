@@ -6,18 +6,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { NgClass, NgIf } from '@angular/common';
 import { TopHeaderComponent } from '../top-header/top-header.component';
+import { Trainee } from '../../core/interfaces/trainee';
 
-interface Trainee {
-  id?: string;
-  employee?: string;
-  ilp?: string;
-  date?: string;
-  status?: string;
-  checkin?: string;
-  checkout?: string;
-  workhours?: string;
-  attendancepercentage?: string;
-}
+
 
 @Component({
   selector: 'app-table',
