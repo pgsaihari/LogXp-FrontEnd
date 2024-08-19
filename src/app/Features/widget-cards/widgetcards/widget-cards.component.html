@@ -1,6 +1,6 @@
 <div class="widget-cards-container">
     <div class="widget-cards">
-        <app-widget-card [card_number]= 452 card_header="Total Employees" header_icon="fa-solid fa-users icon"></app-widget-card>
+        <app-widget-card [card_number]="totalTrainees"  card_header="Total Employees" header_icon="fa-solid fa-users icon"></app-widget-card>
         <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= 360 card_header="On Time" header_icon="fa-solid fa-user-check"></app-widget-card>
         <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= 30 card_header="Absent" header_icon="fa-solid fa-ban"></app-widget-card>
         <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= 30 card_header="Late Arrivals" header_icon="fa-solid fa-user-clock"></app-widget-card>
