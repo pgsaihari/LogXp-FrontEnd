@@ -1,4 +1,4 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.component';
 import { TraineeServiceService } from '../../../core/services/trainee-service.service';
 import { FormsModule } from '@angular/forms';
@@ -32,5 +32,11 @@ export class WidgetCardsComponent implements OnInit {
 
       )
   }
+  @Output() widgetSelected = new EventEmitter<{isClicked: boolean, header: string}>();
 
+clickWidget(dataRecieved: { isClicked: boolean, header: string }){
+  this.widgetSelected.emit(dataRecieved)
+
+  }
 }
+
