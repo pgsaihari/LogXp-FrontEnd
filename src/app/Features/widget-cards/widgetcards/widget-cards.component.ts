@@ -14,10 +14,11 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './widget-cards.component.css'
 })
 export class WidgetCardsComponent implements OnInit {
-
-  constructor(private traineeService:TraineeServiceService,private messageService: MessageService){}
+  @Output() widgetSelected = new EventEmitter<{isClicked: boolean, header: string}>();
+  constructor(private traineeService:TraineeServiceService,private messageService: MessageService, private http: HttpClient){}
   totalTrainees:number=0;
   ngOnInit(): void {
+    this.widgetCount();
       this.traineeService.getTraineesCount().subscribe(
         response=>{
           console.log(response);
@@ -33,9 +34,6 @@ export class WidgetCardsComponent implements OnInit {
 
       )
   }
-  @Output() widgetSelected = new EventEmitter<{isClicked: boolean, header: string}>();
-  
-  constructor(private http: HttpClient) {}
 
   // const attendanceApis = [
   //   {
@@ -56,10 +54,7 @@ export class WidgetCardsComponent implements OnInit {
   //   }
   // ];
   
-  
-    ngOnInit(){
-      this.widgetCount();
-    }
+
 
     widgetCount(){
     }
