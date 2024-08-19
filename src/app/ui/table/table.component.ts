@@ -6,7 +6,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { NgClass, NgIf } from '@angular/common';
 import { TopHeaderComponent } from '../top-header/top-header.component';
-import { Trainee } from '../../core/interfaces/trainee';
+import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 
 
 
@@ -39,7 +39,7 @@ export class TableComponent implements OnInit {
     { name: 'Batch 4', code: 'Batch 4' },
   ];
 
-  trainees: Trainee[] = [
+  trainees: TraineeAttendanceLogs[] = [
     { id: '1000', employee: 'faheem', ilp: 'Batch 3', date: '31-07-2024', status: 'Present', checkin: '09:01', checkout: '18:00', workhours: '9h', attendancepercentage:'90%' },
     { id: '1001', employee: 'Samvrutha', ilp: 'Batch 4', date: '30-07-2024', status: 'Half Day', checkin: '09:00', checkout: '18:00', workhours: '9h' , attendancepercentage:'96%'},
     { id: '1002', employee: 'vijin', ilp: 'Batch 4', date: '30-07-2024', status: 'Absent', checkin: '00:00', checkout: '00:00', workhours: '9h',attendancepercentage:'95%' },
@@ -48,7 +48,7 @@ export class TableComponent implements OnInit {
     { id: '1005', employee: 'flip', ilp: 'Batch 2', date: '10-07-2024', status: 'Present', checkin: '09:00', checkout: '18:00', workhours: '9h',attendancepercentage:'89%' }
   ];
 
-  filteredTrainees: Trainee[] = [];
+  filteredTrainees: TraineeAttendanceLogs[] = [];
   showTimeColumns: boolean = true;
   
 

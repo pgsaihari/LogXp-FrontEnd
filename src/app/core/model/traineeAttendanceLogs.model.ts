@@ -1,4 +1,4 @@
-export interface Trainee {
+export interface TraineeAttendanceLogs {
         id?: string;
         employee?: string;
         ilp?: string;
