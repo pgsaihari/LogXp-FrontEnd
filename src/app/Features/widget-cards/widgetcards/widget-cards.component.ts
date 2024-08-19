@@ -1,4 +1,4 @@
-import { Component, Input} from '@angular/core';
+import { Component, EventEmitter, Input, Output} from '@angular/core';
 import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.component';
 
 
@@ -11,5 +11,11 @@ import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.compone
 })
 export class WidgetCardsComponent {
 
+  @Output() widgetSelected = new EventEmitter<{isClicked: boolean, header: string}>();
 
+clickWidget(dataRecieved: { isClicked: boolean, header: string }){
+  this.widgetSelected.emit(dataRecieved)
+
+  }
 }
+
