@@ -18,8 +18,8 @@ export class TraineeServiceService {
       map(response => response.trainees) )
     }
 
-    return this.http.get<any[]>(this.apiUrl);
-  }
+  //   return this.http.get<any[]>(this.apiUrl);
+  // }
 
   getTraineesCount():Observable<number>{
     return this.http.get<number>(this.apiUrl + '/active-count');

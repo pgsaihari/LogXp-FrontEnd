@@ -62,9 +62,9 @@ padding-top: 10px !important;
     }
 }
 /* for half screen */
-@media (max-width: 650px) { 
+@media (max-width: 660px) { 
     .card-container{
         margin: 10px;
-        width: 220px; 
+        width: 210px; 
     }
 }
