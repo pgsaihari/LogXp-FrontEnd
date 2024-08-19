@@ -6,10 +6,11 @@ import { WidgetCardComponent } from "../../ui/widget-card/widget-card.component"
 import { CalendarModule } from 'primeng/calendar';
 import { CallenderComponent } from '../../ui/callender/callender.component';
 import { FormComponent } from '../../ui/form/form.component';
+import { WidgetTableComponent } from "../../ui/widget-table/widget-table.component";
 @Component({
   selector: 'app-test-page',
   standalone: true,
-  imports: [CardModule, ButtonModule, WidgetCardComponent,FormComponent,CallenderComponent],
+  imports: [CardModule, ButtonModule, WidgetCardComponent, FormComponent, CallenderComponent, WidgetTableComponent],
   templateUrl: './test-page.component.html',
   styleUrl: './test-page.component.css'
 })
