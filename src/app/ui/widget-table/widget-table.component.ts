@@ -4,18 +4,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
-
-interface Trainee {
-  id?: string;
-  employee?: string;
-  ilp?: string;
-  date?: string;
-  status?: string;
-  checkin?: string;
-  checkout?: string;
-  workhours?: string;
-
-}
+import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 
 @Component({
   selector: 'app-widget-table',
@@ -30,11 +19,11 @@ export class WidgetTableComponent implements OnChanges {
 @Input() toggleField: string = 'Check-In';
 todayDate: string | undefined;
 date: Date | undefined;
-filteredTrainees: Trainee[] = [];
+filteredTrainees: TraineeAttendanceLogs[] = [];
 
 
 
-  trainees: Trainee[] = [
+  trainees: TraineeAttendanceLogs[] = [
     { id: '1000', employee: 'faheem', ilp: 'Batch 3', date: '31-07-2024', status: 'Work from Office', checkin:'09:00',checkout:'18:00',workhours:'9h' },
     { id: '1001', employee: 'Samvrutha', ilp: 'Batch 4', date: '30-07-2024',  status: 'Work from Home',checkin:'09:00',checkout:'18:45',workhours:'9h' },
     { id: '1002', employee: 'vijin', ilp: 'Batch 4', date: '30-07-2024',  status: 'Absent',checkin:'09:20',checkout:'17:30',workhours:'9h' },
