@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output} from '@angular/core';
 import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.component';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -12,6 +13,35 @@ import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.compone
 export class WidgetCardsComponent {
 
   @Output() widgetSelected = new EventEmitter<{isClicked: boolean, header: string}>();
+  
+  constructor(private http: HttpClient) {}
+
+  // const attendanceApis = [
+  //   {
+  //     label: 'On Time',
+  //     url: 'https://localhost:7074/api/LogXP/traineeAttendanceLogs/earlyArrivals'
+  //   },
+  //   {
+  //     label: 'Absent',
+  //     url: 'https://localhost:7074/api/LogXP/traineeAttendanceLogs/absentees'
+  //   },
+  //   {
+  //     label: 'Late Arrival',
+  //     url: 'https://localhost:7074/api/LogXP/traineeAttendanceLogs/lateArrivals'
+  //   },
+  //   {
+  //     label: 'Early Departure',
+  //     url: 'https://localhost:7074/api/LogXP/traineeAttendanceLogs/earlyDepartures'
+  //   }
+  // ];
+  
+  
+    ngOnInit(){
+      this.widgetCount();
+    }
+
+    widgetCount(){
+    }
 
 clickWidget(dataRecieved: { isClicked: boolean, header: string }){
   this.widgetSelected.emit(dataRecieved)
