@@ -16,30 +16,42 @@ export class TraineeServiceService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  // Function to get a trainee by ID
-  getTraineeById(id: number): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
+  // Function to get count of active trainees
+  getTraineesCount(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/active-count`);
+  }
+
+  // Function to get a trainee by employeeCode
+  getTraineeByEmployeeCode(employeeCode: string): Observable<any> {
+    const url = `${this.apiUrl}/${employeeCode}`;
     return this.http.get<any>(url);
   }
 
   // Function to add a new trainee
-  addTrainees(trainee: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, trainee);
+  addTrainee(trainee: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/add-trainee`, trainee);
   }
 
-  addTrainee(trainee: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl+"/add-trainee", trainee);
+  // Function to add multiple trainees
+  addTrainees(trainees: any[]): Observable<any> {
+    return this.http.post<any>(this.apiUrl, trainees);
   }
 
   // Function to update an existing trainee
-  updateTrainee(id: number, trainee: any): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
+  updateTrainee(employeeCode: string, trainee: any): Observable<any> {
+    const url = `${this.apiUrl}/${employeeCode}`;
     return this.http.put<any>(url, trainee);
   }
 
+  // Function to update trainee status
+  updateTraineeStatus(employeeCode: string, isActive: boolean): Observable<any> {
+    const url = `${this.apiUrl}/${employeeCode}/status`;
+    return this.http.patch<any>(url, { isActive });
+  }
+
   // Function to delete a trainee
-  deleteTrainee(id: number): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
+  deleteTrainee(employeeCode: string): Observable<any> {
+    const url = `${this.apiUrl}/${employeeCode}`;
     return this.http.delete<any>(url);
   }
 }
