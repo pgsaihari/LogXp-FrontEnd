@@ -13,9 +13,18 @@ export class TraineeServiceService {
 
   // Function to get all trainees
   getTrainees(): Observable<any[]> {
+
     return this.http.get<{ trainees: any[] }>(this.apiUrl).pipe(
       map(response => response.trainees) )
     }
+
+    return this.http.get<any[]>(this.apiUrl);
+  }
+
+  getTraineesCount():Observable<number>{
+    return this.http.get<number>(this.apiUrl + '/active-count');
+  }
+
   // Function to get a trainee by ID
   getTraineeById(id: number): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
