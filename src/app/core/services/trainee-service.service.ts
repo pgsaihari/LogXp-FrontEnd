@@ -13,15 +13,13 @@ export class TraineeServiceService {
 
   // Function to get all trainees
   getTrainees(): Observable<any[]> {
-
     return this.http.get<{ trainees: any[] }>(this.apiUrl).pipe(
-      map(response => response.trainees) )
-    }
-
-    return this.http.get<any[]>(this.apiUrl);
+      map(response => response.trainees)
+    );
   }
 
-  getTraineesCount():Observable<number>{
+  // Function to get count of active trainees
+  getTraineesCount(): Observable<number> {
     return this.http.get<number>(this.apiUrl + '/active-count');
   }
 
@@ -37,20 +35,14 @@ export class TraineeServiceService {
   }
 
   // Function to update an existing trainee
-  // updateTrainee(id: number, trainee: any): Observable<any> {
-  //   const url = `${this.apiUrl}/${id}`;
-  //   return this.http.put<any>(url, trainee);
-  // }
   updateTrainee(employeeCode: string, trainee: any): Observable<any> {
     const url = `${this.apiUrl}/${employeeCode}`;
     return this.http.put<any>(url, trainee);
-}
-
+  }
 
   // Function to delete a trainee
   deleteTrainee(id: number): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete<any>(url);
   }
-  
 }
