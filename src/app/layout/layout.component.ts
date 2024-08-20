@@ -38,7 +38,7 @@ isLoggedIn():Boolean {
       case 'admin':
         return '#F1F2F6';
       case 'trainer':
-        return '#EFE6EB'
+        return '#F1F2F6'
       case 'trainee':
         return '#FCF6F5';
       default:
