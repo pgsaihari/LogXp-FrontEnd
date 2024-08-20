@@ -27,7 +27,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   selector: 'app-user-table',
   standalone: true,
   imports: [TableModule, DialogModule, RippleModule, ButtonModule, ToastModule, ToolbarModule, ConfirmDialogModule, InputTextModule, DropdownModule, TagModule, FormsModule,CommonModule],
-  providers: [MessageService, ConfirmationService, TraineeServiceService],
+  providers: [MessageService, ConfirmationService, TraineeServiceService,MultiSelectModule,ProgressBarModule,Table,NgClass,NgClass],
   templateUrl: './user-table.component.html',
   styleUrl: './user-table.component.css'
 })
@@ -43,14 +43,16 @@ export class UserTableComponent implements OnInit  {
     selectedTrainees!: Trainee[] | null;
 
     submitted: boolean = false;
-
+   
+      
     constructor(private traineeService: TraineeServiceService, private messageService: MessageService, private confirmationService: ConfirmationService) {}
 
     ngOnInit() {
-      this.traineeService.getTrainees().subscribe((data) => {
-        this.trainees = data;
-      });
-    }
+        this.traineeService.getTrainees().subscribe((data) => {
+          this.trainees = data; // Ensure data is an array
+        });
+      }
+      
 
     openNew() {
         this.trainee = {};
@@ -58,36 +60,14 @@ export class UserTableComponent implements OnInit  {
         this.traineeDialog = true;
     }
 
-    deleteSelectedTrainees() {
-        this.confirmationService.confirm({
-            message: 'Are you sure you want to delete the selected trainees?',
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                this.trainees = this.trainees.filter((val) => !this.selectedTrainees?.includes(val));
-                this.selectedTrainees = null;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Trainees Deleted', life: 3000 });
-            }
-        });
-    }
+  
 
     editTrainee(trainee: Trainee) {
         this.trainee = { ...trainee };
         this.traineeDialog = true;
     }
 
-    deleteTrainee(trainee: Trainee) {
-        this.confirmationService.confirm({
-            message: `Are you sure you want to delete ${trainee.name}?`,
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                this.trainees = this.trainees.filter((val) => val.employeeCode !== trainee.employeeCode);
-                this.trainee = {};
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Trainee Deleted', life: 3000 });
-            }
-        });
-    }
+  
 
     hideDialog() {
         this.traineeDialog = false;
@@ -114,7 +94,7 @@ export class UserTableComponent implements OnInit  {
     // }
   //   saveTrainee() {
   //     this.submitted = true;
-  
+
   //     if (this.trainee.employeeCode && this.trainee.name) {
   //         if (this.trainee.employeeCode) {
   //           console.log(this.trainee)
@@ -150,14 +130,14 @@ export class UserTableComponent implements OnInit  {
   //                 life: 3000,
   //             });
   //         }
-  
+
   //         this.trainees = [...this.trainees];
   //         this.traineeDialog = false;
   //         this.trainee = {};
   //     }
-      
+
   // }
-  
+
   saveTrainee() {
     this.submitted = true;
 
@@ -192,6 +172,55 @@ export class UserTableComponent implements OnInit  {
         }
     }
 }
+// setIsActiveForSelected(isActive: boolean) {
+//     if (!this.selectedTrainees || this.selectedTrainees.length === 0) {
+//         this.messageService.add({
+//             severity: 'warn',
+//             summary: 'Warning',
+//             detail: 'No trainees selected',
+//             life: 3000,
+//         });
+//         return;
+//     }
+
+//     this.selectedTrainees.forEach((trainee) => {
+//         trainee.isActive = isActive;
+
+//         // Ensure employeeCode is defined
+//         if (trainee.employeeCode) {
+//             this.traineeService.updateTrainee(trainee.employeeCode, this.trainee).subscribe({
+//                 next: () => {
+//                     this.trainees = this.trainees.map((t) =>
+//                         t.employeeCode === trainee.employeeCode ? trainee : t
+//                     );
+//                     this.messageService.add({
+//                         severity: 'success',
+//                         summary: 'Successful',
+//                         detail: `Trainee ${trainee.name} Updated`,
+//                         life: 3000,
+//                     });
+//                 },
+//                 error: (err) => {
+//                     console.error('Update error:', err);
+//                     this.messageService.add({
+//                         severity: 'error',
+//                         summary: 'Error',
+//                         detail: `Failed to update trainee ${trainee.name}`,
+//                         life: 3000,
+//                     });
+//                 },
+//             });
+//         } else {
+//             console.error('Employee code is missing for the trainee:', trainee);
+//             this.messageService.add({
+//                 severity: 'error',
+//                 summary: 'Error',
+//                 detail: `Employee code is missing for trainee ${trainee.name}`,
+//                 life: 3000,
+//             });
+//         }
+//     });
+// }
 setIsActiveForSelected(isActive: boolean) {
     if (!this.selectedTrainees || this.selectedTrainees.length === 0) {
         this.messageService.add({
@@ -203,20 +232,19 @@ setIsActiveForSelected(isActive: boolean) {
         return;
     }
 
-    this.selectedTrainees.forEach((trainee) => {
-        trainee.isActive = isActive;
+    this.selectedTrainees.forEach((selectedTrainee) => {
+        const updatedTrainee = { ...selectedTrainee, isActive };
 
-        // Ensure employeeCode is defined
-        if (trainee.employeeCode) {
-            this.traineeService.updateTrainee(trainee.employeeCode, trainee).subscribe({
+        if (updatedTrainee.employeeCode) {
+            this.traineeService.updateTrainee(updatedTrainee.employeeCode, updatedTrainee).subscribe({
                 next: () => {
                     this.trainees = this.trainees.map((t) =>
-                        t.employeeCode === trainee.employeeCode ? trainee : t
+                        t.employeeCode === updatedTrainee.employeeCode ? updatedTrainee : t
                     );
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Successful',
-                        detail: `Trainee ${trainee.name} Updated`,
+                        detail: `Trainee ${updatedTrainee.name} updated successfully`,
                         life: 3000,
                     });
                 },
@@ -225,18 +253,10 @@ setIsActiveForSelected(isActive: boolean) {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: `Failed to update trainee ${trainee.name}`,
+                        detail: `Failed to update trainee ${updatedTrainee.name}: ${err.message}`,
                         life: 3000,
                     });
                 },
-            });
-        } else {
-            console.error('Employee code is missing for the trainee:', trainee);
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: `Employee code is missing for trainee ${trainee.name}`,
-                life: 3000,
             });
         }
     });
@@ -247,6 +267,8 @@ setIsActiveForSelected(isActive: boolean) {
     createId(): string {
         return Math.random().toString(36).substring(2, 9);
     }
-    
-}
 
+  
+
+
+}
