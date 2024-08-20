@@ -65,8 +65,8 @@
                         <td><strong>{{ trainee.batch }}</strong></td>
                         <td><strong>{{ formatDate(trainee.date)}}</strong></td>
                         <td><strong><span [ngClass]="getStatusClass(trainee.status)">{{ trainee.status }}</span></strong></td>
-                        <td><strong><span [ngClass]="getTimeClass(trainee.loginTime)">{{ formatTime(trainee.loginTime) }}</span></strong></td>
-                        <td><strong>{{ formatTime(trainee.logoutTime) }}</strong></td>
+                        <td><strong><span [ngClass]="getCheckinTimeClass(trainee.loginTime)">{{ formatTime(trainee.loginTime) }}</span></strong></td>
+                        <td><strong><span [ngClass]="getCheckoutTimeClass(trainee.logoutTime)">{{ formatTime(trainee.logoutTime) }}</span></strong></td>
                         <td><strong>{{ trainee.totalWorkHour}} Hrs</strong></td>
                         <!-- <td *ngIf="!isAbsent(trainee.status)"><strong>{{ trainee.attendancepercentage }}</strong></td> -->
                     </tr>

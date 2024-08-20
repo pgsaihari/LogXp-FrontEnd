@@ -157,23 +157,34 @@ export class TableComponent implements OnInit {
     }
   }
 
-  getTimeClass(time: string): string {
+  getCheckinTimeClass(time: string): string {
     if (!time) return '';
-  
     // Extract the time part (08:58:18) from the datetime string
     const timePart = time.split('T')[1];
-  
     // Split the time part into hours and minutes
     const hours = parseInt(timePart.slice(0, 2), 10);
     const minutes = parseInt(timePart.slice(3, 5), 10);
 
-  
     if (hours === 0 && minutes === 0) {
       return 'time-on-leave'; // Red for 00:00
     } else if (hours < 9 || (hours === 9 && minutes === 0)) {
       return 'time-on-time'; // Green for less than 9:00
     } else {
       return 'time-late'; // Yellow for later than 9:00
+    }
+  }
+
+  getCheckoutTimeClass(logOuttime: string): string {
+    if (!logOuttime) return '';
+   
+    // Extract the time part (HH:MM:SS) from the datetime string
+    const timePart = logOuttime.split('T')[1];
+    const [hours] = timePart.split(':').map(Number);
+ 
+    if (hours < 18) { // Before 6 PM
+      return 'time-late'; // Yellow background
+    } else {
+      return ''; // No additional class if after 6 PM
     }
   }
   
