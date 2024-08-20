@@ -69,3 +69,22 @@
         width: 210px; 
     }
 }
+.red-text .card-number, 
+.red-text .icon i {
+    color: red;
+}
+
+
+.green-text .card-number, 
+.green-text .icon i {
+    color: green;
+}
+
+
+/* Active state */
+.card-container.active {
+    background-color: #E6F9E6;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    /* border: 2px solid #B2F5B2; */
+    transform: translateY(-5px);
+}
