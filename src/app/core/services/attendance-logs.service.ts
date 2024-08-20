@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { WidgetAttendance } from '../model/widget-attendance';
+import { WidgetAttendance } from '../interfaces/widget-attendance';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { WidgetAttendance } from '../model/widget-attendance';
 export class AttendanceLogsService {
 
 
-  private apiUrl = "https://localhost:7074/api/LogXP/WidgetAttendance"
+  private apiUrl = "https://localhost:7074/api/LogXP/traineeAttendanceLogs"
   // private absentApi = "https://localhost:7074/api/LogXP/WidgetAttendance/absentees"
   // private lateArrivalApi = "https://localhost:7074/api/LogXP/WidgetAttendance/lateArrivals"
   // private earlyDepartureApi = "https://localhost:7074/api/LogXP/WidgetAttendance/earlyDepartures"
@@ -18,6 +18,18 @@ export class AttendanceLogsService {
 
   onTimeLogs(): Observable<WidgetAttendance[]>{
     return this.http.get<any>(`${this.apiUrl}/earlyArrivals`)
+  }
+
+  lateArrivalLogs(): Observable<WidgetAttendance[]>{
+    return this.http.get<any>(`${this.apiUrl}/lateArrivals`)
+  }
+
+  earlyDeparturesLogs(): Observable<WidgetAttendance[]>{
+    return this.http.get<any>(`${this.apiUrl}/earlyDepartures`)
+  }
+
+  absenteeLogs(): Observable<WidgetAttendance[]>{
+    return this.http.get<any>(`${this.apiUrl}/absentees`)
   }
 
   getEarlyArrivalsCount(): Observable<number> {

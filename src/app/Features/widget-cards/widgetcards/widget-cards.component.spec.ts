@@ -1,15 +1,38 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WidgetCardsComponent } from './widget-cards.component';
+import { TraineeServiceService } from '../../../core/services/trainee-service.service';
+import { AttendanceLogsService } from '../../../core/services/attendance-logs.service';
+import { of, throwError } from 'rxjs';
 import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.component';
-import { By } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 
 describe('WidgetCardsComponent', () => {
   let component: WidgetCardsComponent;
   let fixture: ComponentFixture<WidgetCardsComponent>;
+  let traineeServiceMock: any;
+  let attendanceLogsServiceMock: any;
 
   beforeEach(async () => {
+    traineeServiceMock = {
+      getTraineesCount: jasmine.createSpy().and.returnValue(of(50)),
+    };
+
+    attendanceLogsServiceMock = {
+      getEarlyArrivalsCount: jasmine.createSpy().and.returnValue(of(10)),
+      getAbsenteesCount: jasmine.createSpy().and.returnValue(of(5)),
+      lateArrivalsCount: jasmine.createSpy().and.returnValue(of(8)),
+      earlyDeparturesCount: jasmine.createSpy().and.returnValue(of(3)),
+    };
+
     await TestBed.configureTestingModule({
-      imports: [WidgetCardsComponent, WidgetCardComponent],
+      imports: [WidgetCardComponent, FormsModule],
+      declarations: [WidgetCardsComponent],
+      providers: [
+        { provide: TraineeServiceService, useValue: traineeServiceMock },
+        { provide: AttendanceLogsService, useValue: attendanceLogsServiceMock },
+        MessageService,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WidgetCardsComponent);
@@ -17,32 +40,63 @@ describe('WidgetCardsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the WidgetCardsComponent', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should emit widgetSelected event when a widget card is clicked', () => {
+  it('should load total trainees count on initialization', () => {
+    component.ngOnInit();
+    expect(traineeServiceMock.getTraineesCount).toHaveBeenCalled();
+    expect(component.totalTrainees).toBe(50);
+  });
+
+  it('should load early arrivals count on initialization', () => {
+    component.ngOnInit();
+    expect(attendanceLogsServiceMock.getEarlyArrivalsCount).toHaveBeenCalled();
+    expect(component.onTimeNum).toBe(10);
+  });
+
+  it('should load absentees count on initialization', () => {
+    component.ngOnInit();
+    expect(attendanceLogsServiceMock.getAbsenteesCount).toHaveBeenCalled();
+    expect(component.absentees).toBe(5);
+  });
+
+  it('should load late arrivals count on initialization', () => {
+    component.ngOnInit();
+    expect(attendanceLogsServiceMock.lateArrivalsCount).toHaveBeenCalled();
+    expect(component.lateArrivals).toBe(8);
+  });
+
+  it('should load early departures count on initialization', () => {
+    component.ngOnInit();
+    expect(attendanceLogsServiceMock.earlyDeparturesCount).toHaveBeenCalled();
+    expect(component.earlyDepartures).toBe(3);
+  });
+
+  it('should set the active card index when a widget is clicked', () => {
+    const event = { isClicked: true, header: 'On Time' };
+    component.clickWidget(event, 1);
+    expect(component.activeCardIndex).toBe(1);
+  });
+
+  it('should correctly identify the active card using isCardActive', () => {
+    component.activeCardIndex = 2;
+    expect(component.isCardActive(2)).toBeTrue();
+    expect(component.isCardActive(0)).toBeFalse();
+  });
+
+  it('should emit the widgetSelected event when a widget is clicked', () => {
     spyOn(component.widgetSelected, 'emit');
-
-    // Simulating the event emitted from the child widget card
-    const mockData = { isClicked: true, header: 'On Time' };
-    component.clickWidget(mockData);
-
-    expect(component.widgetSelected.emit).toHaveBeenCalledWith(mockData);
+    const event = { isClicked: true, header: 'On Time' };
+    component.clickWidget(event, 1);
+    expect(component.widgetSelected.emit).toHaveBeenCalledWith(event);
   });
 
-  it('should render multiple widget cards', () => {
-    // Verify that there are multiple widget-card components rendered
-    const widgetCards = fixture.debugElement.queryAll(By.css('app-widget-card'));
-    expect(widgetCards.length).toBe(6); // There are 6 widget cards defined in the template
-  });
-
-  it('should pass correct inputs to each widget card', () => {
-    // Check the inputs for one of the widget cards
-    const widgetCard = fixture.debugElement.query(By.css('app-widget-card'));
-
-    expect(widgetCard.properties['card_number']).toBe(452);
-    expect(widgetCard.properties['card_header']).toBe('Total Employees');
-    expect(widgetCard.properties['header_icon']).toBe('fa-solid fa-users icon');
+  it('should handle error when service call fails', () => {
+    traineeServiceMock.getTraineesCount.and.returnValue(throwError('Error'));
+    spyOn(console, 'error');
+    component.ngOnInit();
+    expect(console.error).toHaveBeenCalledWith('Error adding trainee', 'Error');
   });
 });
