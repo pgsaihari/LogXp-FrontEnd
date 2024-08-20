@@ -1,69 +1,92 @@
-
 .card-container{
     font-family: "Poppins", sans-serif;
     margin-top: 10px;
-    /* width: 300px; */
+
 }
-
-
-
 
 :host ::ng-deep .p-card {
     margin-top: 10px;
-    /* height: 500px; */
-    /* padding: 20px; */
     text-align: center;
     border-radius: 10px;
+}
+:host ::ng-deep .p-card-content {
+    padding: 0;
 }
 
 .time{
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
 }
 
 .date{
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
 }
   
 .card-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
 }
   
 .logo-time {
     display: flex;
-    /* align-items: center; */
-    font-size: 24px;
+    font-size: 20px;
     gap: 10px;
-    /* margin-bottom: 10px; */
+    justify-content: space-around;
+    min-width: 170px;
 }
   
 .logo-time i {
-    font-size: 50px;
-    margin-right: 10px;
+    font-size: 32px;
+}
+.logo-time span{
+    min-width: 110px;
 }
   
 .realtime-insight {
-    font-size: 20px;
+    font-size: 14px;
     color: #888;
-    /* margin-bottom: 60px; */
 }
   
 .today {
-    font-size: 30px;
-    /* margin-bottom: 20px; */
+    font-size: 22px;
 }
   
 .greeting {
     color: var(--primary-color);
-    font-size: 17px;
+    font-size: 14px;
     font-weight: bolder;
+}
+
+@media (max-width: 1024px) {
+    .card-content{
+        padding: 10px;
+    }
+    .logo-time {
+        font-size: 26px;
+        gap: 10px;
+        justify-content: space-around;
+        min-width: 200px;
+    }
+
+    .logo-time i {
+        font-size: 40px;
+    }
+    .logo-time span{
+        min-width: 130px;
+    }
+
+    .realtime-insight {
+        font-size: 20px;
+        color: #888;
+    }
+
+    .today {
+        font-size: 28px;
+    }
 }
 
 @media only screen and (min-width: 820px) {
@@ -88,8 +111,7 @@
         display: flex;
         align-items: center;
     }
-    
-    
+
     :host ::ng-deep .p-card {
         margin-top: 10px;
         text-align: center;
@@ -97,13 +119,16 @@
     }
 
 }
+@media (max-width: 650px) { 
+    .logo-time {
+        font-size: 24px;
+    }
+}
 
 @media (max-width: 480px){
-    .card-content{
-        
+    .card-content{ 
         display: flex;
         flex-direction: column;
-        /* justify-content: space-around; */
     }
 
     .logo-time{

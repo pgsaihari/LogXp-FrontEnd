@@ -1,6 +1,6 @@
 
 .graphContainer {
-    width: 90vw;
+    /* width: 90vw; */
     max-width: 1140px; /* Same max-width as container-xl for large screens */
     margin: auto;
     background-color: white; 
@@ -13,15 +13,19 @@
     display: flex;
     justify-content: space-between;
 }
+:host ::ng-deep  .p-inputtext{
+    padding: 8px;
+}
 
 p {
     font-weight: 700;
     font-size: larger;
+    margin: 0;
 }
 
 @media (max-width: 1200px) {
     .graphContainer {
-        width: 95vw; /* Slightly smaller width for medium to large screens */
+        width: 95%; /* Slightly smaller width for medium to large screens */
     }
 }
 
@@ -31,7 +35,7 @@ p {
         font-weight: 500;
     }
     .graphContainer {
-        width: 100vw; /* Full width for small screens */
+        width: 90vw; /* Full width for small screens */
     }
 }
 
@@ -42,8 +46,8 @@ p {
     }
 }
 
-@media (min-width: 1200px) {
+/* @media (min-width: 1200px) {
     .graphContainer {
-        width: 85vw; /* Larger width for extra-large screens */
+        width: 85vw; 
     }
-}
+} */
