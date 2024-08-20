@@ -43,8 +43,7 @@ export class UserTableComponent implements OnInit  {
     selectedTrainees!: Trainee[] | null;
 
     submitted: boolean = false;
-   
-      
+    isSetStatusDialogVisible =false;
     constructor(private traineeService: TraineeServiceService, private messageService: MessageService, private confirmationService: ConfirmationService) {}
 
     ngOnInit() {
@@ -172,55 +171,6 @@ export class UserTableComponent implements OnInit  {
         }
     }
 }
-// setIsActiveForSelected(isActive: boolean) {
-//     if (!this.selectedTrainees || this.selectedTrainees.length === 0) {
-//         this.messageService.add({
-//             severity: 'warn',
-//             summary: 'Warning',
-//             detail: 'No trainees selected',
-//             life: 3000,
-//         });
-//         return;
-//     }
-
-//     this.selectedTrainees.forEach((trainee) => {
-//         trainee.isActive = isActive;
-
-//         // Ensure employeeCode is defined
-//         if (trainee.employeeCode) {
-//             this.traineeService.updateTrainee(trainee.employeeCode, this.trainee).subscribe({
-//                 next: () => {
-//                     this.trainees = this.trainees.map((t) =>
-//                         t.employeeCode === trainee.employeeCode ? trainee : t
-//                     );
-//                     this.messageService.add({
-//                         severity: 'success',
-//                         summary: 'Successful',
-//                         detail: `Trainee ${trainee.name} Updated`,
-//                         life: 3000,
-//                     });
-//                 },
-//                 error: (err) => {
-//                     console.error('Update error:', err);
-//                     this.messageService.add({
-//                         severity: 'error',
-//                         summary: 'Error',
-//                         detail: `Failed to update trainee ${trainee.name}`,
-//                         life: 3000,
-//                     });
-//                 },
-//             });
-//         } else {
-//             console.error('Employee code is missing for the trainee:', trainee);
-//             this.messageService.add({
-//                 severity: 'error',
-//                 summary: 'Error',
-//                 detail: `Employee code is missing for trainee ${trainee.name}`,
-//                 life: 3000,
-//             });
-//         }
-//     });
-// }
 setIsActiveForSelected(isActive: boolean) {
     if (!this.selectedTrainees || this.selectedTrainees.length === 0) {
         this.messageService.add({
@@ -232,19 +182,20 @@ setIsActiveForSelected(isActive: boolean) {
         return;
     }
 
-    this.selectedTrainees.forEach((selectedTrainee) => {
-        const updatedTrainee = { ...selectedTrainee, isActive };
+    this.selectedTrainees.forEach((trainee) => {
+        trainee.isActive = isActive;
 
-        if (updatedTrainee.employeeCode) {
-            this.traineeService.updateTrainee(updatedTrainee.employeeCode, updatedTrainee).subscribe({
+        // Ensure employeeCode is defined
+        if (trainee.employeeCode) {
+            this.traineeService.updateTraineeStatus(trainee.employeeCode, trainee.isActive).subscribe({
                 next: () => {
                     this.trainees = this.trainees.map((t) =>
-                        t.employeeCode === updatedTrainee.employeeCode ? updatedTrainee : t
+                        t.employeeCode === trainee.employeeCode ? trainee : t
                     );
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Successful',
-                        detail: `Trainee ${updatedTrainee.name} updated successfully`,
+                        detail: `Trainee ${trainee.name} Updated`,
                         life: 3000,
                     });
                 },
@@ -253,10 +204,18 @@ setIsActiveForSelected(isActive: boolean) {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: `Failed to update trainee ${updatedTrainee.name}: ${err.message}`,
+                        detail: `Failed to update trainee ${trainee.name}`,
                         life: 3000,
                     });
                 },
+            });
+        } else {
+            console.error('Employee code is missing for the trainee:', trainee);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: `Employee code is missing for trainee ${trainee.name}`,
+                life: 3000,
             });
         }
     });
