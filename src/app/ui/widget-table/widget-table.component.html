@@ -2,10 +2,10 @@
     <div class="search-filter">
         <h2>{{tableHeader}}</h2>
         <p-calendar id="datepick" [(ngModel)]="date" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-        placeholder="Select Date"></p-calendar>
+            placeholder="{{todayDate}}" />
     </div>
     <div class="card table-container">
-        <p-table [value]="filteredTrainees" [paginator]="true" [rows]="4" [sortMode]="'single'" [paginatorPosition]="'top'">
+        <p-table [value]="filteredTrainees" [paginator]="true" [rows]="4" [sortMode]="'single'">
             <ng-template pTemplate="header">
                 <tr>
                     <th>ID</th>
@@ -19,8 +19,18 @@
                     <td><strong>{{ trainee.id }}</strong></td>
                     <td><strong>{{ trainee.employee }}</strong></td>
                     <td><strong>{{ trainee.ilp }}</strong></td>
-                    <td><strong>1
-                        </strong></td>
+                    <td><strong><span [ngClass]="getTimeClass(
+                        toggleField === 'Check-In' ? trainee.checkin :
+                        toggleField === 'Check-Out' ? trainee.checkout :
+                        trainee.workhours
+                      )">
+                        {{
+                        toggleField === 'Check-In'
+                          ? trainee.checkin
+                          : toggleField === 'Check-Out'
+                          ? trainee.checkout
+                          : trainee.workhours
+                      }}</span></strong></td>
                 </tr>
             </ng-template>
         </p-table>
