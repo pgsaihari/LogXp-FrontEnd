@@ -1,67 +1,67 @@
-
-/* .card-container .card {
-    font-family: 'Poppins' !important;
-  } */
-
-  :host ::ng-deep .p-card .p-card-content{
-    padding: 10px !important;
-  }
-  
-  :host ::ng-deep .p-card-body{
-    padding: 10px !important;
-  }
-
-  .p-card .p-card-footer {
-    padding-top: 10px !important;
+.card-container {
+    margin: 10px;
+    width: 250px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
-/* .p-card{
-    height: 134px;
-    width: 250px;
-} */
+/* Hover effect */
+.card-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
 
-:host ::ng-deep .p-card {
-    font-family: 'Poppins',sans-serif;
-  }
 
-.icon > i{
+.red-text .card-number, 
+.red-text .icon i {
+    color: red;
+}
+
+
+.green-text .card-number, 
+.green-text .icon i {
+    color: green;
+}
+
+
+/* Active state */
+.card-container.active {
+    background-color: #E6F9E6;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    /* border: 2px solid #B2F5B2; */
+    transform: translateY(-5px);
+}
+
+/* Icon styling */
+.icon > i {
     font-size: 24px;
     margin-bottom: -30px;
     display: flex;
     justify-content: end;
 }
 
-
-.card-header{
+/* Text styling */
+.card-header {
     margin-top: 35px;
     margin-bottom: 0;
     font-weight: 900;
     font-size: 18px;
 }
 
-.card-number{
+.card-number {
     font-weight: bolder;
     font-size: 38px;
 }
 
-.card-container{
-    margin: 10px;
-    width: 250px;
-}
-
-.flex-footer{
-    display: flex;
-    gap: 5px;
-    align-items: center;
-}
-
-.footer-text{
-    font-weight: bold;
-    color: rgb(176, 176, 176);
-}
-
-/* @media (max-width: 480px) {
-    :host ::ng-deep .p-card{
-
+/* Responsive behavior */
+@media (max-width: 768px) {
+    .card-container {
+        width: calc(50% - 20px);
     }
-} */
+}
+
+@media (max-width: 480px) {
+    .card-container {
+        width: 100%;
+    }
+}

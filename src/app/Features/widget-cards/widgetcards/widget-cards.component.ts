@@ -3,7 +3,7 @@ import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.compone
 import { TraineeServiceService } from '../../../core/services/trainee-service.service';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { HttpClient } from '@angular/common/http';
+import { AttendanceLogsService } from '../../../core/services/attendance-logs.service';
 
 
 @Component({
@@ -14,11 +14,34 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './widget-cards.component.css'
 })
 export class WidgetCardsComponent implements OnInit {
+
   @Output() widgetSelected = new EventEmitter<{isClicked: boolean, header: string}>();
-  constructor(private traineeService:TraineeServiceService,private messageService: MessageService, private http: HttpClient){}
-  totalTrainees:number=0;
+  
+  constructor(private traineeService:TraineeServiceService,private messageService: MessageService, private AttendanceLogsService: AttendanceLogsService ){}
+  
+  totalTrainees:Number= 0;
+  onTimeNum: Number = 0;
+  absentees: Number = 0;
+  lateArrivals: Number = 0;
+  earlyDepartures: Number = 0;
+  
+
+  activeCardIndex!: Number;
+
+  clickWidget(dataRecieved: { isClicked: boolean, header: string }, index:Number){
+    this.widgetSelected.emit(dataRecieved)
+    this.activeCardIndex = index;
+    }
+  
+  isCardActive(index: number): boolean {
+    if (index >=0 && index <= 3) {
+      return this.activeCardIndex === index;
+    }
+    return false;
+  }
+
+
   ngOnInit(): void {
-    this.widgetCount();
       this.traineeService.getTraineesCount().subscribe(
         response=>{
           console.log(response);
@@ -30,38 +53,33 @@ export class WidgetCardsComponent implements OnInit {
          
           console.error('Error adding trainee', error); 
          
-        }
+        })
 
-      )
-  }
+       //Early Arrivals Count
+        this.AttendanceLogsService.getEarlyArrivalsCount().subscribe(count => {
+          console.log('Count of early arrivals:', count);
+          this.onTimeNum = count;
+        });
 
-  // const attendanceApis = [
-  //   {
-  //     label: 'On Time',
-  //     url: 'https://localhost:7074/api/LogXP/traineeAttendanceLogs/earlyArrivals'
-  //   },
-  //   {
-  //     label: 'Absent',
-  //     url: 'https://localhost:7074/api/LogXP/traineeAttendanceLogs/absentees'
-  //   },
-  //   {
-  //     label: 'Late Arrival',
-  //     url: 'https://localhost:7074/api/LogXP/traineeAttendanceLogs/lateArrivals'
-  //   },
-  //   {
-  //     label: 'Early Departure',
-  //     url: 'https://localhost:7074/api/LogXP/traineeAttendanceLogs/earlyDepartures'
-  //   }
-  // ];
-  
+        //Absentees Count
+        this.AttendanceLogsService.getAbsenteesCount().subscribe(count => {
+          console.log('Count of absent:', count);
+          this.absentees = count;
+        });
 
-
-    widgetCount(){
-    }
-
-clickWidget(dataRecieved: { isClicked: boolean, header: string }){
-  this.widgetSelected.emit(dataRecieved)
+        //Late Arrivals Count
+        this.AttendanceLogsService.lateArrivalsCount().subscribe(count => {
+          console.log('Count of late arrivals:', count);
+          this.lateArrivals = count;
+        });
+        
+        //Early Departures Count
+        this.AttendanceLogsService.earlyDeparturesCount().subscribe(count => {
+          console.log('Count of late arrivals:', count);
+          this.earlyDepartures = count;
+        });
 
   }
+
 }
 
