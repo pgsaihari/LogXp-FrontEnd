@@ -9,31 +9,22 @@ body {
     width: 100%;
     display: flex;
     justify-content: center; /* Center the content within main */
-    height: 100vh;
 }
 
 .main-container {
-    padding: 5px 20px;
+    padding: 20px;
     max-width: 1140px;
     width: 100%; /* Make sure the container takes full width available */
     box-sizing: border-box; /* Ensure padding is included in width calculation */
 }
 
 /* Responsive adjustments */
-/* @media (min-width: 1200px) {
+@media (max-width: 1200px) {
     .main-container {
-        max-width: 90vw;
-
-    }
-} */
-
-
-@media (min-width: 1024px) {
-    .main-container {
-        max-width: 90vw;
+        max-width: 95vw;
+        /* margin-left: 55px; */
     }
 }
-
 
 @media (max-width: 768px) {
     .main-container {

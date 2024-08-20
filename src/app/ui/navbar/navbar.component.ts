@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit {
-  activeIndex = 0; // Set the default active index
+  activeIndex = 2; // Set the default active index
   
   ngOnInit() {
     const user = localStorage.getItem('logintoken');

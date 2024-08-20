@@ -1,14 +1,17 @@
 .top-header {
+    
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 10px;
+    padding: 10px 20px;
     background-color: #fff;
     border-bottom: 1px solid #e0e0e0;
     border-radius: 10px;
     flex-wrap: wrap;
     position: sticky;
     top: 0;
+    /* background-color: #333; */
+    /* padding: 10px 0; */
     width: 100%;
     z-index: 1000;
   }
@@ -96,29 +99,6 @@
   
     .user-avatar {
       margin-left: auto;
-    }
-  }
-  @media (max-width: 480px){
-    .top-header {
-      flex-wrap: nowrap;
-      flex-direction: row;
-      align-items: center;
-    }
-    .user-details {
-      align-items: flex-end;
-      margin-right: 0;
-    }
-    .user-info {
-      margin-top: 10px;
-      width: 100%;
-      justify-content: flex-end;
-    }
-    .user-name,
-    .user-email {
-      text-align: right;
-    }
-    .user-avatar {
-      margin-left: 5px;
     }
   }
   
