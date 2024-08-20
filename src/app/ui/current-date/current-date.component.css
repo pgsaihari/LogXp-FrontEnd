@@ -1,16 +1,19 @@
 .card-container{
     font-family: "Poppins", sans-serif;
-    margin-top: 10px;
+    margin-top: 5px;
 
 }
 
 :host ::ng-deep .p-card {
-    margin-top: 10px;
+    margin-top: 5px;
     text-align: center;
     border-radius: 10px;
 }
 :host ::ng-deep .p-card-content {
     padding: 0;
+}
+:host ::ng-deep .p-card-body {
+    padding: 1rem;
 }
 
 .time{
