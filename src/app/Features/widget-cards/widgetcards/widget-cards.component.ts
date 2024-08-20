@@ -24,7 +24,7 @@ export class WidgetCardsComponent implements OnInit {
           this.totalTrainees=response;
         },
         error=>{
-          this.messageService.add({severity:'error', summary:`${error.error.message}`, detail:'LogXp'}); // Show success toast
+         // Show success toast
          
           console.error('Error adding trainee', error); 
          

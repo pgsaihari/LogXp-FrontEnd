@@ -13,12 +13,10 @@
         <i  routerLinkActive="router-link-active"  class="fa-solid fa-user-plus"></i>
       </li>
       <li *ngIf="role === 'admin'" [routerLink]="['/edit-callender']" [class.active]="activeIndex === 3" (click)="setActive(3)">
-        <i class="fa-solid fa-calendar-plus"></i>
+        <i class="fa-solid fa-gear"></i>
       </li>
       <hr>
-      <li [class.active]="activeIndex === 6" [routerLink]="['/add-user']" (click)="setActive(6)" (click)="signOut()">
-        <i class="fas fa-sign-out-alt"></i>
-      </li>
+      
     </ul>
   </div>
   

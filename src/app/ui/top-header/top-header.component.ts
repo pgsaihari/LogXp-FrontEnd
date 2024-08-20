@@ -1,8 +1,10 @@
+import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-top-header',
   templateUrl: './top-header.component.html',
+  imports:[NgIf],
   standalone:true,
   styleUrls: ['./top-header.component.css']
 })
@@ -31,5 +33,14 @@ export class TopHeaderComponent implements OnInit {
     this.userName = 'Admin';
     this.userEmail = 'admin@domain.com';
     this.userAvatar = 'assets/avatar.png';
+  }
+  dropdownVisible: boolean = false;
+
+  toggleDropdown() {
+    this.dropdownVisible = !this.dropdownVisible;
+  }
+
+  signOut(){
+    localStorage.removeItem('logintoken');
   }
 }

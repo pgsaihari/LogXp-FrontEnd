@@ -2,11 +2,19 @@
   <div class="logo">
     <img src="assets/experionlogo.png" alt="Experion Logo">
   </div>
-  <div class="user-info">
+  
+  <div class="user-info" (click)="toggleDropdown()">
     <div class="user-details">
       <span class="user-name">Admin</span>
       <span class="user-email">{{"admin@domain.com"}}</span>
     </div>
     <img class="user-avatar" src="assets/Avatar.png" alt="User Avatar">
+    
+    <!-- Dropdown menu -->
+    <div class="dropdown-menu" *ngIf="dropdownVisible">
+      <ul>
+        <li (click)="signOut()"> <i class="fas fa-sign-out-alt"></i>   Logout</li>
+      </ul>
+    </div>
   </div>
 </div>
