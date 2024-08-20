@@ -1,5 +1,4 @@
-<div class="card-container" [class.active]="isActive && card_header !== 'Total Employees' && card_header !== 'Working Days'"
- [ngClass]="{'red-text': card_header === 'Absent' || card_header === 'Late Arrivals' || card_header === 'Early Departures', 'green-text': card_header === 'On Time'}"  (click)="onClick()">
+<div class="card-container" (click)="onClick()">
     <p-card class="card">
         <div class="icon">
             <i [class]="header_icon"></i>
