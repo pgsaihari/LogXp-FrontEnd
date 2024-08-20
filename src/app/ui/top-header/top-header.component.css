@@ -1,104 +1,157 @@
 .top-header {
-    
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #fff;
-    border-bottom: 1px solid #e0e0e0;
-    border-radius: 10px;
-    flex-wrap: wrap;
-    position: sticky;
-    top: 0;
-    /* background-color: #333; */
-    /* padding: 10px 0; */
-    width: 100%;
-    z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 10px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  position: relative; /* For dropdown positioning */
+  cursor: pointer; /* Show clickable cursor */
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 10px;
+}
+
+.user-name {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.user-email {
+  font-size: 0.9em;
+  color: #888;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* Subtle translucent dropdown menu with centered content and animation */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.642); /* Slightly more opaque background */
+  backdrop-filter: blur(2px); /* Lighter blur effect */
+  border-radius: 8px;
+  box-shadow: 0px 8px 16px rgba(79, 79, 79, 0.1);
+  padding: 10px;
+  min-width: 150px;
+  z-index: 1001;
+  display: flex; /* Center content using flexbox */
+  flex-direction: column;
+  align-items: center;
+  opacity: 0; /* Start invisible */
+  animation: fadeIn 0.3s ease-in forwards; /* Fade in with ease-in animation */
+}
+
+/* Centered and styled list */
+.dropdown-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  color:var(--primary-color);
+  width: 100%;
+  text-align: center; /* Center text */
+}
+
+.dropdown-menu li {
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  transition: background-color 0.3s ease-in; /* Smooth transition on hover */
+}
+
+.dropdown-menu li:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* Subtle hover effect */
+}
+
+/* Keyframes for the fade-in animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px); /* Slight upward movement */
   }
-  
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* End in place */
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .top-header {
+    padding: 10px;
+  }
+
   .logo img {
-    height: 40px;
+    height: 30px;
   }
-  
-  .user-info {
-    display: flex;
-    align-items: center;
-  }
-  
+
   .user-details {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-right: 10px;
+    margin-right: 5px;
   }
-  
+
   .user-name {
-    font-weight: bold;
-    margin-bottom: 2px;
-  }
-  
-  .user-email {
     font-size: 0.9em;
-    color: #888;
   }
-  
+
+  .user-email {
+    font-size: 0.8em;
+  }
+
   .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 30px;
+    height: 30px;
   }
-  
-  @media (max-width: 768px) {
-    .top-header {
-      padding: 10px;
-    }
-  
-    .logo img {
-      height: 30px;
-    }
-  
-    .user-details {
-      margin-right: 5px;
-    }
-  
-    .user-name {
-      font-size: 0.9em;
-    }
-  
-    .user-email {
-      font-size: 0.8em;
-    }
-  
-    .user-avatar {
-      width: 30px;
-      height: 30px;
-    }
+}
+
+@media (max-width: 480px) {
+  .top-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  @media (max-width: 480px) {
-    .top-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .user-info {
-      margin-top: 10px;
-      width: 100%;
-      justify-content: space-between;
-    }
-  
-    .user-details {
-      align-items: flex-start;
-      margin-right: 0;
-    }
-  
-    .user-name,
-    .user-email {
-      text-align: left;
-    }
-  
-    .user-avatar {
-      margin-left: auto;
-    }
+
+  .user-info {
+    margin-top: 10px;
+    width: 100%;
+    justify-content: space-between;
   }
-  
+
+  .user-details {
+    align-items: flex-start;
+    margin-right: 0;
+  }
+
+  .user-name,
+  .user-email {
+    text-align: left;
+  }
+
+  .user-avatar {
+    margin-left: auto;
+  }
+}
