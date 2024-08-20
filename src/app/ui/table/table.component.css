@@ -45,7 +45,7 @@ p-table th {
 }
 
 /* Status Colors */
-.status-work-from-office {
+.status-present {
     color: green;
     background-color: #e0f7e9; /* Light green background */
     padding: 2px 4px;
@@ -53,13 +53,6 @@ p-table th {
     font-size: 12px; /* Adjust font size */
 }
 
-.status-work-from-home {
-    color: blue;
-    background-color: #e0f0ff; /* Light blue background */
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 12px; /* Adjust font size */
-}
 
 .status-absent {
     color: #EA454C;
@@ -94,13 +87,6 @@ p-table th {
     font-size: 12px; /* Adjust font size */
 }
 
-.time-very-late {
-    color: #EA454C;
-    background-color: #ffe0e0; /* Light red background */
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 12px; /* Adjust font size */
-}
 
 /* Dropdown Header */
 .dropdown-header {
