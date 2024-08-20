@@ -1,31 +1,21 @@
-
-/* .card-container .card {
-    font-family: 'Poppins' !important;
-  } */
-
   :host ::ng-deep .p-card .p-card-content{
-    padding: 10px !important;
+    padding: 5px !important;
   }
   
   :host ::ng-deep .p-card-body{
-    padding: 10px !important;
+    padding: 5px !important;
   }
 
   .p-card .p-card-footer {
     padding-top: 10px !important;
 }
 
-/* .p-card{
-    height: 134px;
-    width: 250px;
-} */
-
 :host ::ng-deep .p-card {
     font-family: 'Poppins',sans-serif;
   }
 
 .icon > i{
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: -30px;
     display: flex;
     justify-content: end;
@@ -33,15 +23,15 @@
 
 
 .card-header{
-    margin-top: 35px;
+    margin-top: 0px;
     margin-bottom: 0;
     font-weight: 900;
-    font-size: 18px;
+    font-size: 14px;
 }
 
 .card-number{
     font-weight: bolder;
-    font-size: 38px;
+    font-size: 25px;
 }
 
 .card-container{
@@ -60,8 +50,22 @@
     color: rgb(176, 176, 176);
 }
 
-/* @media (max-width: 480px) {
-    :host ::ng-deep .p-card{
-
+@media (max-width: 1024px) {
+    .card-container{
+        margin: 5px;
+        width: 200px; 
     }
-} */
+}
+@media (max-width: 768px) {
+    .card-container{
+        margin: 10px;
+        width: 250px; 
+    }
+}
+/* for half screen */
+@media (max-width: 650px) { 
+    .card-container{
+        margin: 10px;
+        width: 210px; 
+    }
+}

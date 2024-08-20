@@ -1,0 +1,86 @@
+.card{
+  margin-bottom: -50rem;
+}
+.p-toolbar-group-right{
+  display:  flex;
+  gap: 5px;
+}
+
+.table-container {
+    height: 100%; /* Adjust the height to fit within the viewport */
+    overflow-y: auto; /* Make the table scrollable */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+  }
+  
+  .trainee-status-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .trainee-status-table th,
+  .trainee-status-table td {
+    padding: 8px; /* Reduced padding */
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .trainee-status-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  .status {
+    padding: 4px ; /* Reduced padding */
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  .status.enabled {
+    background-color: green;
+  }
+  
+  .status.disabled {
+    background-color: #dc3545;
+  }
+  
+  .edit-button {
+    padding: 4px 10px; /* Reduced padding */
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 8px; /* Reduced font size */
+  }
+  
+  .edit-button:hover {
+    background-color: #0056b3;
+  }
+  .card {
+    padding: 1rem;
+    margin: 1rem;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+  }
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ml-auto {
+    margin-left: auto;
+}
+
+.p-input-icon-left {
+    margin-left: 1rem;
+}
+
+.table-header {
+    font-weight: bold;
+    font-size: 0.25rem;
+}
