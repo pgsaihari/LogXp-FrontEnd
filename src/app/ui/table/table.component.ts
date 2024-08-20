@@ -82,25 +82,25 @@ export class TableComponent implements OnInit {
     if (this.statusFilter) {
       this.traineeLogs = this.traineeLogs.filter(trainee => trainee.status === this.statusFilter);
     }
-    this.checkTimeColumnsVisibility();
+    
   }
 
   search(event: AutoCompleteCompleteEvent) {
-    this.suggestions = [...Array(10).keys()].map(item => event.query + '-' + item);
-    // this.filterTrainees(event.query);
+  
   }
 
   filterTrainees(query: string): void {
     if (query) {
       this.traineeLogs = this.traineeLogs.filter(trainee =>
         Object.values(trainee).some(value =>
-          value?.toString().toLowerCase().includes(query.toLowerCase())
+          value.toString().toLowerCase().includes(query)
         )
       );
     } else {
-      this.traineeLogs = this.traineeLogs;
+      // Reset to the original data if the query is empty
+      this.getTraineeAttendanceLogs(); // Re-fetch or reset data as needed
     }
-    this.checkTimeColumnsVisibility();
+    
   }
 
   filterByDate() {
@@ -111,7 +111,7 @@ export class TableComponent implements OnInit {
     } else {
       this.traineeLogs = this.traineeLogs;
     }
-    this.checkTimeColumnsVisibility();
+   
   }
 
   filterByStatus(selectedOptions: any[]) {
@@ -126,21 +126,14 @@ export class TableComponent implements OnInit {
         (batchCodes.length === 0 || batchCodes.includes(trainee.ilp || ''))
       );
     }
-    this.checkTimeColumnsVisibility();
+    
   }
 
   isAbsent(status?: string): boolean {
     return status === 'Absent';
   }
 
-  checkTimeColumnsVisibility(): void {
-    if (Array.isArray(this.traineeLogs)) {
-      this.showTimeColumns = this.traineeLogs.some(trainee => !this.isAbsent(trainee.status));
-    } else {
-      console.error('traineeLogs is not an array:', this.traineeLogs);
-      this.showTimeColumns = true; // Default behavior if data is corrupted
-    }
-  }
+
 
   getStatusClass(status: string): string {
     switch (status) {
@@ -157,7 +150,10 @@ export class TableComponent implements OnInit {
     }
   }
 
-  getCheckinTimeClass(time: string): string {
+  getCheckinTimeClass(time: string, status: string): string {
+    if (status === 'On Leave') {
+      return ''; // No special class for absent
+    }
     if (!time) return '';
     // Extract the time part (08:58:18) from the datetime string
     const timePart = time.split('T')[1];
@@ -174,7 +170,10 @@ export class TableComponent implements OnInit {
     }
   }
 
-  getCheckoutTimeClass(logOuttime: string): string {
+  getCheckoutTimeClass(logOuttime: string, status: string): string {
+    if (status === 'On Leave') {
+      return ''; // No special class for absent
+    }
     if (!logOuttime) return '';
    
     // Extract the time part (HH:MM:SS) from the datetime string
@@ -186,6 +185,13 @@ export class TableComponent implements OnInit {
     } else {
       return ''; // No additional class if after 6 PM
     }
+  }
+
+  getDisplayTime(time: string, status: string): string {
+    if (status === 'On Leave') {
+      return '-'; // Display '-' for absent status
+    }
+    return time ? this.formatTime(time) : '-';
   }
   
 }

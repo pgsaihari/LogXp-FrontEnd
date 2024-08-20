@@ -52,9 +52,9 @@
                         <th pSortableColumn="ilp">Batch <p-sortIcon field="ilp"></p-sortIcon></th>
                         <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
                         <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
-                        <th *ngIf="showTimeColumns" pSortableColumn="checkin">Check-In <p-sortIcon field="checkin"></p-sortIcon></th>
-                        <th *ngIf="showTimeColumns" pSortableColumn="checkout">Check-Out <p-sortIcon field="checkout"></p-sortIcon></th>
-                        <th *ngIf="showTimeColumns" pSortableColumn="workhours">Work Hours <p-sortIcon field="workhours"></p-sortIcon></th>
+                        <th pSortableColumn="checkin">Check-In <p-sortIcon field="checkin"></p-sortIcon></th>
+                        <th pSortableColumn="checkout">Check-Out <p-sortIcon field="checkout"></p-sortIcon></th>
+                        <th pSortableColumn="workhours">Work Hours <p-sortIcon field="workhours"></p-sortIcon></th>
                         <!-- <th *ngIf="showTimeColumns" pSortableColumn="attendancepercentage">Attendance % <p-sortIcon field="attendancepercentage"></p-sortIcon></th> -->
                     </tr>
                 </ng-template>
@@ -65,8 +65,8 @@
                         <td><strong>{{ trainee.batch }}</strong></td>
                         <td><strong>{{ formatDate(trainee.date)}}</strong></td>
                         <td><strong><span [ngClass]="getStatusClass(trainee.status)">{{ trainee.status }}</span></strong></td>
-                        <td><strong><span [ngClass]="getCheckinTimeClass(trainee.loginTime)">{{ formatTime(trainee.loginTime) }}</span></strong></td>
-                        <td><strong><span [ngClass]="getCheckoutTimeClass(trainee.logoutTime)">{{ formatTime(trainee.logoutTime) }}</span></strong></td>
+                        <td><strong><span [ngClass]="getCheckinTimeClass(trainee.loginTime, trainee.status)">{{ getDisplayTime(trainee.loginTime, trainee.status) }}</span></strong></td>
+                        <td><strong> <span [ngClass]="getCheckoutTimeClass(trainee.logoutTime, trainee.status)">{{ getDisplayTime(trainee.logoutTime, trainee.status) }}</span></strong></td>
                         <td><strong>{{ trainee.totalWorkHour}} Hrs</strong></td>
                         <!-- <td *ngIf="!isAbsent(trainee.status)"><strong>{{ trainee.attendancepercentage }}</strong></td> -->
                     </tr>
