@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.component';
 import { TraineeServiceService } from '../../../core/services/trainee-service.service';
 import { FormsModule } from '@angular/forms';
@@ -24,7 +24,7 @@ export class WidgetCardsComponent implements OnInit {
           this.totalTrainees=response;
         },
         error=>{
-         // Show success toast
+          this.messageService.add({severity:'error', summary:`${error.error.message}`, detail:'LogXp'}); // Show success toast
          
           console.error('Error adding trainee', error); 
          
@@ -32,11 +32,5 @@ export class WidgetCardsComponent implements OnInit {
 
       )
   }
-  @Output() widgetSelected = new EventEmitter<{isClicked: boolean, header: string}>();
 
-clickWidget(dataRecieved: { isClicked: boolean, header: string }){
-  this.widgetSelected.emit(dataRecieved)
-
-  }
 }
-
