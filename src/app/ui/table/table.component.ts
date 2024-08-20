@@ -10,18 +10,20 @@ import { TopHeaderComponent } from '../top-header/top-header.component';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { DatePipe } from '@angular/common';
+import { SideUserProfileComponent } from "../../Features/side-user-profile/side-user-profile.component";
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [TopHeaderComponent,AutoCompleteModule, FormsModule,CalendarModule, MultiSelectModule, TableModule, NgClass, NgIf],
+  imports: [TopHeaderComponent, AutoCompleteModule, FormsModule, CalendarModule, MultiSelectModule, TableModule, NgClass, NgIf, SideUserProfileComponent],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
 
   private datePipe = new DatePipe('en-US');
-
+  selectedTraineeCode: string ="";
+  isSideProfileVisible?: boolean |undefined = false;
   constructor(private traineeAttendancelogService: TraineeAttendancelogService) {}
 
   @Input() statusFilter: string = '';
@@ -186,6 +188,14 @@ export class TableComponent implements OnInit {
     } else {
       return ''; // No additional class if after 6 PM
     }
+  }
+
+  showSideProfile(employeeCode: string): void {
+    this.selectedTraineeCode = employeeCode;
+    this.isSideProfileVisible = true;  // Show the side profile when an employee is clicked
+  }
+  closeSideProfile(): void {
+    this.isSideProfileVisible = false;  // Set to false when hiding the side profile
   }
   
 }

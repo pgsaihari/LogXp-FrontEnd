@@ -1,0 +1,39 @@
+<div class="card">
+    <div class="p-d-flex p-ai-center p-jc-between ">
+    
+    <!-- Compact PrimeNG table with scrolling -->
+    <p-table [value]="traineelogs" [scrollable]="true" scrollHeight="200px" [responsiveLayout]="'scroll'">
+        <ng-template pTemplate="header">
+            <tr>
+                
+                <th>NAME</th>
+                <th>LOG DETAILS</th>
+                <th>STATUS</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-traineelog>
+            <tr>
+                
+                <td>{{ traineelog.date | date: 'mediumDate' }}</td>
+                <td>
+                      
+                 <span id="check-in">check-in:</span>    {{ traineelog.loginTime | date: 'hh:mm a' }} <br>
+                 <span id="check-out">check-out:</span>   {{ traineelog.logoutTime | date: 'hh:mm a' }}<br>
+                 
+                </td>
+                
+               
+                <td>
+                    <span [ngClass]="{
+                        'status-badge-late': traineelog.status === 'Late Arival',
+                        'status-badge-absent': traineelog.status === 'Absent',
+                        'status-badge-present': traineelog.status === 'Present'
+                    }">
+                        {{ traineelog.status }}
+                    </span>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
