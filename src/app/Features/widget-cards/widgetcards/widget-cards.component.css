@@ -1,16 +1,9 @@
-/* .widget-cards-container{
-    display: flex;
-    justify-content: center;
-    width: 80%;
-} */
 .widget-cards{
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-end;
+    width: 100%;
 }
-
-
-
-
 
 @media (max-width: 768px) {
     app-widget-card {

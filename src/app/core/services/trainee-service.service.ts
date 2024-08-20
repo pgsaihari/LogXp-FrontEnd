@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,10 @@ export class TraineeServiceService {
 
   // Function to get all trainees
   getTrainees(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
-  }
+    
+    return this.http.get<{ trainees: any[] }>(this.apiUrl).pipe(
+      map(response => response.trainees) )
+    }
 
   // Function to get count of active trainees
   getTraineesCount(): Observable<number> {
@@ -40,8 +42,14 @@ export class TraineeServiceService {
   // Function to update an existing trainee
   updateTrainee(employeeCode: string, trainee: any): Observable<any> {
     const url = `${this.apiUrl}/${employeeCode}`;
-    return this.http.put<any>(url, trainee);
-  }
+    return this.http.put<any>(url, trainee).pipe(
+        catchError((error: any) => {
+            console.error('Error updating trainee:', error);
+            return throwError(() => new Error(error.message || 'Server error'));
+        })
+    );
+}
+
 
   // Function to update trainee status
   updateTraineeStatus(employeeCode: string, isActive: boolean): Observable<any> {

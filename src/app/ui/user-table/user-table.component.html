@@ -1,35 +1,8 @@
 <div class="card">
     <p-toast></p-toast>
-    <p-toolbar styleClass="mb-4 gap-2">
-        <ng-template pTemplate="left">
-            <p-button
-                severity="success" 
-                label="New" 
-                icon="pi pi-plus" 
-                class="mr-2" 
-                (onClick)="openNew()" />
-            <p-button
-                severity="danger" 
-                label="Delete" 
-                icon="pi pi-trash" 
-                (onClick)="deleteSelectedTrainees()" 
-                [disabled]="!selectedTrainees || !selectedTrainees.length" />
-        </ng-template>
-
-        <ng-template pTemplate="right">
-            <p-button
-                severity="help" 
-                label="Export" 
-                icon="pi pi-upload" />
-        </ng-template>
-    </p-toolbar>
-
-    <p-toolbar>
-        <div class="p-toolbar-group-right">
-            <button pButton label="Set Active" icon="pi pi-check" class="p-button-success" (click)="setIsActiveForSelected(true)"></button>
-            <button pButton label="Set Inactive" icon="pi pi-times" class="p-button-danger" (click)="setIsActiveForSelected(false)"></button>
-        </div>
-    </p-toolbar>
+   
+ 
+ 
 
     <p-table
         #dt
@@ -37,9 +10,9 @@
         [rows]="10"
         [paginator]="true"
         [scrollable]="true"
-        scrollHeight="400px"
+        scrollHeight="200px"
         [globalFilterFields]="['employeeCode', 'name', 'email', 'batch']"
-        [tableStyle]="{ 'min-width': '75rem' }"
+        [tableStyle]="{ 'min-width': '20rem' }"
         [(selection)]="selectedTrainees"
         [rowHover]="true"
         dataKey="employeeCode"
@@ -49,6 +22,13 @@
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h5 class="m-0">Manage Trainees</h5>
+                <p-toolbar>
+                    <div class="p-toolbar-group-right">
+                        <button pButton label="Set Active" icon="pi pi-check" class="p-button-success" (click)="setIsActiveForSelected(true)"></button>
+                        
+                        <button pButton label="Set Inactive" icon="pi pi-times" class="p-button-danger" (click)="setIsActiveForSelected(false)"></button>
+                    </div>
+                </p-toolbar>  
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input 
@@ -65,8 +45,8 @@
                 <th style="width: 4rem">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th pSortableColumn="employeeCode" style="min-width:15rem">
-                    Employee Code <p-sortIcon field="employeeCode"></p-sortIcon>
+                <th pSortableColumn="employeeCode" >
+                    Trainee Id<p-sortIcon field="employeeCode"></p-sortIcon>
                 </th>
                 <th pSortableColumn="name">
                     Name <p-sortIcon field="name"></p-sortIcon>
@@ -74,11 +54,15 @@
                 <th pSortableColumn="email">
                     Email <p-sortIcon field="email"></p-sortIcon>
                 </th>
-                <th pSortableColumn="batch" style="min-width:10rem">
-                    Batch <p-sortIcon field="batch"></p-sortIcon>
-                </th>
-                <th pSortableColumn="accessCode">
-                    Access Code <p-sortIcon field="accessCode"></p-sortIcon>
+                 <th pSortableColumn="batch">
+        <div class="flex justify-content-between align-items-center">
+          Batch
+          <p-sortIcon field="batch"></p-sortIcon>
+          <p-columnFilter type="text" field="batch" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+                <th pSortableColumn="isActive">
+                    Active Status <p-sortIcon field="isActive"></p-sortIcon>
                 </th>
                 <th></th>
             </tr>
@@ -111,20 +95,15 @@
                         [outlined]="true" 
                         severity="success" 
                         (onClick)="editTrainee(trainee)"></p-button>
-                    <p-button 
-                        icon="pi pi-trash" 
-                        severity="danger" 
-                        [rounded]="true" 
-                        [outlined]="true" 
-                        (onClick)="deleteTrainee(trainee)"></p-button>
+                   
                 </td>
             </tr>
         </ng-template>
-        <ng-template pTemplate="summary">
+        <!-- <ng-template pTemplate="summary">
             <div class="flex align-items-center justify-content-between">
                 In total there are {{ trainees ? trainees.length : 0 }} trainees.
             </div>
-        </ng-template>
+        </ng-template> -->
     </p-table>
 
     <p-dialog 
@@ -184,7 +163,7 @@
                         optionValue="value">
                     </p-dropdown>
                 </div>
-                
+
             </ng-template>
 
             <ng-template pTemplate="footer">

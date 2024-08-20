@@ -1,85 +1,140 @@
+/* Main container with gradient background */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: linear-gradient(to bottom right, #DB0000 50%, white 50%);
-    height: 100vh;
-    justify-content: center;
-    text-align: center;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom right, #DB0000 50%, white 50%);
+  height: 100vh;
+ 
+  position: relative;
+}
+
+/* Translucent box centered with hover and animation effects */
+.translucent-box {
+   backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.9); /* Slightly less translucent for clarity */
+  padding: 40px;
+  border-radius: 15px; /* Softer rounded corners */
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Stronger shadow for a more prominent look */
+  max-width: 600px;
+  width: 100%;
+  margin: 0 20px;
+  transition: all 0.3s ease; /* Smooth transition for hover */
+  animation: fadeInScale 1s ease-in-out; /* Animation for fade-in and scaling */
+  transform: scale(0.95); /* Start slightly smaller for animation */
+  opacity: 0; /* Start invisible for animation */
+  animation-fill-mode: forwards;
+}
+
+/* Hover effect on the translucent box */
+.translucent-box:hover {
+  transform: translateY(-10px) scale(1.05); /* Slight lift and zoom on hover */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25); /* Stronger shadow on hover */
+}
+
+/* Keyframes for fade-in and scale animation */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
   }
-  
-  .contents {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0 50px;
-    position: absolute;
-    top: 40%;
-    transform: translateY(-50%);
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  .header {
-    text-align: left;
-  }
-  
+}
+
+/* Header section styling */
+.header {
+  margin-bottom: 25px;
+}
+
+.title {
+  font-size: 48px;
+  color: #1A1A40; /* Dark Navy Blue for professional contrast */
+  margin: 0;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 20px; /* Slightly larger subtitle for professional look */
+  color: #555;
+  margin-top: 10px;
+  font-weight: 400;
+}
+
+/* Content description and Microsoft button */
+.content p {
+  font-size: 18px; /* Larger font for readability */
+  color: #666; /* Softer text color */
+  margin-bottom: 30px; /* More space between text and button */
+}
+
+.microsoft-signin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 14px 30px; /* Larger padding for a more substantial button */
+  border: 2px solid #ccc;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600; /* Stronger text weight for button */
+  font-size: 18px; /* Slightly larger font size */
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.microsoft-signin-btn i {
+  font-size: 22px;
+  margin-right: 10px;
+}
+
+/* Button hover effect with color and shadow change */
+.microsoft-signin-btn:hover {
+  border-color: #DB0000;
+  background-color: #f8f8f8;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+/* Footer with Experion logo */
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  bottom: 20px;
+}
+
+.logo {
+  width: 180px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
   .title {
-    font-size: 48px;
-    color: white;
-    margin: 0;
-    font-weight: bold;
+    font-size: 36px;
   }
-  
-  .subtitle {
-    font-size: 18px;
-    color: white;
-    margin: 5px 0 0;
-  }
-  
-  .login-buttons {
-    display: flex;
-    
-    gap: 10px;
-    align-items: flex-end;
-  }
-  
-  .btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .btn.trainee {
-    background-color: #DB0000;
-    color: white;
-  }
-  
-  .btn.admin {
-    background-color: #f1f1f1;
-    color: gray;
-  }
-  
-  .btn.trainer {
-    background-color: black;
-    color: white;
-  }
-  
-  .btn:hover {
-    opacity: 0.8;
-  }
-  
-  .footer {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: absolute;
-    bottom: 20px;
-  }
-  
+
   .logo {
-    width: 200px;
+    width: 150px;
   }
-  
+
+  .translucent-box {
+    padding: 20px;
+    margin: 0 10px;
+  }
+
+  .content p {
+    font-size: 16px;
+  }
+
+  .microsoft-signin-btn {
+    font-size: 16px;
+    padding: 12px 25px;
+  }
+}

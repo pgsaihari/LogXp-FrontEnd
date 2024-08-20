@@ -1,5 +1,5 @@
 .card-container {
-    margin: 10px;
+    margin: 5px;
     width: 250px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
@@ -32,36 +32,71 @@
     transform: translateY(-5px);
 }
 
-/* Icon styling */
-.icon > i {
-    font-size: 24px;
+
+  :host ::ng-deep .p-card .p-card-content{
+    padding: 5px !important;
+  }
+  
+  :host ::ng-deep .p-card-body{
+    padding: 5px !important;
+  }
+
+  .p-card .p-card-footer {
+    padding-top: 10px !important;
+}
+
+:host ::ng-deep .p-card {
+    font-family: 'Poppins',sans-serif;
+  }
+
+.icon > i{
+    font-size: 20px;
     margin-bottom: -30px;
     display: flex;
     justify-content: end;
 }
 
-/* Text styling */
-.card-header {
-    margin-top: 35px;
+
+.card-header{
+    margin-top: 0px;
     margin-bottom: 0;
     font-weight: 900;
-    font-size: 18px;
+    font-size: 14px;
 }
 
 .card-number {
     font-weight: bolder;
-    font-size: 38px;
+    font-size: 25px;
 }
 
-/* Responsive behavior */
-@media (max-width: 768px) {
-    .card-container {
-        width: calc(50% - 20px);
+
+.flex-footer{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.footer-text{
+    font-weight: bold;
+    color: rgb(176, 176, 176);
+}
+
+@media (max-width: 1024px) {
+    .card-container{
+        margin: 5px;
+        width: 200px; 
     }
 }
-
-@media (max-width: 480px) {
-    .card-container {
-        width: 100%;
+@media (max-width: 768px) {
+    .card-container{
+        margin: 10px;
+        width: 250px; 
+    }
+}
+/* for half screen */
+@media (max-width: 650px) { 
+    .card-container{
+        margin: 10px;
+        width: 210px; 
     }
 }

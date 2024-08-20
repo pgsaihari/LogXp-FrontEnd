@@ -1,20 +1,24 @@
 <div class="container">
-    <div class="contents">
-        <div class="header">
-            <h1 class="title">LogXP</h1>
-            <p class="subtitle">track your time anytime</p>
-          </div>
-          <div class="login-buttons">
-            <button class="btn trainee" (click)="trainee()">Trainee Login</button>
-            <button class="btn admin"  (click)="adminLogin()">Admin Login</button>
-            <button class="btn trainer"  (click)="trainerLogin()">Trainer Login</button>
-          </div>
+  <div class="translucent-box">
+    <!-- Header with Title and Subtitle -->
+    <div class="header">
+      <h1 class="title">LogXP</h1>
+      <p class="subtitle">Track your time anytime</p>
     </div>
-   
-    <div class="footer"> 
-        
-      <img src="assets/experionlogo.png" alt="Experion Technologies Logo" class="logo" />
-      <p>Copyright 2024 LogXP</p>
+
+    <!-- Content Section with description and Microsoft Sign-in -->
+    <div class="content">
+      <p>Cultivating Future Leaders Through Precision and Presence.</p>
+      <button class="microsoft-signin-btn" (click)="adminLogin()">
+        <i class="fa-brands fa-windows fa-beat" style="color: #e13737;"></i>
+        Sign in with Microsoft
+      </button>
     </div>
   </div>
-  
+
+  <!-- Footer with Experion Technologies Logo -->
+  <div class="footer">
+    <img src="assets/experionlogo.png" alt="Experion Technologies Logo" class="logo" />
+    <!-- <p>&copy; 2024 LogXP</p> -->
+  </div>
+</div>
