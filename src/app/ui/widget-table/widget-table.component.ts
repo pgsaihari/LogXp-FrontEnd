@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import {  DatePipe, NgClass,NgIf } from '@angular/common';
 import { WidgetAttendance } from '../../core/interfaces/widget-attendance';
 import { AttendanceLogsService } from '../../core/services/attendance-logs.service';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-widget-table',
@@ -23,7 +24,9 @@ export class WidgetTableComponent implements OnChanges {
   date: Date | undefined;
   time: string = ''
   widgetAttendance: WidgetAttendance[] = [];
-  
+  error: any;
+  containerVisibility:string = '';
+
   constructor(private traineeAttendancelogService: AttendanceLogsService) {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -35,62 +38,115 @@ export class WidgetTableComponent implements OnChanges {
   fetchAttendanceLogs() {
     switch (this.tableHeader) {
       case 'On Time':
-        this.traineeAttendancelogService.onTimeLogs().subscribe(
-          (response: any) => {
-            this.widgetAttendance = response.earlyArrivals || [];
-            console.log('On Time Logs:', this.widgetAttendance);
-            if (response.earlyArrivals && response.earlyArrivals.length > 0) {
-              const loginTime = response.earlyArrivals[0].loginTime;
-              this.updateDateFromLoginTime(loginTime);
-            }  
-          },
-          (error) => {
-            console.error('Error fetching on time logs:', error);
-            this.widgetAttendance = [];
+        // this.traineeAttendancelogService.onTimeLogs().subscribe(
+        //   (response: any) => {
+        //     this.widgetAttendance = response.earlyArrivals || [];
+        //     console.log('On Time Logs:', this.widgetAttendance);
+        //     if (response.earlyArrivals && response.earlyArrivals.length > 0) {
+        //       const loginTime = response.earlyArrivals[0].loginTime;
+        //       this.updateDateFromLoginTime(loginTime);
+        //     }  
+        //   },
+        //   (error) => {
+        //     console.error('Error fetching on time logs:', error);
+        //     this.widgetAttendance = [];
+        //   }
+        // );
+        this.containerVisibility = '';
+        this.traineeAttendancelogService.onTimeLogs()
+        .pipe(
+          catchError(error => {
+            this.error = error.message;
+            return of([]);
+          })
+        )
+        .subscribe((data:any) =>{
+          this.widgetAttendance = data.earlyArrivals || [];
+          const loginTime = data.earlyArrivals[0].loginTime;
+          if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
+          else{console.log("no data");
           }
-        );
+          
+        });
         break;
 
       case 'Late Arrivals':
-        this.traineeAttendancelogService.lateArrivalLogs().subscribe(
-          (response: any) => {
-            this.widgetAttendance = response.lateArrivals || [];
-            console.log('Late Arrival Logs:', response);
-          },
-          (error) => {
-            console.error('Error fetching late arrival logs:', error);
+        // this.traineeAttendancelogService.lateArrivalLogs().subscribe(
+        //   (response: any) => {
+        //     this.widgetAttendance = response.lateArrivals || [];
+        //     console.log('Late Arrival Logs:', response);
+        //   },
+        //   (error) => {
+        //     console.error('Error fetching late arrival logs:', error);
+        //     this.widgetAttendance = [];
+        //   }
+        // );
+        this.containerVisibility = '';
+        this.traineeAttendancelogService.lateArrivalLogs()
+        .pipe(
+          catchError(error => {
+            this.error = error.message;
             this.widgetAttendance = [];
-          }
-        );
+            return of([]);
+          })
+        )
+        .subscribe((data:any)=>{
+          this.widgetAttendance = data.lateArrivals || [];
+        });
         break;
-
+      
       case 'Absent':
-        this.traineeAttendancelogService.absenteeLogs().subscribe(
-          (response: any) => {
-            this.widgetAttendance = response.absentees || [];
-            console.log('Absent Logs:', response);
-          },
-          (error) => {
-            console.error('Error fetching absentee logs:', error);
+        // this.traineeAttendancelogService.absenteeLogs().subscribe(
+        //   (response: any) => {
+        //     this.widgetAttendance = response.absentees || [];
+        //     console.log('Absent Logs:', response);
+        //   },
+        //   (error) => {
+        //     console.error('Error fetching absentee logs:', error);
+        //     this.widgetAttendance = [];
+        //   }
+        // );
+        this.containerVisibility = '';
+        this.traineeAttendancelogService.absenteeLogs()
+        .pipe(
+          catchError(error => {
+            this.error = error.message;
             this.widgetAttendance = [];
-          }
-        );
+            return of([]);
+          })
+        )
+        .subscribe((data:any)=>{
+          this.widgetAttendance = data.absentees || [];
+        });
         break;
 
       case 'Early Departures':
-        this.traineeAttendancelogService.earlyDeparturesLogs().subscribe(
-          (response: any) => {
-            this.widgetAttendance = response.earlyDepartures || [];
-            console.log('Early Departure Logs:', response);
-          },
-          (error) => {
-            console.error('Error fetching early departure logs:', error);
+        // this.traineeAttendancelogService.earlyDeparturesLogs().subscribe(
+        //   (response: any) => {
+        //     this.widgetAttendance = response.earlyDepartures || [];
+        //     console.log('Early Departure Logs:', response);
+        //   },
+        //   (error) => {
+        //     console.error('Error fetching early departure logs:', error);
+        //     this.widgetAttendance = [];
+        //   }
+        // );
+        this.containerVisibility = '';
+        this.traineeAttendancelogService.earlyDeparturesLogs()
+        .pipe(
+          catchError(error => {
+            this.error = error.message;
             this.widgetAttendance = [];
-          }
-        );
+            return of([]);
+          })
+        )
+        .subscribe((data:any)=>{
+          this.widgetAttendance = data.earlyDepartures || [];
+        });
         break;
 
       default:
+        this.containerVisibility = "invisible";
         this.widgetAttendance = [];
         console.error('Unknown table header:', this.tableHeader);
     }
