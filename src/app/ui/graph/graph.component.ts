@@ -4,6 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { ChartModule } from 'primeng/chart';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule, } from 'primeng/calendar';
+import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
+import { DailyAttendanceOfMonth } from '../../core/interfaces/daily-attendance-of-month';
+import { catchError, of } from 'rxjs';
 
  
 @Component({
@@ -14,6 +17,8 @@ import { CalendarModule, } from 'primeng/calendar';
   styleUrls: ['./graph.component.css']
 })
 export class GraphComponent  {
+  error: any;
+  constructor(private api: TraineeAttendancelogService) {}
   graphDataMonth: Date | undefined;
   numberOfWorkingDays: number = 25;
   data: any;
@@ -24,12 +29,26 @@ export class GraphComponent  {
   ];
   currentMonth:string = '';
   maxDate!: Date;
-
+  dailyAttendanceData?:DailyAttendanceOfMonth[] | never[];
+  // this.graphInit();
   ngOnInit() {
     this.graphDataMonth = new Date();
     this.maxDate = this.graphDataMonth;
     this.currentMonth = this.monthNames[this.graphDataMonth.getMonth()]
-    this.graphInit();    
+     
+    this.api.getAttendanceOfAMonth(8,2024)
+    .pipe(
+      catchError(error => {
+        this.error = error.message;
+        return of([]);
+      })
+    )
+    .subscribe(data => {
+      this.dailyAttendanceData = data;
+      console.log(this.dailyAttendanceData.length);
+      
+      this.graphInit(this.dailyAttendanceData.length);
+    });   
   }
 
   generateRandomData(length: number): number[] {
@@ -42,6 +61,26 @@ export class GraphComponent  {
     }
     return result;
   }
+
+  // calculateYaxis(dailyAttendanceData:any): number[]{
+  //   //hardcoded
+  //   let result: number[] = []; 
+  //   for (let i = 1; i <= 25; i++) {
+  //     dailyAttendanceData.forEach((element) => {
+  //       if(element.day.getDate() == i){
+  //         result.push(element.totalEmployees-element.absentees);
+  //       }
+  //       else{
+  //         result.push(0);
+  //       }
+  //     });
+      
+  //   }
+  //   console.log(result);
+    
+  //   return result
+  // }
+
   generateXaxisLabel(length: number): string[] {
     const result: string[] = []; 
     for (let i = 1; i <= length; i++) {
@@ -52,10 +91,10 @@ export class GraphComponent  {
 
   monthSelection() {
     this.currentMonth = this.monthNames[<number>this.graphDataMonth?.getMonth()]
-    this.graphInit()
+    this.graphInit(2)
   }
 
-  graphInit(){
+  graphInit(numberOfWorkingDays:number){
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
@@ -66,10 +105,12 @@ export class GraphComponent  {
         datasets: [
             {
                 label: 'Present',
+                // data: this.calculateYaxis(this.dailyAttendanceData),
                 data: this.generateRandomData(this.numberOfWorkingDays),
-                fill: false,
+                fill: true,
                 borderColor: "#EA454C",
-                tension: 0.4
+                tension: 0.4,
+                backgroundColor: 'rgba(234, 69, 76, 0.1)'
             },
         ]
     };
