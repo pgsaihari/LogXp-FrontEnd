@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule, } from 'primeng/table';
-import { AutoComplete } from 'primeng/autocomplete';
 import { NgClass, NgIf } from '@angular/common';
 import { TopHeaderComponent } from '../top-header/top-header.component';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
@@ -24,6 +23,7 @@ export class TableComponent implements OnInit {
   private datePipe = new DatePipe('en-US');
   selectedTraineeCode: string ="";
   isSideProfileVisible?: boolean |undefined = false;
+  selectedDate: Date | undefined;
   constructor(private traineeAttendancelogService: TraineeAttendancelogService) {}
 
   @Input() statusFilter: string = '';
@@ -31,7 +31,6 @@ export class TableComponent implements OnInit {
   items: any[] | undefined;
   selectedItem: any;
   suggestions: any[] = [];
-  date2: Date | undefined;
   todayDate: string | undefined;
   selectedOptions: any[] = [];
 
@@ -46,8 +45,9 @@ export class TableComponent implements OnInit {
     { name: 'Batch 4', code: 'Batch 4' },
   ];
 
-  traineeLogs: TraineeAttendanceLogs[] = [];
-  // filteredTrainees: TraineeAttendanceLogs[] = [];
+
+  filteredTrainees: TraineeAttendanceLogs[] = [];
+  originalTraineeLogs: TraineeAttendanceLogs[] = [];
   showTimeColumns: boolean = true;
 
   formatDate(dateString: string): string {
@@ -61,88 +61,95 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getTraineeAttendanceLogs(); // Fetch data from the API
+    this.setDefaultDateFilter();
   }
 
   getTraineeAttendanceLogs() {
     this.traineeAttendancelogService.getTraineeAttendanceLogs().subscribe(
       (response: any) => {
-        if (response && response.attendanceLogs && Array.isArray(response.attendanceLogs)) {
-          this.traineeLogs = response.attendanceLogs;
+        if (response &&response.attendanceLogs && Array.isArray(response.attendanceLogs)) {
+        
+          this.originalTraineeLogs = response.attendanceLogs;
+          this.filteredTrainees = [...this.originalTraineeLogs];
+          this.filterByDate();
         } else {
           console.error('API did not return an array:', response);
-          this.traineeLogs = [];
+          this.originalTraineeLogs = [];
+          this.filteredTrainees = [];
         }
       },
       (error) => {
         console.error('Error fetching trainee attendance logs:', error);
-        this.traineeLogs = [];
+        this.originalTraineeLogs = [];
+        this.filteredTrainees = [];
       }
     );
   }    
 
-  applyStatusFilter() {
-    if (this.statusFilter) {
-      this.traineeLogs = this.traineeLogs.filter(trainee => trainee.status === this.statusFilter);
-    }
-    this.checkTimeColumnsVisibility();
-  }
+  // applyStatusFilter() {
+  //   if (this.statusFilter) {
+  //     this.traineeLogs = this.traineeLogs.filter(trainee => trainee.status === this.statusFilter);
+  //   }
+    
+  // }
 
   search(event: AutoCompleteCompleteEvent) {
-    this.suggestions = [...Array(10).keys()].map(item => event.query + '-' + item);
-    // this.filterTrainees(event.query);
+    const query = event.query;
+    this.filterTrainees(query);
   }
+  
 
   filterTrainees(query: string): void {
     if (query) {
-      this.traineeLogs = this.traineeLogs.filter(trainee =>
-        Object.values(trainee).some(value =>
-          value?.toString().toLowerCase().includes(query.toLowerCase())
-        )
+      this.filteredTrainees = this.originalTraineeLogs.filter(trainee =>
+        trainee.name && trainee.name.toLowerCase().includes(query.toLowerCase())
       );
     } else {
-      this.traineeLogs = this.traineeLogs;
+      // Reset to the original data if the query is empty
+      this.filteredTrainees = [...this.originalTraineeLogs]; // Changed to use originalTraineeLogs
+      this.filterByDate();
+      
     }
-    this.checkTimeColumnsVisibility();
   }
-
-  filterByDate() {
-    if (this.date2) {
-      const selectedDateString = this.date2.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      console.log('Selected Date:', selectedDateString);
-      this.traineeLogs = this.traineeLogs.filter(trainee => trainee.date === selectedDateString);
-    } else {
-      this.traineeLogs = this.traineeLogs;
-    }
-    this.checkTimeColumnsVisibility();
-  }
-
-  filterByStatus(selectedOptions: any[]) {
-    const statusCodes = selectedOptions.filter(option => !option.code.startsWith('Batch')).map(option => option.code);
-    const batchCodes = selectedOptions.filter(option => option.code.startsWith('Batch')).map(option => option.code);
-
-    if ((statusCodes.includes('ALL') || statusCodes.length === 0) && batchCodes.length === 0) {
-      this.traineeLogs = this.traineeLogs;
-    } else {
-      this.traineeLogs = this.traineeLogs.filter(trainee =>
-        (statusCodes.length === 0 || statusCodes.includes(trainee.status || '')) &&
-        (batchCodes.length === 0 || batchCodes.includes(trainee.ilp || ''))
+  
+  
+  
+  filterByDate(): void {
+    if (this.selectedDate) {
+      // Transform the selected date to a string format (yyyy-MM-dd) for comparison
+      const selectedDateString = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
+      // Filter the trainees based on the selected date
+      this.filteredTrainees = this.originalTraineeLogs.filter(trainee =>
+        this.datePipe.transform(new Date(trainee.date), 'yyyy-MM-dd') === selectedDateString
       );
-    }
-    this.checkTimeColumnsVisibility();
-  }
-
-  isAbsent(status?: string): boolean {
-    return status === 'Absent';
-  }
-
-  checkTimeColumnsVisibility(): void {
-    if (Array.isArray(this.traineeLogs)) {
-      this.showTimeColumns = this.traineeLogs.some(trainee => !this.isAbsent(trainee.status));
     } else {
-      console.error('traineeLogs is not an array:', this.traineeLogs);
-      this.showTimeColumns = true; // Default behavior if data is corrupted
+      // If no date is selected, reset to original data
+      this.filteredTrainees = [...this.originalTraineeLogs];
     }
   }
+
+  setDefaultDateFilter(): void {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    this.selectedDate = yesterday;
+    this.filterByDate(); // Apply the filter for yesterday's date by default
+  }
+
+  // filterByStatus(selectedOptions: any[]) {
+  //   const statusCodes = selectedOptions.filter(option => !option.code.startsWith('Batch')).map(option => option.code);
+  //   const batchCodes = selectedOptions.filter(option => option.code.startsWith('Batch')).map(option => option.code);
+
+  //   if ((statusCodes.includes('ALL') || statusCodes.length === 0) && batchCodes.length === 0) {
+  //     this.traineeLogs = this.traineeLogs;
+  //   } else {
+  //     this.traineeLogs = this.traineeLogs.filter(trainee =>
+  //       (statusCodes.length === 0 || statusCodes.includes(trainee.status || '')) &&
+  //       (batchCodes.length === 0 || batchCodes.includes(trainee.ilp || ''))
+  //     );
+  //   }
+    
+  // }
+
 
   getStatusClass(status: string): string {
     switch (status) {
@@ -159,7 +166,10 @@ export class TableComponent implements OnInit {
     }
   }
 
-  getCheckinTimeClass(time: string): string {
+  getCheckinTimeClass(time: string, status: string): string {
+    if (status === 'On Leave') {
+      return ''; // No special class for absent
+    }
     if (!time) return '';
     // Extract the time part (08:58:18) from the datetime string
     const timePart = time.split('T')[1];
@@ -176,7 +186,10 @@ export class TableComponent implements OnInit {
     }
   }
 
-  getCheckoutTimeClass(logOuttime: string): string {
+  getCheckoutTimeClass(logOuttime: string, status: string): string {
+    if (status === 'On Leave') {
+      return ''; // No special class for absent
+    }
     if (!logOuttime) return '';
    
     // Extract the time part (HH:MM:SS) from the datetime string
@@ -196,6 +209,13 @@ export class TableComponent implements OnInit {
   }
   closeSideProfile(): void {
     this.isSideProfileVisible = false;  // Set to false when hiding the side profile
+  }
+
+  getDisplayTime(time: string, status: string): string {
+    if (status === 'On Leave') {
+      return '-'; // Display '-' for absent status
+    }
+    return time ? this.formatTime(time) : '-';
   }
   
 }
