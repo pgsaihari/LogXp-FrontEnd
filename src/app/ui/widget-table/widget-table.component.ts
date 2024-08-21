@@ -3,7 +3,7 @@ import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import {  DatePipe, NgClass } from '@angular/common';
+import {  DatePipe, NgClass,NgIf } from '@angular/common';
 import { WidgetAttendance } from '../../core/interfaces/widget-attendance';
 import { AttendanceLogsService } from '../../core/services/attendance-logs.service';
 

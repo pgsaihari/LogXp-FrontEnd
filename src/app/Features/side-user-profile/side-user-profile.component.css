@@ -53,6 +53,14 @@
     color: #777;  /* Softer text color */
 }
 
+/* Additional info styling */
+.additional-info {
+    margin-top: 10px; /* Add space above the additional info */
+    text-align: left;
+    font-size: 12px; /* Smaller font for additional details */
+    color: #555;
+}
+
 /* Table Section */
 .table-section {
     flex: 1;
@@ -160,7 +168,6 @@
     }
 }
 
-
 /* Close button styling */
 .close-btn {
     position: absolute;
@@ -178,3 +185,33 @@
 .close-btn:hover {
     color: #ff0000; /* Red color on hover to indicate action */
 }
+/* Additional info styling */
+.additional-info {
+    padding-left: 10%;
+    margin-top: 15px; /* Add space above the additional info */
+    font-size: 14px; /* Larger font size for better readability */
+    color: #333; /* Darker text color for better contrast */
+}
+
+/* Info item container */
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* Space between info items */
+}
+
+/* Icon styling */
+.info-item i {
+    font-size: 24px; /* Larger icon size */
+    color: #ff0000; /* Primary color for the icons */
+    margin-right: 10px; /* Space between the icon and the text */
+}
+
+/* Text styling */
+.info-item p {
+    margin: 0; /* Remove default margin */
+    font-size: 16px; /* Slightly larger text */
+    font-weight: 500; /* Medium font weight for emphasis */
+    color: #555; /* Softer text color */
+}
+
