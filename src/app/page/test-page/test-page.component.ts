@@ -8,10 +8,12 @@ import { CallenderComponent } from '../../ui/callender/callender.component';
 import { FormComponent } from '../../ui/form/form.component';
 import { WidgetTableComponent } from "../../ui/widget-table/widget-table.component";
 import { UserTableComponent } from "../../ui/user-table/user-table.component";
+import { SingleUserTableComponent } from "../../ui/single-user-table/single-user-table.component";
+import { SideUserProfileComponent } from "../../Features/side-user-profile/side-user-profile.component";
 @Component({
   selector: 'app-test-page',
   standalone: true,
-  imports: [CardModule, ButtonModule, WidgetCardComponent, FormComponent, CallenderComponent, WidgetTableComponent, UserTableComponent],
+  imports: [CardModule, ButtonModule, WidgetCardComponent, FormComponent, CallenderComponent, WidgetTableComponent, UserTableComponent, SingleUserTableComponent, SideUserProfileComponent],
   templateUrl: './test-page.component.html',
   styleUrl: './test-page.component.css'
 })

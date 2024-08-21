@@ -20,4 +20,8 @@ export class TraineeAttendancelogService {
   getAttendanceOfAMonth( month:number, year:number ):Observable<DailyAttendanceOfMonth[]>{
     return this.http.get<DailyAttendanceOfMonth[]>(this.apiUrl+`/GetAttendanceOfAMonth?month=${month}&year=${year}`);
   }
+  getLogsByEmployeeCode(employeeCode: string): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
+    const url = `${this.apiUrl}/logsByEmployee/${employeeCode}`;
+    return this.http.get<{ logs: TraineeAttendanceLogs[], count: number, message: string }>(url);
+  }
 }

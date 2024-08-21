@@ -10,7 +10,7 @@
         [rows]="10"
         [paginator]="true"
         [scrollable]="true"
-        scrollHeight="200px"
+        scrollHeight="250px"
         [globalFilterFields]="['employeeCode', 'name', 'email', 'batch']"
         [tableStyle]="{ 'min-width': '20rem' }"
         [(selection)]="selectedTrainees"
@@ -21,14 +21,18 @@
     >
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <h5 class="m-0">Manage Trainees</h5>
-                <p-toolbar>
+                <h3 class="m-0">Manage Trainees</h3>
+                <!-- <p-toolbar>
                     <div class="p-toolbar-group-right">
                         <button pButton label="Set Active" icon="pi pi-check" class="p-button-success" (click)="setIsActiveForSelected(true)"></button>
                         
                         <button pButton label="Set Inactive" icon="pi pi-times" class="p-button-danger" (click)="setIsActiveForSelected(false)"></button>
                     </div>
-                </p-toolbar>  
+                </p-toolbar>   -->
+                <!-- Button to open the dialog -->
+<p-button label="Change Trainee Status" icon="pi pi-cog" (onClick)="isSetStatusDialogVisible = true"></p-button>
+
+
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input 
@@ -70,7 +74,7 @@
         <ng-template pTemplate="body" let-trainee>
             <tr>
                 <td>
-                    <p-tableCheckbox [value]="trainee"></p-tableCheckbox>
+                    <p-tableCheckbox  [value]="trainee"></p-tableCheckbox>
                 </td>
                 <td>
                     {{ trainee.employeeCode }}
@@ -182,4 +186,24 @@
     </p-dialog>
 
     <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+    <!-- Dialog box for setting trainees as active or inactive -->
+<p-dialog 
+[(visible)]="isSetStatusDialogVisible" 
+[style]="{ width: '300px' }" 
+header="Set Trainee Status" 
+[modal]="true" 
+[draggable]="false" 
+[resizable]="false"
+[closable]="true"
+appendTo="body"
+styleClass="p-fluid"
+>
+<div class="p-grid p-align-center p-justify-center">
+    <div class="p-col">
+        <button pButton label="Set Active" icon="pi pi-check" class="p-button-success" (click)="setIsActiveForSelected(true)"></button>
+    </div>
+    <div class="p-col">
+        <button pButton label="Set Inactive" icon="pi pi-times" class="p-button-danger" (click)="setIsActiveForSelected(false)"></button>
+    </div>
 </div>
+</p-dialog>

@@ -44,7 +44,7 @@ export class UserTableComponent implements OnInit  {
 
     submitted: boolean = false;
    
-      
+    isSetStatusDialogVisible=false;
     constructor(private traineeService: TraineeServiceService, private messageService: MessageService, private confirmationService: ConfirmationService) {}
 
     ngOnInit() {
