@@ -5,7 +5,9 @@
             placeholder="{{todayDate}}" />
     </div>
     <div class="card table-container">
-        <p-table [value]="filteredTrainees" [paginator]="true" [rows]="4" [sortMode]="'single'">
+
+        <p-table [value]="widgetAttendance" [paginator]="true" [rows]="4" [sortMode]="'single'" [paginatorPosition]="'top'">
+
             <ng-template pTemplate="header">
                 <tr>
                     <th>ID</th>
@@ -16,21 +18,19 @@
             </ng-template>
             <ng-template pTemplate="body" let-trainee>
                 <tr>
-                    <td><strong>{{ trainee.id }}</strong></td>
-                    <td><strong>{{ trainee.employee }}</strong></td>
-                    <td><strong>{{ trainee.ilp }}</strong></td>
-                    <td><strong><span [ngClass]="getTimeClass(
-                        toggleField === 'Check-In' ? trainee.checkin :
-                        toggleField === 'Check-Out' ? trainee.checkout :
-                        trainee.workhours
-                      )">
-                        {{
-                        toggleField === 'Check-In'
-                          ? trainee.checkin
-                          : toggleField === 'Check-Out'
-                          ? trainee.checkout
-                          : trainee.workhours
-                      }}</span></strong></td>
+
+                    <td><strong>{{ trainee.employeeCode }}</strong></td>
+                    <td><strong>{{ trainee.name }}</strong></td>
+                    <td><strong>{{ trainee.batch }}</strong></td>
+                    <td>
+                        <strong *ngIf="getTime(trainee) !== 'N/A'; else notAvailable">
+                            {{ getTime(trainee) | date:'hh:mm a' }}
+                        </strong>
+                        <ng-template #notAvailable>
+                            <strong>{{ getTime(trainee) }}</strong>
+                        </ng-template>
+                    </td>
+
                 </tr>
             </ng-template>
         </p-table>
