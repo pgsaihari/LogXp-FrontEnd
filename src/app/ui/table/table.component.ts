@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule, } from 'primeng/table';
-import { AutoComplete } from 'primeng/autocomplete';
 import { NgClass, NgIf } from '@angular/common';
 import { TopHeaderComponent } from '../top-header/top-header.component';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
@@ -46,8 +45,9 @@ export class TableComponent implements OnInit {
     { name: 'Batch 4', code: 'Batch 4' },
   ];
 
-  traineeLogs: TraineeAttendanceLogs[] = [];
-  // filteredTrainees: TraineeAttendanceLogs[] = [];
+
+  filteredTrainees: TraineeAttendanceLogs[] = [];
+  originalTraineeLogs: TraineeAttendanceLogs[] = [];
   showTimeColumns: boolean = true;
 
   formatDate(dateString: string): string {
@@ -66,75 +66,78 @@ export class TableComponent implements OnInit {
   getTraineeAttendanceLogs() {
     this.traineeAttendancelogService.getTraineeAttendanceLogs().subscribe(
       (response: any) => {
-        if (response && response.attendanceLogs && Array.isArray(response.attendanceLogs)) {
-          this.traineeLogs = response.attendanceLogs;
+        if (response &&response.attendanceLogs && Array.isArray(response.attendanceLogs)) {
+        
+          this.originalTraineeLogs = response.attendanceLogs;
+          this.filteredTrainees = [...this.originalTraineeLogs];
+         
         } else {
           console.error('API did not return an array:', response);
-          this.traineeLogs = [];
+          this.originalTraineeLogs = [];
+          this.filteredTrainees = [];
         }
       },
       (error) => {
         console.error('Error fetching trainee attendance logs:', error);
-        this.traineeLogs = [];
+        this.originalTraineeLogs = [];
+        this.filteredTrainees = [];
       }
     );
   }    
 
-  applyStatusFilter() {
-    if (this.statusFilter) {
-      this.traineeLogs = this.traineeLogs.filter(trainee => trainee.status === this.statusFilter);
-    }
+  // applyStatusFilter() {
+  //   if (this.statusFilter) {
+  //     this.traineeLogs = this.traineeLogs.filter(trainee => trainee.status === this.statusFilter);
+  //   }
     
-  }
+  // }
 
   search(event: AutoCompleteCompleteEvent) {
-  
+    const query = event.query;
+    this.filterTrainees(query);
   }
+  
 
   filterTrainees(query: string): void {
     if (query) {
-      this.traineeLogs = this.traineeLogs.filter(trainee =>
-        Object.values(trainee).some(value =>
-          value.toString().toLowerCase().includes(query)
-        )
+      this.filteredTrainees = this.originalTraineeLogs.filter(trainee =>
+        trainee.name && trainee.name.toLowerCase().includes(query.toLowerCase())
       );
     } else {
       // Reset to the original data if the query is empty
-      this.getTraineeAttendanceLogs(); // Re-fetch or reset data as needed
+      this.filteredTrainees = [...this.originalTraineeLogs]; // Changed to use originalTraineeLogs
+      
     }
-    
   }
+  
+  
+  
 
-  filterByDate() {
-    if (this.date2) {
-      const selectedDateString = this.date2.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      console.log('Selected Date:', selectedDateString);
-      this.traineeLogs = this.traineeLogs.filter(trainee => trainee.date === selectedDateString);
-    } else {
-      this.traineeLogs = this.traineeLogs;
-    }
+  // filterByDate() {
+  //   if (this.date2) {
+  //     const selectedDateString = this.date2.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  //     console.log('Selected Date:', selectedDateString);
+  //     this.traineeLogs = this.traineeLogs.filter(trainee => trainee.date === selectedDateString);
+  //   } else {
+  //     this.traineeLogs = this.traineeLogs;
+  //   }
    
-  }
+  // }
 
-  filterByStatus(selectedOptions: any[]) {
-    const statusCodes = selectedOptions.filter(option => !option.code.startsWith('Batch')).map(option => option.code);
-    const batchCodes = selectedOptions.filter(option => option.code.startsWith('Batch')).map(option => option.code);
+  // filterByStatus(selectedOptions: any[]) {
+  //   const statusCodes = selectedOptions.filter(option => !option.code.startsWith('Batch')).map(option => option.code);
+  //   const batchCodes = selectedOptions.filter(option => option.code.startsWith('Batch')).map(option => option.code);
 
-    if ((statusCodes.includes('ALL') || statusCodes.length === 0) && batchCodes.length === 0) {
-      this.traineeLogs = this.traineeLogs;
-    } else {
-      this.traineeLogs = this.traineeLogs.filter(trainee =>
-        (statusCodes.length === 0 || statusCodes.includes(trainee.status || '')) &&
-        (batchCodes.length === 0 || batchCodes.includes(trainee.ilp || ''))
-      );
-    }
+  //   if ((statusCodes.includes('ALL') || statusCodes.length === 0) && batchCodes.length === 0) {
+  //     this.traineeLogs = this.traineeLogs;
+  //   } else {
+  //     this.traineeLogs = this.traineeLogs.filter(trainee =>
+  //       (statusCodes.length === 0 || statusCodes.includes(trainee.status || '')) &&
+  //       (batchCodes.length === 0 || batchCodes.includes(trainee.ilp || ''))
+  //     );
+  //   }
     
-  }
-
-  isAbsent(status?: string): boolean {
-    return status === 'Absent';
-  }
-
+  // }
 
 
   getStatusClass(status: string): string {

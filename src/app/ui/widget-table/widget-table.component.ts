@@ -24,12 +24,12 @@ filteredTrainees: TraineeAttendanceLogs[] = [];
 
 
   trainees: TraineeAttendanceLogs[] = [
-    { id: '1000', employee: 'faheem', ilp: 'Batch 3', date: '31-07-2024', status: 'Work from Office', checkin:'09:00',checkout:'18:00',workhours:'9h' },
-    { id: '1001', employee: 'Samvrutha', ilp: 'Batch 4', date: '30-07-2024',  status: 'Work from Home',checkin:'09:00',checkout:'18:45',workhours:'9h' },
-    { id: '1002', employee: 'vijin', ilp: 'Batch 4', date: '30-07-2024',  status: 'Absent',checkin:'09:20',checkout:'17:30',workhours:'9h' },
-    { id: '1003', employee: 'Saii', ilp: 'Batch 3', date: '31-07-2024',  status: 'Late Arrival',checkin:'10:30',checkout:'18:00',workhours:'9h'},
-    { id: '1004', employee: 'Afthab', ilp: 'Batch 2', date: '10-07-2024',  status: 'Work from Office',checkin:'09:00',checkout:'16:00',workhours:'9h' },
-    { id: '1005', employee: 'flip', ilp: 'Batch 2', date: '10-07-2024',  status: 'Work from Office',checkin:'09:00',checkout:'16:30',workhours:'9h' }
+    { id: '1000', name: 'faheem', ilp: 'Batch 3', date: '31-07-2024', status: 'Work from Office', checkin:'09:00',checkout:'18:00',workhours:'9h' },
+    { id: '1001', name: 'Samvrutha', ilp: 'Batch 4', date: '30-07-2024',  status: 'Work from Home',checkin:'09:00',checkout:'18:45',workhours:'9h' },
+    { id: '1002', name: 'vijin', ilp: 'Batch 4', date: '30-07-2024',  status: 'Absent',checkin:'09:20',checkout:'17:30',workhours:'9h' },
+    { id: '1003', name: 'Saii', ilp: 'Batch 3', date: '31-07-2024',  status: 'Late Arrival',checkin:'10:30',checkout:'18:00',workhours:'9h'},
+    { id: '1004', name: 'Afthab', ilp: 'Batch 2', date: '10-07-2024',  status: 'Work from Office',checkin:'09:00',checkout:'16:00',workhours:'9h' },
+    { id: '1005', name: 'flip', ilp: 'Batch 2', date: '10-07-2024',  status: 'Work from Office',checkin:'09:00',checkout:'16:30',workhours:'9h' }
 ];
 
 

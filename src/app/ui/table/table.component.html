@@ -3,10 +3,11 @@
         <div class="filter-row">
             <div class="left-filters">
                 <p-autoComplete id="search-bar"
-                    [(ngModel)]="selectedItem" 
-                    [suggestions]="suggestions" 
-                    (completeMethod)="search($event)"
-                    placeholder="Quick Search" />
+                [(ngModel)]="selectedItem" 
+                [suggestions]="suggestions" 
+                (completeMethod)="search($event)"
+                
+                placeholder="Quick Search" />
             </div>
             <div class="right-filters">
                 <p-calendar 
@@ -44,7 +45,7 @@
         </div>
   
         <div class="card table-container">
-            <p-table [value]="traineeLogs" [paginator]="true" [rows]="5" [sortMode]="'single'" paginatorPosition="top">
+            <p-table [value]="filteredTrainees" [scrollable]="true" [scrollHeight]="'400px'" [sortMode]="'single'" paginatorPosition="top">
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="id">Code <p-sortIcon field="id"></p-sortIcon></th>
