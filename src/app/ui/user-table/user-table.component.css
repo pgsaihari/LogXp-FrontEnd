@@ -1,16 +1,14 @@
-.card{
-  margin-bottom: -50rem;
-}
+
 .p-toolbar-group-right{
   display:  flex;
   gap: 5px;
 }
 
 .table-container {
-    height: 100%; /* Adjust the height to fit within the viewport */
+    height: 100% ;/* Adjust the height to fit within the viewport */
     overflow-y: auto; /* Make the table scrollable */
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px;
   }
@@ -20,7 +18,15 @@
     border-collapse: collapse;
   }
   
-  .trainee-status-table th,
+  .trainee-status-table th{
+    font-size: small;
+  }
+  ::ng-deep.p-sortable-column{
+    font-size: small;
+  }
+  ::ng-deep.p-datatable-tbody{
+    font-size: small;
+  }
   .trainee-status-table td {
     padding: 8px; /* Reduced padding */
     text-align: center;
@@ -83,4 +89,15 @@
 .table-header {
     font-weight: bold;
     font-size: 0.25rem;
+}
+::ng-deep.p-datatable-header{
+padding: 0rem, 1rem;
+}
+::ng-deep.p-paginator{
+  padding: 0.5rem, 0.2rem;
+}
+::ng-deep.p-grid{
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }

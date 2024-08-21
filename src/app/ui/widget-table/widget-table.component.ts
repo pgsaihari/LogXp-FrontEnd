@@ -3,17 +3,17 @@ import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, DatePipe, NgClass } from '@angular/common';
+import {  DatePipe, NgClass } from '@angular/common';
 import { WidgetAttendance } from '../../core/interfaces/widget-attendance';
 import { AttendanceLogsService } from '../../core/services/attendance-logs.service';
 
 @Component({
   selector: 'app-widget-table',
   standalone: true,
-  imports: [TableModule, CalendarModule, AutoCompleteModule, FormsModule, NgClass, DatePipe, CommonModule],
+  imports: [TableModule, CalendarModule, AutoCompleteModule, FormsModule, NgClass, DatePipe,NgIf],
   templateUrl: './widget-table.component.html',
   styleUrl: './widget-table.component.css'
-  })
+})
 export class WidgetTableComponent implements OnChanges {
 
   @Input() tableHeader!: string;
@@ -101,5 +101,4 @@ export class WidgetTableComponent implements OnChanges {
       : '';
     return result;
   }
-  
 }

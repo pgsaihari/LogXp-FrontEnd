@@ -9,7 +9,6 @@ import { CardModule } from "primeng/card";
   styleUrl: './widget-card.component.css'
 })
 export class WidgetCardComponent {
-
 @Input() header_icon!: string ;
 @Input() card_number!: Number;
 @Input() card_header!: string;

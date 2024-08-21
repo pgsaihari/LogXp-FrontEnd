@@ -1,0 +1,22 @@
+<!-- Use *ngIf to conditionally display the container -->
+<div class="container" *ngIf="isVisible">
+    <!-- Close Button -->
+    <button class="close-btn" (click)="closeSideProfile()">&#10005;</button>
+
+    <!-- Trainee Details Section -->
+    <div class="trainee-details">
+        <h3>TRAINEE DETAILS</h3>
+       
+        <div class="trainee-info">
+            <h4>{{trainee.name}}</h4>
+            <p>{{trainee.employeeCode}}</p>
+            <p>{{trainee.batch}}</p>
+            <p>{{trainee.email}}</p>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-section">
+        <app-singleuser-table [traineelogs]="traineeLogs" ></app-singleuser-table>
+    </div>
+</div>

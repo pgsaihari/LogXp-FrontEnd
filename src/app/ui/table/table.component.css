@@ -208,3 +208,6 @@ p-table th {
         font-size: 10px; /* Adjust font size for small screens */
     }
 }
+.trainee-name{
+    cursor: pointer;
+}

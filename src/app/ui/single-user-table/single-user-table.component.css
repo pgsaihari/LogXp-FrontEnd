@@ -1,0 +1,171 @@
+/* Compact card container */
+.card {
+    padding: 0.2rem;
+    width: 100%;
+    max-width: 500px;  /* Smaller max width for dashboard */
+    overflow: hidden;  /* Prevent the card from overflowing */
+}
+
+#check-in{
+    color: green;
+}
+#check-out{
+    color: #EA454C;
+}
+/* Smaller input group for search */
+.p-inputgroup {
+    width: 150px;  /* Very compact search bar */
+}
+
+.p-inputgroup input {
+    font-size: 0.65rem;  /* Smaller font size for input text */
+    padding: 0.2rem;  /* Reduced padding for input */
+}
+
+/* Very compact table header and body cells */
+.p-table th, .p-table td {
+    padding: 0.1rem;  /* Minimal padding inside table cells */
+    font-size: 0.2rem;  /* Small font size for table cells */
+    line-height: 0.3rem;  /* Compact line height */
+}
+
+/* Checkbox Styling */
+.p-checkbox {
+    margin: 0;  /* Remove margin for checkbox */
+    transform: scale(0.8);  /* Make the checkbox smaller */
+}
+
+/* Smaller table headers */
+.p-table th {
+    font-size: 0.65rem;  /* Reduce font size for headers */
+    padding: 0.1rem;  /* Minimal padding for headers */
+}
+
+/* Scrollable table body */
+.p-table .p-datatable-tbody {
+    max-height: 700px;  /* Increased height for table body to show more data */
+    overflow-y: scroll;  /* Enable vertical scrolling */
+}
+
+.p-table .p-datatable-tbody::-webkit-scrollbar {
+    width: 8px;
+}
+
+.p-table .p-datatable-tbody::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+/* Overall smaller table layout */
+.p-table {
+    width: 100%;
+    max-width: 100%;
+    font-size: 0.65rem;  /* Very small overall font size */
+}
+
+/* Status badges */
+.status-badge {
+    color: white;
+    padding: 4px 8px;  /* Add more padding for a better look */
+    border-radius: 12px;  /* Larger border-radius for rounded badges */
+    font-size: 12px;  /* Small font size for badges */
+    font-weight: bold;  /* Bold text for emphasis */
+    display: inline-block;  /* Ensure the badge is inline */
+    text-transform: uppercase;  /* Make the text uppercase for uniformity */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
+    letter-spacing: 0.5px;  /* Slight letter spacing for a cleaner look */
+}
+
+/* Specific status badge styles */
+.status-badge-late {
+    color: #ffffff;
+    background-color: orange;
+    border: 1px solid #ff9800;  
+    color: white;
+    padding: 4px 8px;  /* Add more padding for a better look */
+    border-radius: 12px;  /* Larger border-radius for rounded badges */
+    font-size: 12px;  /* Small font size for badges */
+    font-weight: bold;  /* Bold text for emphasis */
+    display: inline-block;  /* Ensure the badge is inline */
+    text-transform: uppercase;  /* Make the text uppercase for uniformity */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
+    letter-spacing: 0.5px; /* Add a border with a darker shade */
+}
+
+.status-badge-leave {
+    background-color: red;
+    border: 1px solid #d32f2f; 
+    color: white;
+    padding: 4px 8px;  /* Add more padding for a better look */
+    border-radius: 12px;  /* Larger border-radius for rounded badges */
+    font-size: 12px;  /* Small font size for badges */
+    font-weight: bold;  /* Bold text for emphasis */
+    display: inline-block;  /* Ensure the badge is inline */
+    text-transform: uppercase;  /* Make the text uppercase for uniformity */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
+    letter-spacing: 0.5px;  /* Add a border with a darker shade */
+}
+
+.status-badge-present {
+    background-color: green;
+    border: 1px solid #388e3c; 
+    color: white;
+    padding: 4px 8px;  /* Add more padding for a better look */
+    border-radius: 12px;  /* Larger border-radius for rounded badges */
+    font-size: 12px;  /* Small font size for badges */
+    font-weight: bold;  /* Bold text for emphasis */
+    display: inline-block;  /* Ensure the badge is inline */
+    text-transform: uppercase;  /* Make the text uppercase for uniformity */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
+    letter-spacing: 0.5px;  /* Add a border with a darker shade */
+}
+
+/* Hover effect for status badges */
+.status-badge:hover {
+    opacity: 0.9;  /* Slight opacity change on hover */
+    transform: scale(1.05);  /* Slight scale increase on hover for interactivity */
+    transition: all 0.2s ease-in-out;  /* Smooth transition */
+}
+
+/* Smaller buttons */
+.p-button-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-size: 0.6rem;  /* Very small font size for buttons */
+    padding: 0.2rem 0.5rem;  /* Minimal padding for buttons */
+}
+
+.p-button-primary .pi {
+    font-size: 0.7rem;  /* Smaller icon size */
+}
+
+/* Smaller footer row */
+.p-table-footer {
+    font-size: 0.6rem;  /* Smaller footer font size */
+    padding: 0.2rem;  /* Minimal padding in footer */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .card {
+        max-width: 100%;
+    }
+    
+    .p-inputgroup {
+        width: 120px;  /* Very compact input group on small screens */
+    }
+
+    .p-inputgroup input {
+        font-size: 0.6rem;  /* Smaller input text for mobile */
+    }
+    
+    .p-table th, .p-table td {
+        font-size: 0.6rem;  /* Very small font size for mobile */
+        padding: 0.1rem;  /* Minimal padding on smaller screens */
+    }
+
+    .p-button-primary {
+        font-size: 0.55rem;  /* Smaller button text on mobile */
+        padding: 0.15rem 0.4rem;  /* Reduce button padding for mobile */
+    }
+}

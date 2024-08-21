@@ -4,6 +4,7 @@ import { TraineeServiceService } from '../../../core/services/trainee-service.se
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AttendanceLogsService } from '../../../core/services/attendance-logs.service';
+// import { AttendanceLogsService } from '../../../core/services/attendance-logs.service';
 
 
 @Component({
@@ -16,15 +17,15 @@ import { AttendanceLogsService } from '../../../core/services/attendance-logs.se
 export class WidgetCardsComponent implements OnInit {
 
   @Output() widgetSelected = new EventEmitter<{isClicked: boolean, header: string}>();
-  
-  constructor(private traineeService:TraineeServiceService,private messageService: MessageService, private AttendanceLogsService: AttendanceLogsService ){}
-  
+
+  constructor(private traineeService:TraineeServiceService,private messageService: MessageService ,private AttendanceLogsService:AttendanceLogsService){}
+
   totalTrainees:Number= 0;
   onTimeNum: Number = 0;
   absentees: Number = 0;
   lateArrivals: Number = 0;
   earlyDepartures: Number = 0;
-  
+
 
   activeCardIndex!: Number;
 
@@ -32,7 +33,7 @@ export class WidgetCardsComponent implements OnInit {
     this.widgetSelected.emit(dataRecieved)
     this.activeCardIndex = index;
     }
-  
+
   isCardActive(index: number): boolean {
     if (index >=0 && index <= 3) {
       return this.activeCardIndex === index;
@@ -49,10 +50,10 @@ export class WidgetCardsComponent implements OnInit {
           this.totalTrainees=response;
         },
         error=>{
-         // Show success toast
-         
+          this.messageService.add({severity:'error', summary:`${error.error.message}`, detail:'LogXp'}); // Show success toast
+
           console.error('Error adding trainee', error); 
-         
+
         })
 
        //Early Arrivals Count
@@ -66,13 +67,11 @@ export class WidgetCardsComponent implements OnInit {
           console.log('Count of absent:', count);
           this.absentees = count;
         });
-
-        //Late Arrivals Count
         this.AttendanceLogsService.lateArrivalsCount().subscribe(count => {
           console.log('Count of late arrivals:', count);
           this.lateArrivals = count;
         });
-        
+
         //Early Departures Count
         this.AttendanceLogsService.earlyDeparturesCount().subscribe(count => {
           console.log('Count of late arrivals:', count);
@@ -82,4 +81,3 @@ export class WidgetCardsComponent implements OnInit {
   }
 
 }
-

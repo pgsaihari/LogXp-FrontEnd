@@ -1,11 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { WidgetCardsComponent } from './widget-cards.component';
+
 import { TraineeServiceService } from '../../../core/services/trainee-service.service';
 import { AttendanceLogsService } from '../../../core/services/attendance-logs.service';
 import { of, throwError } from 'rxjs';
 import { WidgetCardComponent } from '../../../ui/widget-card/widget-card.component';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+
+
 
 describe('WidgetCardsComponent', () => {
   let component: WidgetCardsComponent;
@@ -26,6 +30,7 @@ describe('WidgetCardsComponent', () => {
     };
 
     await TestBed.configureTestingModule({
+
       imports: [WidgetCardComponent, FormsModule],
       declarations: [WidgetCardsComponent],
       providers: [
@@ -35,10 +40,16 @@ describe('WidgetCardsComponent', () => {
       ],
     }).compileComponents();
 
+      imports: [WidgetCardsComponent]
+    })
+    .compileComponents();
+
+
     fixture = TestBed.createComponent(WidgetCardsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
@@ -99,4 +110,9 @@ describe('WidgetCardsComponent', () => {
     component.ngOnInit();
     expect(console.error).toHaveBeenCalledWith('Error adding trainee', 'Error');
   });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
 });
