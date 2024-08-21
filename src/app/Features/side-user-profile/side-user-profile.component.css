@@ -1,0 +1,180 @@
+/* Container for the entire side nav and table */
+.container {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh; /* Full height of the viewport */
+    width: 400px; /* Adjusted width to make it more compact */
+    background-color: #f4f4f4; /* Subtle background color for the entire section */
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2); /* Slightly darker shadow for a more defined look */
+    overflow: hidden; /* Prevent scrolling */
+    z-index: 2000;
+}
+
+/* Trainee Details section */
+.trainee-details {
+    padding: 15px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center content vertically */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    height: 30%; /* Make the details section take up 30% of the container height */
+}
+
+/* Styling for the avatar */
+.trainee-avatar img {
+    width: 80px;  /* Smaller avatar for a more compact look */
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+/* Styling for the trainee name and batch details */
+.trainee-info {
+    text-align: center;
+    line-height: 1.4;
+}
+
+.trainee-info h4 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 16px;  /* Reduced font size for a compact look */
+    color: #333;  /* Darker text color for readability */
+}
+
+.trainee-info p {
+    margin: 5px 0 0;
+    font-size: 13px;  /* Smaller font size for a more professional appearance */
+    color: #777;  /* Softer text color */
+}
+
+/* Table Section */
+.table-section {
+    flex: 1;
+    padding: 10px 15px;  /* Reduced padding for a more compact layout */
+    width: 100%;
+    overflow-y: auto; /* Allow table to scroll if content exceeds */
+    height: 70%; /* Ensure the table section takes up 70% of the container height */
+}
+
+/* Scrollbar Styling for a cleaner look */
+.container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+/* Professional Button Styling (Add customer) */
+.p-button-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-size: 0.75rem;  /* Smaller font size */
+    padding: 0.4rem 0.6rem;  /* Compact button size */
+    border-radius: 5px;  /* Slightly rounded corners */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.p-button-primary:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Elevated shadow on hover */
+}
+
+/* Professional Table Styling */
+.p-table {
+    font-size: 0.75rem;  /* Smaller, cleaner font size */
+    width: 100%;
+    max-width: 100%;
+    border-spacing: 0;  /* Remove spacing between table cells */
+}
+
+.p-table th,
+.p-table td {
+    padding: 0.4rem 0.5rem;  /* Compact padding for table cells */
+    font-size: 0.75rem;  /* Uniform smaller font size */
+}
+
+.p-table th {
+    font-weight: 600;
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.p-table td {
+    border-bottom: 1px solid #e0e0e0;  /* Subtle border for clean separation */
+}
+
+/* Status Badges */
+.status-badge-open,
+.status-badge-paid,
+.status-badge-inactive {
+    padding: 0.1em 0.3em;
+    font-size: 0.7rem;
+    border-radius: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge-open {
+    background-color: #007bff;
+    color: white;
+}
+
+.status-badge-paid {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-badge-inactive {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;  /* Make container full width on smaller screens */
+    }
+
+    .p-inputgroup {
+        width: 150px;  /* Smaller input group width */
+    }
+
+    .p-table th,
+    .p-table td {
+        font-size: 0.7rem;  /* Even smaller font for mobile */
+        padding: 0.3rem;  /* Reduce padding on mobile */
+    }
+
+    .p-button-primary {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.5rem;
+    }
+}
+
+
+/* Close button styling */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+    z-index: 2000; /* Ensure the close button is always visible */
+    padding: 0;
+}
+
+.close-btn:hover {
+    color: #ff0000; /* Red color on hover to indicate action */
+}

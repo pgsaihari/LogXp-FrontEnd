@@ -15,4 +15,8 @@ export class TraineeAttendancelogService {
   getTraineeAttendanceLogs(): Observable<TraineeAttendanceLogs[]>{
     return this.http.get<TraineeAttendanceLogs[]>(this.apiUrl)
   }
+  getLogsByEmployeeCode(employeeCode: string): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
+    const url = `${this.apiUrl}/logsByEmployee/${employeeCode}`;
+    return this.http.get<{ logs: TraineeAttendanceLogs[], count: number, message: string }>(url);
+  }
 }

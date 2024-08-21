@@ -61,7 +61,7 @@
                 <ng-template pTemplate="body" let-trainee>
                     <tr>
                         <td><strong>{{ trainee.employeeCode }}</strong></td>
-                        <td><strong>{{ trainee.name }}</strong></td>
+                        <td (click)="showSideProfile(trainee.employeeCode)"><strong><span class="trainee-name">{{ trainee.name }} </span></strong></td>
                         <td><strong>{{ trainee.batch }}</strong></td>
                         <td><strong>{{ formatDate(trainee.date)}}</strong></td>
                         <td><strong><span [ngClass]="getStatusClass(trainee.status)">{{ trainee.status }}</span></strong></td>
@@ -75,4 +75,7 @@
         </div>
     </div>
   </div>
+  @if (isSideProfileVisible) {
+    <app-side-user-profile  [employeeCode]="selectedTraineeCode" [isVisible]="isSideProfileVisible" (closeProfile)="closeSideProfile()"></app-side-user-profile>
+  }
   
