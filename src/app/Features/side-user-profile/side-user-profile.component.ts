@@ -14,6 +14,8 @@ import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.mo
   styleUrl: './side-user-profile.component.css'
 })
 export class SideUserProfileComponent implements OnInit {
+totalLeaves: any="NA"
+lateArrivals: any="NA"
   ngOnInit(): void {
      console.log("hii")
       this.getTraineeDetails(this.employeeCode);
