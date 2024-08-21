@@ -23,6 +23,7 @@ export class TableComponent implements OnInit {
   private datePipe = new DatePipe('en-US');
   selectedTraineeCode: string ="";
   isSideProfileVisible?: boolean |undefined = false;
+  selectedDate: Date | undefined;
   constructor(private traineeAttendancelogService: TraineeAttendancelogService) {}
 
   @Input() statusFilter: string = '';
@@ -30,7 +31,6 @@ export class TableComponent implements OnInit {
   items: any[] | undefined;
   selectedItem: any;
   suggestions: any[] = [];
-  date2: Date | undefined;
   todayDate: string | undefined;
   selectedOptions: any[] = [];
 
@@ -61,6 +61,7 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getTraineeAttendanceLogs(); // Fetch data from the API
+    this.setDefaultDateFilter();
   }
 
   getTraineeAttendanceLogs() {
@@ -70,7 +71,7 @@ export class TableComponent implements OnInit {
         
           this.originalTraineeLogs = response.attendanceLogs;
           this.filteredTrainees = [...this.originalTraineeLogs];
-         
+          this.filterByDate();
         } else {
           console.error('API did not return an array:', response);
           this.originalTraineeLogs = [];
@@ -106,23 +107,33 @@ export class TableComponent implements OnInit {
     } else {
       // Reset to the original data if the query is empty
       this.filteredTrainees = [...this.originalTraineeLogs]; // Changed to use originalTraineeLogs
+      this.filterByDate();
       
     }
   }
   
   
   
+  filterByDate(): void {
+    if (this.selectedDate) {
+      // Transform the selected date to a string format (yyyy-MM-dd) for comparison
+      const selectedDateString = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
+      // Filter the trainees based on the selected date
+      this.filteredTrainees = this.originalTraineeLogs.filter(trainee =>
+        this.datePipe.transform(new Date(trainee.date), 'yyyy-MM-dd') === selectedDateString
+      );
+    } else {
+      // If no date is selected, reset to original data
+      this.filteredTrainees = [...this.originalTraineeLogs];
+    }
+  }
 
-  // filterByDate() {
-  //   if (this.date2) {
-  //     const selectedDateString = this.date2.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  //     console.log('Selected Date:', selectedDateString);
-  //     this.traineeLogs = this.traineeLogs.filter(trainee => trainee.date === selectedDateString);
-  //   } else {
-  //     this.traineeLogs = this.traineeLogs;
-  //   }
-   
-  // }
+  setDefaultDateFilter(): void {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    this.selectedDate = yesterday;
+    this.filterByDate(); // Apply the filter for yesterday's date by default
+  }
 
   // filterByStatus(selectedOptions: any[]) {
   //   const statusCodes = selectedOptions.filter(option => !option.code.startsWith('Batch')).map(option => option.code);
