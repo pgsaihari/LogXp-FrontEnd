@@ -17,7 +17,6 @@ import { WidgetTableComponent } from "../../ui/widget-table/widget-table.compone
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  @ViewChild(WidgetTableComponent) widgetTableComponent?: WidgetTableComponent;
   tableHeader!: string
   toggleField: string = 'Check-Out'; // Initialize default value
   isVisible:boolean=false;
@@ -34,9 +33,5 @@ export class HomeComponent {
     } else {
       this.toggleField = 'Monthly Leave Percentage';
     }
-  
-    // Trigger filtering based on the updated tableHeader
-    // this.widgetTableComponent?.filterTrainees('');
   }
-  
 }  

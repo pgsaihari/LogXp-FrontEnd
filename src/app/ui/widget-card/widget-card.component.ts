@@ -12,8 +12,9 @@ export class WidgetCardComponent {
 @Input() header_icon!: string ;
 @Input() card_number!: Number;
 @Input() card_header!: string;
-@Input() isActive: boolean = false;
 @Output() onBtnClick = new EventEmitter<{isClicked:boolean, header:string}>();
+
+isActive: boolean = false;
 
 constructor(private elementRef: ElementRef) {}
 

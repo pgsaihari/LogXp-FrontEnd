@@ -2,11 +2,11 @@
     <div class="search-filter">
         <h2>{{tableHeader}}</h2>
         <p-calendar id="datepick" [(ngModel)]="date" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-            placeholder="{{todayDate}}" />
+            placeholder="{{date}}" />
     </div>
     <div class="card table-container">
 
-        <p-table [value]="widgetAttendance" [paginator]="true" [rows]="4" [sortMode]="'single'" [paginatorPosition]="'top'">
+        <p-table [value]="widgetAttendance" [scrollable]="true" scrollHeight="400px" [rows]="4" [sortMode]="'single'">
 
             <ng-template pTemplate="header">
                 <tr>
