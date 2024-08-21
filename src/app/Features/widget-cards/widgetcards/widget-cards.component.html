@@ -1,10 +1,10 @@
 <div class="widget-cards-container">
     <div class="widget-cards">
-        <app-widget-card [card_number]="totalTrainees"  card_header="Total Employees" header_icon="fa-solid fa-users icon"></app-widget-card>
-        <app-widget-card [isActive]="isCardActive(0)" (onBtnClick)="clickWidget($event, 0)" [card_number]= "onTimeNum" card_header="On Time" header_icon="fa-solid fa-user-check"></app-widget-card>
-        <app-widget-card [isActive]="isCardActive(1)" (onBtnClick)="clickWidget($event, 1)" [card_number]= "absentees" card_header="Absent" header_icon="fa-solid fa-ban"></app-widget-card>
-        <app-widget-card [isActive]="isCardActive(2)"  (onBtnClick)="clickWidget($event, 2)" [card_number]= "lateArrivals" card_header="Late Arrivals" header_icon="fa-solid fa-user-clock"></app-widget-card>
-        <app-widget-card [isActive]="isCardActive(3)"  (onBtnClick)="clickWidget($event, 3)" [card_number]= "earlyDepartures" card_header="Early Departures" header_icon="fa-solid fa-sign-out-alt"></app-widget-card>
-        <app-widget-card [card_number]= 30 card_header="Working Days" header_icon="fa-solid fa-calendar-check"></app-widget-card>
+        <app-widget-card routerLink="/search" [card_number]="totalTrainees"  card_header="Total Trainees" header_icon="fa-solid fa-users icon"></app-widget-card>
+        <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= "onTimeNum" card_header="On Time" header_icon="fa-solid fa-user-check"></app-widget-card>
+        <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= "absentees" card_header="Absent" header_icon="fa-solid fa-ban"></app-widget-card>
+        <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= "lateArrivals" card_header="Late Arrivals" header_icon="fa-solid fa-user-clock"></app-widget-card>
+        <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= "earlyDepartures" card_header="Early Departures" header_icon="fa-solid fa-sign-out-alt"></app-widget-card>
+        <app-widget-card (onBtnClick)="clickWidget($event)" [card_number]= 30 card_header="Attendance Graph" header_icon="fa-solid fa-calendar-check"></app-widget-card>
     </div>
 </div>

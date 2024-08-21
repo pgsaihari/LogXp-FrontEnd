@@ -4,13 +4,14 @@ import { TraineeServiceService } from '../../../core/services/trainee-service.se
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AttendanceLogsService } from '../../../core/services/attendance-logs.service';
+import { RouterLink, RouterOutlet } from '@angular/router';
 // import { AttendanceLogsService } from '../../../core/services/attendance-logs.service';
 
 
 @Component({
   selector: 'app-widget-cards',
   standalone: true,
-  imports: [WidgetCardComponent,FormsModule],
+  imports: [WidgetCardComponent,FormsModule, RouterLink, RouterOutlet],
   templateUrl: './widget-cards.component.html',
   styleUrl: './widget-cards.component.css'
 })
@@ -29,17 +30,10 @@ export class WidgetCardsComponent implements OnInit {
 
   activeCardIndex!: Number;
 
-  clickWidget(dataRecieved: { isClicked: boolean, header: string }, index:Number){
+  clickWidget(dataRecieved: { isClicked: boolean, header: string }){
     this.widgetSelected.emit(dataRecieved)
-    this.activeCardIndex = index;
     }
 
-  isCardActive(index: number): boolean {
-    if (index >=0 && index <= 3) {
-      return this.activeCardIndex === index;
-    }
-    return false;
-  }
 
 
   ngOnInit(): void {
