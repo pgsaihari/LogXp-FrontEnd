@@ -36,7 +36,7 @@ export class HomeComponent {
     }
   
     // Trigger filtering based on the updated tableHeader
-    this.widgetTableComponent?.filterTrainees('');
+    // this.widgetTableComponent?.filterTrainees('');
   }
   
 }  
