@@ -1,95 +1,89 @@
 <div class="card">
     <p-toast></p-toast>
-   
- 
- 
-
     <p-table
         #dt
         [value]="trainees"
         [rows]="10"
-        [paginator]="true"
         [scrollable]="true"
-        scrollHeight="250px"
+        scrollHeight="400px"
         [globalFilterFields]="['employeeCode', 'name', 'email', 'batch']"
         [tableStyle]="{ 'min-width': '20rem' }"
         [(selection)]="selectedTrainees"
         [rowHover]="true"
         dataKey="employeeCode"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        [showCurrentPageReport]="true"
     >
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h3 class="m-0">Manage Trainees</h3>
-                <!-- <p-toolbar>
-                    <div class="p-toolbar-group-right">
-                        <button pButton label="Set Active" icon="pi pi-check" class="p-button-success" (click)="setIsActiveForSelected(true)"></button>
-                        
-                        <button pButton label="Set Inactive" icon="pi pi-times" class="p-button-danger" (click)="setIsActiveForSelected(false)"></button>
-                    </div>
-                </p-toolbar>   -->
-                <!-- Button to open the dialog -->
-<p-button label="Change Trainee Status" icon="pi pi-cog" (onClick)="isSetStatusDialogVisible = true"></p-button>
-
-
+                <p-button 
+                    label="Change Trainee Status" 
+                    icon="pi pi-cog" 
+                    (onClick)="isSetStatusDialogVisible = true">
+                </p-button>
+                <div class="p-field">
+                    <p-dropdown 
+                        id="batchId" 
+                        [options]="batchOptions" 
+                        [(ngModel)]="selectedBatchId" 
+                        optionLabel="label" 
+                        placeholder="Select a Batch">
+                    </p-dropdown>
+                </div>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input 
-                    pInputText 
-                    type="text" 
-                    #globalFilterInput
-                    (input)="dt.filterGlobal(globalFilterInput.value, 'contains')" 
-                    placeholder="Search..." />
+                        pInputText 
+                        type="text" 
+                        #globalFilterInput
+                        (input)="dt.filterGlobal(globalFilterInput.value, 'contains')" 
+                        placeholder="Search..." />
                 </span>
             </div>
         </ng-template>
+
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 4rem">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th pSortableColumn="employeeCode" >
-                    Trainee Id<p-sortIcon field="employeeCode"></p-sortIcon>
+                <th pSortableColumn="employeeCode">
+                    Trainee Id
+                    <p-sortIcon field="employeeCode"></p-sortIcon>
                 </th>
                 <th pSortableColumn="name">
-                    Name <p-sortIcon field="name"></p-sortIcon>
+                    Name
+                    <p-sortIcon field="name"></p-sortIcon>
                 </th>
                 <th pSortableColumn="email">
-                    Email <p-sortIcon field="email"></p-sortIcon>
+                    Email
+                    <p-sortIcon field="email"></p-sortIcon>
                 </th>
-                 <th pSortableColumn="batch">
-        <div class="flex justify-content-between align-items-center">
-          Batch
-          <p-sortIcon field="batch"></p-sortIcon>
-          <p-columnFilter type="text" field="batch" display="menu" class="ml-auto"></p-columnFilter>
-        </div>
-      </th>
+                <th pSortableColumn="batch">
+                    Batch
+                    <p-sortIcon field="batch"></p-sortIcon>
+                </th>
                 <th pSortableColumn="isActive">
-                    Active Status <p-sortIcon field="isActive"></p-sortIcon>
+                    Active Status
+                    <p-sortIcon field="isActive"></p-sortIcon>
                 </th>
                 <th></th>
             </tr>
         </ng-template>
+
         <ng-template pTemplate="body" let-trainee>
             <tr>
                 <td>
-                    <p-tableCheckbox  [value]="trainee"></p-tableCheckbox>
+                    <p-tableCheckbox [value]="trainee"></p-tableCheckbox>
                 </td>
+                <td>{{ trainee.employeeCode }}</td>
+                <td>{{ trainee.name }}</td>
+                <td>{{ trainee.email }}</td>
+                <td>{{ trainee.batchId }}</td>
                 <td>
-                    {{ trainee.employeeCode }}
-                </td>
-                <td>
-                    {{ trainee.name }}
-                </td>
-                <td>
-                    {{ trainee.email }}
-                </td>
-                <td>
-                    {{ trainee.batch }}
-                </td>
-                <td>
-                    <p-tag [value]="trainee.isActive ? 'Active' : 'Inactive'" [severity]="trainee.isActive ? 'success' : 'danger'"></p-tag>
+                    <p-tag 
+                        [value]="trainee.isActive ? 'Active' : 'Inactive'" 
+                        [severity]="trainee.isActive ? 'success' : 'danger'">
+                    </p-tag>
                 </td>
                 <td>
                     <p-button 
@@ -98,112 +92,101 @@
                         [rounded]="true" 
                         [outlined]="true" 
                         severity="success" 
-                        (onClick)="editTrainee(trainee)"></p-button>
-                   
+                        (onClick)="editTrainee(trainee)">
+                    </p-button>
                 </td>
             </tr>
         </ng-template>
-        <!-- <ng-template pTemplate="summary">
-            <div class="flex align-items-center justify-content-between">
-                In total there are {{ trainees ? trainees.length : 0 }} trainees.
-            </div>
-        </ng-template> -->
     </p-table>
 
+    <!-- Dialog for Trainee Details -->
     <p-dialog 
         [(visible)]="traineeDialog" 
         [style]="{ width: '450px' }" 
         header="Trainee Details" 
         [modal]="true" 
         styleClass="p-fluid">
-            <ng-template pTemplate="content">
-                <div class="field">
-                    <label for="employeeCode">Employee Code</label>
-                    <input 
-                        type="text" 
-                        pInputText 
-                        id="employeeCode" 
-                        [(ngModel)]="trainee.employeeCode" 
-                        required 
-                        autofocus />
-                    <small class="p-error" *ngIf="submitted && !trainee.employeeCode">
-                        Employee Code is required.
-                    </small>
-                </div>
-                <div class="field">
-                    <label for="name">Name</label>
-                    <input 
-                        type="text" 
-                        pInputText 
-                        id="name" 
-                        [(ngModel)]="trainee.name" 
-                        required />
-                    <small class="p-error" *ngIf="submitted && !trainee.name">
-                        Name is required.
-                    </small>
-                </div>
-                <div class="field">
-                    <label for="email">Email</label>
-                    <input 
-                        type="email" 
-                        pInputText 
-                        id="email" 
-                        [(ngModel)]="trainee.email" />
-                </div>
-                <div class="field">
-                    <label for="batch">Batch</label>
-                    <input 
-                        type="text" 
-                        pInputText 
-                        id="batch" 
-                        [(ngModel)]="trainee.batch" />
-                </div>
-                <div class="field">
-                    <label for="isActive">Active Status</label>
-                    <p-dropdown 
-                        [(ngModel)]="trainee.isActive" 
-                        [options]="[{ label: 'Active', value: true }, { label: 'Inactive', value: false }]" 
-                        optionLabel="label" 
-                        optionValue="value">
-                    </p-dropdown>
-                </div>
+        
+        <ng-template pTemplate="content">
+            <div class="field">
+                <label for="name">Name</label>
+                <input 
+                    type="text" 
+                    pInputText 
+                    id="name" 
+                    [(ngModel)]="trainee.name" 
+                    required />
+                <small class="p-error" *ngIf="submitted && !trainee.name">
+                    Name is required.
+                </small>
+            </div>
+            <div class="field">
+                <label for="email">Email</label>
+                <input 
+                    type="email" 
+                    pInputText 
+                    id="email" 
+                    [(ngModel)]="trainee.email" />
+            </div>
+            <div class="field">
+                <label for="batch">Batch</label>
+                <p-dropdown 
+                    [options]="batchOptions" 
+                    [(ngModel)]="trainee.batchId" 
+                    optionLabel="label"
+                    placeholder="Select Batch">
+                </p-dropdown>
+            </div>
+        </ng-template>
 
-            </ng-template>
-
-            <ng-template pTemplate="footer">
-                <p-button 
-                    label="Cancel" 
-                    icon="pi pi-times" 
-                    [text]="true" 
-                    (onClick)="hideDialog()"></p-button>
-                <p-button
-                    label="Save" 
-                    icon="pi pi-check" 
-                    [text]="true" 
-                    (onClick)="saveTrainee()"></p-button>
-            </ng-template>
-
+        <ng-template pTemplate="footer">
+            <p-button 
+                label="Cancel" 
+                icon="pi pi-times" 
+                [text]="true" 
+                (onClick)="hideDialog()">
+            </p-button>
+            <p-button 
+                label="Save" 
+                icon="pi pi-check" 
+                [text]="true" 
+                (onClick)="saveTrainee()">
+            </p-button>
+        </ng-template>
     </p-dialog>
 
+    <!-- Confirmation Dialog -->
     <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
-    <!-- Dialog box for setting trainees as active or inactive -->
-<p-dialog 
-[(visible)]="isSetStatusDialogVisible" 
-[style]="{ width: '300px' }" 
-header="Set Trainee Status" 
-[modal]="true" 
-[draggable]="false" 
-[resizable]="false"
-[closable]="true"
-appendTo="body"
-styleClass="p-fluid"
->
-<div class="p-grid p-align-center p-justify-center">
-    <div class="p-col">
-        <button pButton label="Set Active" icon="pi pi-check" class="p-button-success" (click)="setIsActiveForSelected(true)"></button>
-    </div>
-    <div class="p-col">
-        <button pButton label="Set Inactive" icon="pi pi-times" class="p-button-danger" (click)="setIsActiveForSelected(false)"></button>
-    </div>
+
+    <!-- Dialog for Setting Trainee Status -->
+    <p-dialog 
+        [(visible)]="isSetStatusDialogVisible" 
+        [style]="{ width: '300px' }" 
+        header="Set Trainee Status" 
+        [modal]="true" 
+        [draggable]="false" 
+        [resizable]="false"
+        [closable]="true"
+        appendTo="body"
+        styleClass="p-fluid">
+        
+        <div class="p-grid p-align-center p-justify-center">
+            <div class="p-col">
+                <p-button 
+                    label="Set Active" 
+                    icon="pi pi-check" 
+                    class="p-button-success" 
+                    (click)="setIsActiveForSelected(true)">
+                </p-button>
+            </div>
+            <div class="p-col">
+                <p-button 
+                    label="Set Inactive" 
+                    icon="pi pi-times" 
+                    class="p-button-danger" 
+                    (click)="setIsActiveForSelected(false)">
+                </p-button>
+            </div>
+        </div>
+    </p-dialog>
 </div>
-</p-dialog>
