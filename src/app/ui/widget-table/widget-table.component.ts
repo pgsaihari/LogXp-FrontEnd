@@ -38,20 +38,6 @@ export class WidgetTableComponent implements OnChanges {
   fetchAttendanceLogs() {
     switch (this.tableHeader) {
       case 'On Time':
-        // this.traineeAttendancelogService.onTimeLogs().subscribe(
-        //   (response: any) => {
-        //     this.widgetAttendance = response.earlyArrivals || [];
-        //     console.log('On Time Logs:', this.widgetAttendance);
-        //     if (response.earlyArrivals && response.earlyArrivals.length > 0) {
-        //       const loginTime = response.earlyArrivals[0].loginTime;
-        //       this.updateDateFromLoginTime(loginTime);
-        //     }  
-        //   },
-        //   (error) => {
-        //     console.error('Error fetching on time logs:', error);
-        //     this.widgetAttendance = [];
-        //   }
-        // );
         this.containerVisibility = '';
         this.traineeAttendancelogService.onTimeLogs()
         .pipe(
@@ -62,25 +48,14 @@ export class WidgetTableComponent implements OnChanges {
         )
         .subscribe((data:any) =>{
           this.widgetAttendance = data.earlyArrivals || [];
-          const loginTime = data.earlyArrivals[0].loginTime;
+          const loginTime = this.widgetAttendance[0].loginTime;
           if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
           else{console.log("no data");
           }
           
         });
         break;
-
       case 'Late Arrivals':
-        // this.traineeAttendancelogService.lateArrivalLogs().subscribe(
-        //   (response: any) => {
-        //     this.widgetAttendance = response.lateArrivals || [];
-        //     console.log('Late Arrival Logs:', response);
-        //   },
-        //   (error) => {
-        //     console.error('Error fetching late arrival logs:', error);
-        //     this.widgetAttendance = [];
-        //   }
-        // );
         this.containerVisibility = '';
         this.traineeAttendancelogService.lateArrivalLogs()
         .pipe(
@@ -94,18 +69,7 @@ export class WidgetTableComponent implements OnChanges {
           this.widgetAttendance = data.lateArrivals || [];
         });
         break;
-      
       case 'Absent':
-        // this.traineeAttendancelogService.absenteeLogs().subscribe(
-        //   (response: any) => {
-        //     this.widgetAttendance = response.absentees || [];
-        //     console.log('Absent Logs:', response);
-        //   },
-        //   (error) => {
-        //     console.error('Error fetching absentee logs:', error);
-        //     this.widgetAttendance = [];
-        //   }
-        // );
         this.containerVisibility = '';
         this.traineeAttendancelogService.absenteeLogs()
         .pipe(
@@ -119,18 +83,7 @@ export class WidgetTableComponent implements OnChanges {
           this.widgetAttendance = data.absentees || [];
         });
         break;
-
       case 'Early Departures':
-        // this.traineeAttendancelogService.earlyDeparturesLogs().subscribe(
-        //   (response: any) => {
-        //     this.widgetAttendance = response.earlyDepartures || [];
-        //     console.log('Early Departure Logs:', response);
-        //   },
-        //   (error) => {
-        //     console.error('Error fetching early departure logs:', error);
-        //     this.widgetAttendance = [];
-        //   }
-        // );
         this.containerVisibility = '';
         this.traineeAttendancelogService.earlyDeparturesLogs()
         .pipe(
@@ -144,7 +97,6 @@ export class WidgetTableComponent implements OnChanges {
           this.widgetAttendance = data.earlyDepartures || [];
         });
         break;
-
       default:
         this.containerVisibility = "invisible";
         this.widgetAttendance = [];
