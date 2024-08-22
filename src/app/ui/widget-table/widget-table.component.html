@@ -2,7 +2,7 @@
     <div class="search-filter">
         <h2>{{tableHeader}}</h2>
         <p-calendar id="datepick" [(ngModel)]="date" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-            placeholder="{{date}}" />
+            placeholder="{{date}}" (onSelect)="dateChange()" />
     </div>
     <div class="card table-container">
 

@@ -17,11 +17,14 @@ import { catchError, of } from 'rxjs';
   
 })
 export class WidgetTableComponent implements OnChanges {
-
+  private datePipe = new DatePipe('en-US');
   @Input() tableHeader!: string;
   @Input() toggleField: string = 'Check-In';
-  todayDate: string | undefined;
-  date: Date | undefined;
+  date = new Date();
+  currentDay: Date = new Date();
+  day:number = 0;
+  month:number = 0;
+  year:number = 0;
   time: string = ''
   widgetAttendance: WidgetAttendance[] = [];
   error: any;
@@ -31,15 +34,22 @@ export class WidgetTableComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['tableHeader'] && this.tableHeader) {
+      this.date.setDate(this.currentDay.getDate() - 1);
+      this.day = this.date.getDate();
+      this.month = this.date.getMonth()+1;
+      this.year = this.date.getFullYear()
       this.fetchAttendanceLogs();
     }
   }
 
+  /**
+   * fuction to make API calls and assign the data to the desired table.
+   */
   fetchAttendanceLogs() {
     switch (this.tableHeader) {
       case 'On Time':
         this.containerVisibility = '';
-        this.traineeAttendancelogService.onTimeLogs()
+        this.traineeAttendancelogService.onTimeLogs(this.day,this.month,this.year)
         .pipe(
           catchError(error => {
             this.error = error.message;
@@ -48,16 +58,17 @@ export class WidgetTableComponent implements OnChanges {
         )
         .subscribe((data:any) =>{
           this.widgetAttendance = data.earlyArrivals || [];
-          const loginTime = this.widgetAttendance[0].loginTime;
-          if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
-          else{console.log("no data");
+          if(this.widgetAttendance.length != 0){
+            const loginTime = this.widgetAttendance[0].date;
+            if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
+            else{console.log("no data");}
           }
-          
+          else{ this.widgetAttendance = []; }
         });
         break;
       case 'Late Arrivals':
         this.containerVisibility = '';
-        this.traineeAttendancelogService.lateArrivalLogs()
+        this.traineeAttendancelogService.lateArrivalLogs(this.day,this.month,this.year)
         .pipe(
           catchError(error => {
             this.error = error.message;
@@ -66,12 +77,18 @@ export class WidgetTableComponent implements OnChanges {
           })
         )
         .subscribe((data:any)=>{
-          this.widgetAttendance = data.lateArrivals || [];
+          this.widgetAttendance = data.lateArrivals || []; 
+          if(this.widgetAttendance.length != 0){
+            const loginTime = this.widgetAttendance[0].date;
+            if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
+            else{console.log("no data");} 
+          }
+          else{ this.widgetAttendance = []; }
         });
         break;
       case 'Absent':
         this.containerVisibility = '';
-        this.traineeAttendancelogService.absenteeLogs()
+        this.traineeAttendancelogService.absenteeLogs(this.day,this.month,this.year)
         .pipe(
           catchError(error => {
             this.error = error.message;
@@ -80,12 +97,18 @@ export class WidgetTableComponent implements OnChanges {
           })
         )
         .subscribe((data:any)=>{
-          this.widgetAttendance = data.absentees || [];
+          this.widgetAttendance = data.absentees || []; 
+          if(this.widgetAttendance.length != 0){
+            const loginTime = this.widgetAttendance[0].date;
+            if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
+            else{console.log("no data");}
+          }
+          else{ this.widgetAttendance = []; }
         });
         break;
       case 'Early Departures':
         this.containerVisibility = '';
-        this.traineeAttendancelogService.earlyDeparturesLogs()
+        this.traineeAttendancelogService.earlyDeparturesLogs(this.day,this.month,this.year)
         .pipe(
           catchError(error => {
             this.error = error.message;
@@ -94,7 +117,13 @@ export class WidgetTableComponent implements OnChanges {
           })
         )
         .subscribe((data:any)=>{
-          this.widgetAttendance = data.earlyDepartures || [];
+          this.widgetAttendance = data.earlyDepartures || []; 
+          if(this.widgetAttendance.length != 0){
+            const loginTime = this.widgetAttendance[0].date;
+            if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
+            else{console.log("no data");} 
+          }
+          else{ this.widgetAttendance = []; }
         });
         break;
       default:
@@ -107,12 +136,21 @@ export class WidgetTableComponent implements OnChanges {
   updateDateFromLoginTime(loginTime: string) {
     if (loginTime) {
       console.log('Login Time:', loginTime);
-      this.date = new Date(loginTime); // Set the date using the loginTime value from the API response
+      // Set the date using the loginTime value from the API response
+      this.date = new Date(loginTime); 
     }
   }
   
-
-
+  /**
+   * function to assign day,month and year variables and to call the fetchAttendanceLogs() function to make API calls for the specific date and to display its data in the table.
+   */
+  dateChange(){
+    console.log(this.date);
+    this.day = this.date.getDate();
+    this.month = this.date.getMonth()+1;
+    this.year = this.date.getFullYear()
+    this.fetchAttendanceLogs();
+  }
 
   getTime(trainee: any): string {  
     const result = this.tableHeader === 'On Time' || this.tableHeader === 'Late Arrivals'
