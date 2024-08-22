@@ -1,6 +1,6 @@
 .container {
     background-color: white;
-    padding: 20px;
+    padding: 10px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -8,8 +8,8 @@
 .search-filter {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    /* align-items: center; */
+    margin-bottom: 5px;
 }
 
 #search-bar {
@@ -68,3 +68,12 @@
     border-radius: 3px;
 }
 
+.invisible{
+    display: none;
+}
+:host ::ng-deep  .p-inputtext{
+    padding: 8px;
+}
+:host ::ng-deep  h2{
+    margin: 0px;
+}
