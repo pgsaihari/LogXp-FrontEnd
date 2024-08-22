@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
-import { WidgetAttendance } from '../interfaces/widget-attendance';
+import { EarlyArrivalsLog, LateArrivalsLog, WidgetAttendance } from '../interfaces/widget-attendance';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +18,12 @@ export class AttendanceLogsService {
 
   constructor(private http: HttpClient) { }
 
-  onTimeLogs(): Observable<WidgetAttendance[]>{
-    return this.http.get<any>(`${this.apiUrl}/earlyArrivals`)
+  onTimeLogs(): Observable<EarlyArrivalsLog[]>{
+    return this.http.get<EarlyArrivalsLog[]>(`${this.apiUrl}/earlyArrivals`)
   }
 
-  lateArrivalLogs(): Observable<WidgetAttendance[]>{
-    return this.http.get<any>(`${this.apiUrl}/lateArrivals`)
+  lateArrivalLogs(): Observable<LateArrivalsLog[]>{
+    return this.http.get<LateArrivalsLog[]>(`${this.apiUrl}/lateArrivals`)
   }
 
   earlyDeparturesLogs(): Observable<WidgetAttendance[]>{
