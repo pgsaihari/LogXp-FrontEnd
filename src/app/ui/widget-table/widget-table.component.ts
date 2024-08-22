@@ -13,6 +13,7 @@ import { AttendanceLogsService } from '../../core/services/attendance-logs.servi
   imports: [TableModule, CalendarModule, AutoCompleteModule, FormsModule, NgClass, DatePipe,NgIf],
   templateUrl: './widget-table.component.html',
   styleUrl: './widget-table.component.css'
+  
 })
 export class WidgetTableComponent implements OnChanges {
 
@@ -37,7 +38,11 @@ export class WidgetTableComponent implements OnChanges {
         this.traineeAttendancelogService.onTimeLogs().subscribe(
           (response: any) => {
             this.widgetAttendance = response.earlyArrivals || [];
-            console.log('On Time Logs:', response);
+            console.log('On Time Logs:', this.widgetAttendance);
+            if (response.earlyArrivals && response.earlyArrivals.length > 0) {
+              const loginTime = response.earlyArrivals[0].loginTime;
+              this.updateDateFromLoginTime(loginTime);
+            }  
           },
           (error) => {
             console.error('Error fetching on time logs:', error);
@@ -90,6 +95,16 @@ export class WidgetTableComponent implements OnChanges {
         console.error('Unknown table header:', this.tableHeader);
     }
   }
+
+  updateDateFromLoginTime(loginTime: string) {
+    if (loginTime) {
+      console.log('Login Time:', loginTime);
+      this.date = new Date(loginTime); // Set the date using the loginTime value from the API response
+    }
+  }
+  
+
+
 
   getTime(trainee: any): string {  
     const result = this.tableHeader === 'On Time' || this.tableHeader === 'Late Arrivals'
