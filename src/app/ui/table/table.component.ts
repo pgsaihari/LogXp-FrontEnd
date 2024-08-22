@@ -13,6 +13,7 @@ import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.mo
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { DatePipe } from '@angular/common';
 import { SideUserProfileComponent } from '../../Features/side-user-profile/side-user-profile.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'app-table',
@@ -27,6 +28,8 @@ import { SideUserProfileComponent } from '../../Features/side-user-profile/side-
     NgClass,
     NgIf,
     SideUserProfileComponent,
+    OverlayPanelModule
+
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
@@ -44,6 +47,10 @@ export class TableComponent implements OnInit {
   suggestions: any[] = [];
   todayDate: string | undefined;
   selectedOptions: any[] = [];
+  yesterday : Date = new Date();
+  statuses: string[] = ['Present', 'Absent', 'Late Arrival', 'Early Departure'];
+  selectedStatuses: string[] = [];
+
 
   filterOptions = [
     { name: 'All', code: 'ALL' },
@@ -142,6 +149,12 @@ export class TableComponent implements OnInit {
     yesterday.setDate(yesterday.getDate() - 1);
     this.selectedDate = yesterday;
     this.filterByDate(); // Apply the filter for yesterday's date by default
+  }
+
+  applyFilters() {
+    // Logic to apply the selected filters
+    console.log(this.selectedStatuses);
+    // this.filterPanel.hide(); // Close the overlay panel after applying filters
   }
 
   getStatusClass(status: string): string {

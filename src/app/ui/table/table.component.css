@@ -211,3 +211,24 @@ p-table th {
 .trainee-name{
     cursor: pointer;
 }
+
+.p-overlaypanel {
+    padding: 10px;
+}
+
+.p-overlaypanel-content {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.p-button-secondary {
+    background-color: #EA454C; /* Customize the background color */
+    border: none;              /* Remove the border */
+    color: white;              /* Set the text color */
+}
+
+.p-button-secondary:hover {
+    background-color: #f3333d; /* Darken the background color on hover */
+}

@@ -7,26 +7,36 @@
                 [suggestions]="suggestions" 
                 (completeMethod)="search($event)"
                 
-                placeholder="Quick Search" />
+                placeholder="Search Trainee" />
             </div>
             <div class="right-filters">
                 <p-calendar 
                 id="datepick"
                 [(ngModel)]="selectedDate" 
                 [iconDisplay]="'input'" 
-                [showIcon]="true" 
+                [showIcon]="true"
+                [maxDate]="yesterday" 
                 inputId="icondisplay" 
                 placeholder="Select Date"
                 [dateFormat]="'dd-MM-yy'"
                 (onSelect)="filterByDate()">
                 </p-calendar>
                 
+                <button pButton 
+                type="button" 
+                icon="pi pi-filter" 
+                label="Filters" 
+                class="p-button-rounded-rectangle p-button-secondary"
+                (click)="filterPanel.toggle($event)">
+            </button>
+        
+            <p-overlayPanel #filterPanel>
                 <p-multiSelect 
                     [options]="filterOptions"
                     [(ngModel)]="selectedOptions"
                     optionLabel="name"
                     [showClear]="true"
-                    placeholder="Advanced Filters">
+                    placeholder="Select Filters">
                     <ng-template pTemplate="header">
                         <div class="status-heading">
                             <h3>Status</h3>
@@ -43,6 +53,7 @@
                         </div>
                     </ng-template>
                 </p-multiSelect>
+            </p-overlayPanel>
             </div>
         </div>
   
@@ -51,14 +62,13 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="id">Code <p-sortIcon field="id"></p-sortIcon></th>
-                        <th pSortableColumn="employee">Trainee Name <p-sortIcon field="employee"></p-sortIcon></th>
-                        <th pSortableColumn="ilp">Batch <p-sortIcon field="ilp"></p-sortIcon></th>
+                        <th>Trainee Name</th>
+                        <th> Batch </th>
                         <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
                         <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
                         <th pSortableColumn="checkin">Check-In <p-sortIcon field="checkin"></p-sortIcon></th>
                         <th pSortableColumn="checkout">Check-Out <p-sortIcon field="checkout"></p-sortIcon></th>
                         <th pSortableColumn="workhours">Work Hours <p-sortIcon field="workhours"></p-sortIcon></th>
-                        <!-- <th *ngIf="showTimeColumns" pSortableColumn="attendancepercentage">Attendance % <p-sortIcon field="attendancepercentage"></p-sortIcon></th> -->
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-trainee>
@@ -71,7 +81,7 @@
                         <td><strong><span [ngClass]="getCheckinTimeClass(trainee.loginTime, trainee.status)">{{ getDisplayTime(trainee.loginTime, trainee.status) }}</span></strong></td>
                         <td><strong> <span [ngClass]="getCheckoutTimeClass(trainee.logoutTime, trainee.status)">{{ getDisplayTime(trainee.logoutTime, trainee.status) }}</span></strong></td>
                         <td><strong>{{ trainee.totalWorkHour}} Hrs</strong></td>
-                        <!-- <td *ngIf="!isAbsent(trainee.status)"><strong>{{ trainee.attendancepercentage }}</strong></td> -->
+                        
                     </tr>
                 </ng-template>
             </p-table>
