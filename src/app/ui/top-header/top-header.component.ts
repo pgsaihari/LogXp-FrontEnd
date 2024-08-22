@@ -1,5 +1,6 @@
 import { NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
 
 @Component({
   selector: 'app-top-header',
@@ -13,7 +14,9 @@ export class TopHeaderComponent implements OnInit {
   userEmail: string;
   userAvatar: string;
 
-  constructor() {
+  constructor(@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
+  private authService: MsalService,
+  private msalBroadcastService: MsalBroadcastService) {
     // Initialize with default values or fetch from a service
     this.userName = 'Admin';
     this.userEmail = 'admin@domain.com';
@@ -40,7 +43,14 @@ export class TopHeaderComponent implements OnInit {
     this.dropdownVisible = !this.dropdownVisible;
   }
 
-  signOut(){
-    localStorage.removeItem('logintoken');
+  logout(popup?: boolean) {
+    if (popup) {
+      this.authService.logoutPopup({
+        mainWindowRedirectUri: '/',
+      });
+    } else {
+      this.authService.logoutRedirect();
+    }
   }
+
 }

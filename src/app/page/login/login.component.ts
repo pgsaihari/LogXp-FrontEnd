@@ -1,35 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
+import {
+  MSAL_GUARD_CONFIG,
+  MsalBroadcastService,
+  MsalGuardConfiguration,
+  MsalService,
+} from '@azure/msal-angular';
+import { AuthenticationResult, PopupRequest, RedirectRequest } from '@azure/msal-browser';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
- 
-  constructor(private router:Router){
+  constructor(
+    private router: Router,
+    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
+    private authService: MsalService,
+    private msalBroadcastService: MsalBroadcastService
+  ) {}
 
+  trainerLogin() {
+    alert('trainer logged in');
+
+    localStorage.setItem('logintoken', 'trainer');
+    this.router.navigate(['/home']);
+  }
+  adminLogin() {
+    this.loginPopup();
+   
+    localStorage.setItem('logintoken', 'admin');
+    this.router.navigate(['/home']);
+  }
+  trainee() {
+    alert('trainee logged in');
+    localStorage.setItem('logintoken', 'user');
+    this.router.navigate(['/home']);
   }
 
-trainerLogin() {
-  alert("trainer logged in")
-  
-  localStorage.setItem("logintoken","trainer")
-  this.router.navigate(['/home'])
-
-}
-adminLogin() {
-  alert("admin logged in")
-  localStorage.setItem("logintoken","admin")
-  this.router.navigate(['/home'])
-}
-trainee() { 
-  alert("trainee logged in")
-  localStorage.setItem("logintoken","user")
-  this.router.navigate(['/home'])
-}
-
+  loginPopup() {
+    if (this.msalGuardConfig.authRequest) {
+      this.authService
+        .loginPopup({ ...this.msalGuardConfig.authRequest } as PopupRequest)
+        .subscribe((response: AuthenticationResult) => {
+          this.authService.instance.setActiveAccount(response.account);
+        });
+    } else {
+      this.authService
+        .loginPopup()
+        .subscribe((response: AuthenticationResult) => {
+          this.authService.instance.setActiveAccount(response.account);
+        });
+    }
+  }
 }
