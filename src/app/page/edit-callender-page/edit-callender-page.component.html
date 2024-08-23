@@ -1,81 +1,31 @@
 <div class="page">
-  <div class="left-cal">
-    <div class="innersection">
-      <h2 class="section-heading">Add Holiday</h2>
-      <div class="calendar-container">
+  <div class="card">
+    <p-tabMenu [model]="items"  [activeItem]="activeItem"/>
+  </div>
+  
+  <ng-container *ngIf="showDiv1">
+    <p class="section-heading">Add Holiday</p>
+    <!-- <h2 class="section-heading">Add Holiday</h2> -->
+    <div class="calendar-container">
+      <div class="calendar-left">
         <app-callender></app-callender>
       </div>
-    </div>
-    
-    <div class="innersection">
       <div class="buttons-section">
-        <button pButton type="button" label="Download Attendance Report" class="btn btn-danger"></button>
-      </div>  
+        <div class="card flex justify-content-center">
+          <p-card header="Holiday Summary">
+              <p class="m-0">
+                  
+              </p>
+          </p-card>
+        </div>
+        <p-button label="Download Attendance Report" severity="danger"/>
+      </div>      
     </div>
-  </div>   
+  </ng-container>
 
-  <div class="update-status">
-    <h2 class="section-heading">Update Trainee Status</h2>
-    <div class="table-container">
-      <input type="text" class="search-bar" placeholder="🔍 Quick Search..." />
-      <div class="table-header">
-        <span class="date-display">29 July 2023</span>
-      </div>
-      <table class="trainee-status-table">
-        <thead>
-          <tr>
-            <th>Trainee ID</th>
-            <th>Name</th>
-            <th>ILP Batch</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>2341421</td>
-            <td>Ahmed Rashdan</td>
-            <td>Batch 3</td>
-            <td><span class="status disabled">Disabled</span></td>
-            <td><button class="edit-button">Edit</button></td>
-          </tr>
-          <tr>
-            <td>3411421</td>
-            <td>Ali Alhamdan</td>
-            <td>Batch 4</td>
-            <td><span class="status disabled">Disabled</span></td>
-            <td><button class="edit-button">Edit</button></td>
-          </tr>
-          <tr>
-            <td>2341421</td>
-            <td>Mona Alghafar</td>
-            <td>Batch 2</td>
-            <td><span class="status disabled">Disabled</span></td>
-            <td><button class="edit-button">Edit</button></td>
-          </tr>
-          <tr>
-            <td>2341421</td>
-            <td>Moustafa Adel</td>
-            <td>Batch 4</td>
-            <td><span class="status enabled">Enabled</span></td>
-            <td><button class="edit-button">Edit</button></td>
-          </tr>
-          <tr>
-            <td>2341421</td>
-            <td>Jhon Neleson</td>
-            <td>Batch 4</td>
-            <td><span class="status disabled">Disabled</span></td>
-            <td><button class="edit-button">Edit</button></td>
-          </tr>
-          <tr>
-            <td>2341421</td>
-            <td>Kadi Manela</td>
-            <td>Batch 4</td>
-            <td><span class="status enabled">Enabled</span></td>
-            <td><button class="edit-button">Edit</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <ng-container *ngIf="showDiv2">
+    <p class="section-heading">Update Trainee Status</p>
+    <!-- <h2 class="section-heading">Update Trainee Status</h2> -->
+    <app-user-table></app-user-table>
+  </ng-container>
 </div>

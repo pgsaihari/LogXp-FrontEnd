@@ -5,6 +5,7 @@ import { TraineeServiceService } from '../../core/services/trainee-service.servi
 import { Trainee } from '../../core/model/trainee.model';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
+import { catchError, finalize, tap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-side-user-profile',
@@ -38,27 +39,43 @@ lateArrivals: any="NA"
   }
 
   getTraineeDetails(employeeCode: string): void {
-    this.traineeService.getTraineeByEmployeeCode(employeeCode).subscribe(
-      (data) => {
-        this.trainee = data.trainee;
-        console.log('Trainee details:', this.trainee);
-      },
-      (error) => {
+    this.traineeService.getTraineeByEmployeeCode(employeeCode).pipe(
+     
+      catchError((error) => {
         console.error('Error fetching trainee details:', error);
-      }
-    );
+       
+        return throwError(()=>new Error(error)); 
+      }),
+      finalize(() => {
+        console.log('Fetch trainee operation complete');
+        
+      })
+    ).subscribe((data) => {
+      this.trainee = data.trainee;
+      console.log('Trainee details:', this.trainee);
+    });
+    
   }
 
   getLogsByEmployeeCode(employeeCode: string): void {
-    this.traineeAttendancelogService.getLogsByEmployeeCode(employeeCode).subscribe(
+    this.traineeAttendancelogService.getLogsByEmployeeCode(employeeCode).pipe(
+     
+      catchError((error) => {
+        console.error('Error fetching trainee details:', error);
+       
+        return throwError(()=>new Error(error)); 
+      }),
+      finalize(() => {
+        console.log('Fetch trainee operation complete');
+        
+      })
+    ).subscribe(
       (data) => {
         this.traineeLogs = data.logs;
         this.logsCount = data.count;
         console.log('Trainee logs:', data);
       },
-      (error) => {
-        console.error('Error fetching trainee logs:', error);
-      }
-    );
+      
+  );
   }
 }
