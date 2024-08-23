@@ -28,32 +28,34 @@
                 label="Filters" 
                 class="p-button-rounded-rectangle p-button-secondary"
                 (click)="filterPanel.toggle($event)">
-            </button>
+        </button>
         
-            <p-overlayPanel #filterPanel>
-                <p-multiSelect 
-                    [options]="filterOptions"
-                    [(ngModel)]="selectedOptions"
-                    optionLabel="name"
-                    [showClear]="true"
-                    placeholder="Select Filters">
-                    <ng-template pTemplate="header">
-                        <div class="status-heading">
-                            <h3>Status</h3>
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="selectedItem" let-selectedOption>
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ selectedOption?.name }}</div>
-                        </div>
-                    </ng-template>
-                    <ng-template let-option pTemplate="item">
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ option.name }}</div>
-                        </div>
-                    </ng-template>
-                </p-multiSelect>
-            </p-overlayPanel>
+        <p-overlayPanel #filterPanel>
+            <div class="filters">
+              <div class="filter-section">
+                <label class="toggle-heading" (click)="toggleVisibility('status')">Status</label>
+                <mat-selection-list *ngIf="showList" (selectionChange)="applyStatusFilter($event)">
+                  <mat-list-option *ngFor="let status of statuses" [value]="status">
+                    {{ status }}
+                  </mat-list-option>
+                </mat-selection-list>
+              </div>
+              <div class="filter-section">
+                <label class="toggle-heading" (click)="toggleVisibility('batch')">Batches</label>
+                <mat-selection-list *ngIf="showBatchList" (selectionChange)="applyBatchFilter($event)">
+                  <mat-list-option *ngFor="let batch of batches" [value]="batch">
+                    {{ batch }}
+                  </mat-list-option>
+                </mat-selection-list>
+              </div>
+            </div>
+          </p-overlayPanel>
+          
+        
+        
+      
+        
+
             </div>
         </div>
   
@@ -65,7 +67,7 @@
                         <th>Trainee Name</th>
                         <th> Batch </th>
                         <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
-                        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                        <th>Status </th>
                         <th pSortableColumn="checkin">Check-In <p-sortIcon field="checkin"></p-sortIcon></th>
                         <th pSortableColumn="checkout">Check-Out <p-sortIcon field="checkout"></p-sortIcon></th>
                         <th pSortableColumn="workhours">Work Hours <p-sortIcon field="workhours"></p-sortIcon></th>
