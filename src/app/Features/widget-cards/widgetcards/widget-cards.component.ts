@@ -16,64 +16,41 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   styleUrl: './widget-cards.component.css'
 })
 export class WidgetCardsComponent implements OnInit {
+  @Output() widgetSelected = new EventEmitter<{ isClicked: boolean, header: string }>();
 
-  @Output() widgetSelected = new EventEmitter<{isClicked: boolean, header: string}>();
+  totalTrainees = 0;
+  onTimeNum = 0;
+  absentees = 0;
+  lateArrivals = 0;
+  earlyDepartures = 0;
+  activeCardIndex = -1;
 
-  constructor(private traineeService:TraineeServiceService,private messageService: MessageService ,private AttendanceLogsService:AttendanceLogsService){}
+  constructor(
+    private traineeService: TraineeServiceService,
+    private messageService: MessageService,
+    private attendanceLogsService: AttendanceLogsService
+  ) {}
 
-  totalTrainees:Number= 0;
-  onTimeNum: Number = 0;
-  absentees: Number = 0;
-  lateArrivals: Number = 0;
-  earlyDepartures: Number = 0;
-
-
-  activeCardIndex!: Number;
-
-  clickWidget(dataRecieved: { isClicked: boolean, header: string }){
-    this.widgetSelected.emit(dataRecieved)
-    }
-
-
-
-  ngOnInit(): void {
-      this.traineeService.getTraineesCount().subscribe(
-        response=>{
-          console.log(response);
-  
-          this.totalTrainees=response;
-        },
-        error=>{
-          this.messageService.add({severity:'error', summary:`${error.error.message}`, detail:'LogXp'}); // Show success toast
-
-          console.error('Error adding trainee', error); 
-
-        })
-
-       //Early Arrivals Count
-        this.AttendanceLogsService.getWidgetCount().subscribe(count => {
-          console.log('Count of early arrivals:', count.earlyArrivalCount);
-          this.onTimeNum = count.earlyArrivalCount;
-        });
-
-        //Absentees Count
-        this.AttendanceLogsService.getWidgetCount().subscribe(count => {
-          console.log('Count of absent:', count.absentCount);
-          this.absentees = count.absentCount;
-        });
-
-        //Late Arrivals Count
-        this.AttendanceLogsService.getWidgetCount().subscribe(count => {
-          console.log('Count of late arrivals:', count.lateArrivalCount);
-          this.lateArrivals = count.lateArrivalCount;
-        });
-
-        //Early Departures Count
-        this.AttendanceLogsService.getWidgetCount().subscribe(count => {
-          console.log('Count of early departures:', count.earlyDepartureCount);
-          this.earlyDepartures = count.earlyDepartureCount;
-        });
-
+  clickWidget(data: { isClicked: boolean, header: string }, index: number) {
+    this.activeCardIndex = index;
+    this.widgetSelected.emit(data);
   }
 
+  ngOnInit(): void {
+    this.traineeService.getTraineesCount().subscribe({
+      next: response => (this.totalTrainees = response),
+      error: error => this.messageService.add({ severity: 'error', summary: error.error.message, detail: 'LogXp' })
+    });
+
+    this.fetchCounts();
+  }
+
+  private fetchCounts() {
+    this.attendanceLogsService.getWidgetCount().subscribe(count => {
+      this.onTimeNum = count.earlyArrivalCount;
+      this.absentees = count.absentCount;
+      this.lateArrivals = count.lateArrivalCount;
+      this.earlyDepartures = count.earlyDepartureCount;
+    });
+  }
 }

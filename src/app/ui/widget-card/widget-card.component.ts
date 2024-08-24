@@ -8,27 +8,24 @@ import { CardModule } from "primeng/card";
   templateUrl: './widget-card.component.html',
   styleUrl: './widget-card.component.css'
 })
+
 export class WidgetCardComponent {
-@Input() header_icon!: string ;
-@Input() card_number!: Number;
-@Input() card_header!: string;
-@Output() onBtnClick = new EventEmitter<{isClicked:boolean, header:string}>();
+  @Input() header_icon!: string;
+  @Input() card_number!: number;
+  @Input() card_header!: string;
+  @Input() isActive = false;
+  @Output() onBtnClick = new EventEmitter<{ isClicked: boolean, header: string }>();
 
-isActive: boolean = false;
+  constructor(private elementRef: ElementRef) {}
 
-constructor(private elementRef: ElementRef) {}
-
-onClick(){
-    this.onBtnClick.emit({isClicked: true,header: this.card_header});
-    this.isActive = !this.isActive;
-}
-
-@HostListener('document:click', ['$event'])
-onClickOutside(event: Event) {
-  // If the click is outside the component, deactivate the card
-  if (!this.elementRef.nativeElement.contains(event.target)) {
-    this.isActive = false;
+  onClick() {
+    this.onBtnClick.emit({ isClicked: true, header: this.card_header });
   }
-}
 
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    if (this.elementRef.nativeElement.contains(event.target)) {
+      this.isActive = false;
+    }
+  }
 }
