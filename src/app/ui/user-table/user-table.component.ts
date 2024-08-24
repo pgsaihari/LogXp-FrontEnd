@@ -1,19 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-
-
 import { TagModule } from 'primeng/tag';
-
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
-
-import { CommonModule, } from '@angular/common';
-
-import { Table, TableModule } from 'primeng/table';
+import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-
 import { MultiSelectModule } from 'primeng/multiselect';
-
 import { Trainee } from '../../core/model/trainee.model';
 import { TraineeServiceService } from '../../core/services/trainee-service.service';
 import { ToastModule } from 'primeng/toast';
@@ -22,6 +15,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { RippleModule } from 'primeng/ripple';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { BatchService } from '../../core/services/batch.service';  // Import BatchService
+import { TooltipModule } from 'primeng/tooltip';
+
 
 @Component({
   selector: 'app-user-table',
@@ -39,10 +35,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     InputTextModule,
     DropdownModule,
     MultiSelectModule,
-    TagModule
-    
+    TagModule,TooltipModule
   ],
-  providers: [MessageService, ConfirmationService, TraineeServiceService],
+  providers: [MessageService, ConfirmationService, TraineeServiceService, BatchService],
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.css'],
 })
@@ -54,22 +49,43 @@ export class UserTableComponent implements OnInit {
   submitted: boolean = false;
   isSetStatusDialogVisible = false;
   selectedBatchId: number | null = null;
-  batchOptions: { label: number; value: number }[] = [];
+  batchOptions: { label: string; value: number }[] = [];
+  allTrainees: Trainee[] = [];
+
 
   constructor(
     private traineeService: TraineeServiceService,
-    private messageService: MessageService,
-  
+    private batchService: BatchService,  // Inject BatchService
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
     this.traineeService.getTrainees().subscribe((data) => {
       this.trainees = data;
-      this.batchOptions = [...new Set(data.map((t) => t.batchId))].map(
-        (batchId) => ({ label: batchId, value: batchId })
-      );
+      this.allTrainees = data; 
     });
+  // Fetch batches from the backend
+  this.batchService.getBatches().subscribe((batches) => {
+    this.batchOptions = batches.map((batch) => ({
+        label: batch.batchName,  // Make sure batchName is a string
+        value: batch.batchId     // Make sure batchId is a number
+    }));
+});
+}
+filterByBatch() {
+    if (this.selectedBatchId) {
+      this.trainees = this.allTrainees.filter(
+        trainee => trainee.batchId === this.selectedBatchId
+      );
+    } else {
+      this.trainees = [...this.allTrainees];
+    }
   }
+getBatchName(batchId: number): string {
+    const batch = this.batchOptions.find(option => option.value === batchId);
+    return batch ? batch.label : 'Unknown';
+}
+
 
   openNew() {
     this.trainee = {};
@@ -92,7 +108,7 @@ export class UserTableComponent implements OnInit {
       this.submitted = true;
       return;
     }
-
+    console.log('Trainee data before update:', this.trainee);
     this.traineeService.updateTrainee(this.trainee.employeeCode, this.trainee).subscribe({
       next: () => {
         this.updateTraineeList(this.trainee);
@@ -153,4 +169,3 @@ export class UserTableComponent implements OnInit {
     this.showMessage('error', 'Error', `${summary}: ${err.message}`);
   }
 }
-

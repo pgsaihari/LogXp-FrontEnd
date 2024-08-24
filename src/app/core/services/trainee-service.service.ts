@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
+import { Trainee } from '../model/trainee.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +13,9 @@ export class TraineeServiceService {
   constructor(private http: HttpClient) { }
 
   // Function to get all trainees
-  getTrainees(): Observable<any[]> {
+  getTrainees(): Observable<Trainee[]> {
     
-    return this.http.get<{ trainees: any[] }>(this.apiUrl).pipe(
+    return this.http.get<{ trainees: Trainee[] }>(this.apiUrl).pipe(
       map(response => response.trainees) )
     }
 
@@ -26,23 +27,23 @@ export class TraineeServiceService {
   // Function to get a trainee by employeeCode
   getTraineeByEmployeeCode(employeeCode: string): Observable<any> {
     const url = `${this.apiUrl}/${employeeCode}`;
-    return this.http.get<any>(url);
+    return this.http.get<Trainee>(url);
   }
 
   // Function to add a new trainee
   addTrainee(trainee: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/add-trainee`, trainee);
+    return this.http.post<Trainee>(`${this.apiUrl}/add-trainee`, trainee);
   }
 
   // Function to add multiple trainees
-  addTrainees(trainees: any[]): Observable<any> {
-    return this.http.post<any>(this.apiUrl, trainees);
+  addTrainees(trainees: Trainee[]): Observable<any> {
+    return this.http.post<Trainee[]>(this.apiUrl, trainees);
   }
 
   // Function to update an existing trainee
-  updateTrainee(employeeCode: string, trainee: any): Observable<any> {
+  updateTrainee(employeeCode: string, trainee: Trainee): Observable<Trainee> {
     const url = `${this.apiUrl}/${employeeCode}`;
-    return this.http.put<any>(url, trainee).pipe(
+    return this.http.put<Trainee>(url, trainee).pipe(
         catchError((error: any) => {
             console.error('Error updating trainee:', error);
             return throwError(() => new Error(error.message || 'Server error'));
@@ -52,14 +53,14 @@ export class TraineeServiceService {
 
 
   // Function to update trainee status
-  updateTraineeStatus(employeeCode: string, isActive: boolean): Observable<any> {
+  updateTraineeStatus(employeeCode: string, isActive: boolean): Observable<Trainee> {
     const url = `${this.apiUrl}/${employeeCode}/status`;
-    return this.http.patch<any>(url, { isActive });
+    return this.http.patch<Trainee>(url, { isActive });
   }
 
   // Function to delete a trainee
-  deleteTrainee(employeeCode: string): Observable<any> {
+  deleteTrainee(employeeCode: string): Observable<Trainee> {
     const url = `${this.apiUrl}/${employeeCode}`;
-    return this.http.delete<any>(url);
+    return this.http.delete<Trainee>(url);
   }
 }

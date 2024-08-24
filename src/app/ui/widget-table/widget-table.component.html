@@ -2,13 +2,13 @@
     <div class="search-filter">
         <h2>{{tableHeader}}</h2>
         <p-calendar id="datepick" [(ngModel)]="date" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-            placeholder="{{date}}" />
+            placeholder="{{date}}" (onSelect)="dateChange()" />
     </div>
     <div class="card table-container">
 
         <p-table [value]="widgetAttendance" [scrollable]="true" scrollHeight="300px" [rows]="4" [sortMode]="'single'">
 
-            <ng-template pTemplate="header">
+            <ng-template pTemplate="header" *ngIf="widgetAttendance.length > 0">
                 <tr>
                     <th>ID</th>
                     <th>Trainee</th>
@@ -33,6 +33,12 @@
 
                 </tr>
             </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <div class="empty-state-container">
+                    <i class="fas fa-exclamation-circle not-found-icon"></i>
+                    <p>No data found for "<span>{{ tableHeader }}</span>" on <span>{{ date | date:'mediumDate' }}</span></p>
+                </div>
+            </ng-template>            
         </p-table>
     </div>
 </div>
