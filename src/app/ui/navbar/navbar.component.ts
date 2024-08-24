@@ -13,7 +13,7 @@ export class NavbarComponent implements OnInit {
   activeIndex = 0; // Set the default active index
   
   ngOnInit() {
-    const user = localStorage.getItem('logintoken');
+    const user = "admin";
     if (user) {
       this.role=user;
        console.log(user);

@@ -23,23 +23,14 @@ export class LoginComponent {
     private msalBroadcastService: MsalBroadcastService
   ) {}
 
-  trainerLogin() {
-    alert('trainer logged in');
-
-    localStorage.setItem('logintoken', 'trainer');
-    this.router.navigate(['/home']);
-  }
-  adminLogin() {
+  
+  login() {
     this.loginPopup();
    
-    localStorage.setItem('logintoken', 'admin');
+   
     this.router.navigate(['/home']);
   }
-  trainee() {
-    alert('trainee logged in');
-    localStorage.setItem('logintoken', 'user');
-    this.router.navigate(['/home']);
-  }
+ 
 
   loginPopup() {
     if (this.msalGuardConfig.authRequest) {

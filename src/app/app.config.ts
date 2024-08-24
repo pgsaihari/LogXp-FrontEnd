@@ -75,7 +75,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     authRequest: {
       scopes: [...authConfig.apiConfig.scopes],
     },
-    loginFailedRoute: '/login-failed',
+    loginFailedRoute: '/login',
   };
 }
 
