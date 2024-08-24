@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
-import {  AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, WidgetAttendance } from '../interfaces/widget-attendance';
+import {  AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, WidgetAttendance, WidgetSummary } from '../interfaces/widget-attendance';
 
 @Injectable({
   providedIn: 'root'
@@ -54,28 +54,12 @@ export class AttendanceLogsService {
     const url = `${this.apiUrl}/absenteesByDate?day=${day}&month=${month}&year=${year}`;
     return this.http.get<AbsenteeLog>(url)
   }
-
-  getEarlyArrivalsCount(): Observable<number> {
-    return this.http.get<any>(`${this.apiUrl}/earlyArrivals`).pipe(
-      map(response => response.count)
-    );
-  }
-
-  getAbsenteesCount(): Observable<Number> {
-    return this.http.get<any>(`${this.apiUrl}/absentees`).pipe(
-      map(response => response.count)
-    );
-  }
-
-  lateArrivalsCount(): Observable<Number> {
-    return this.http.get<any>(`${this.apiUrl}/lateArrivals`).pipe(
-      map(response => response.count)
-    );
-  }
-
-  earlyDeparturesCount() : Observable<Number> {
-    return this.http.get<any>(`${this.apiUrl}/earlyDepartures`).pipe(
-      map(response => response.count)
-    );
+  /**
+   * FUNC : To make an API call to get the Count of trainees in accordance with the trainee status on the latest date
+   * @returns Observable<WidgetSummary>
+   */
+  getWidgetCount(): Observable<WidgetSummary> {
+    const url = `${this.apiUrl}/latestAttendanceSummary`
+    return this.http.get<WidgetSummary>(url)
   }
 }  
