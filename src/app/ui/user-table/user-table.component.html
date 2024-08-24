@@ -5,7 +5,7 @@
         [value]="trainees"
         [rows]="10"
         [scrollable]="true"
-        scrollHeight="400px"
+        scrollHeight="350px"
         [globalFilterFields]="['employeeCode', 'name', 'email', 'batch']"
         [tableStyle]="{ 'min-width': '20rem' }"
         [(selection)]="selectedTrainees"
@@ -15,17 +15,6 @@
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h3 class="m-0">Manage Trainees</h3>
-              
-                <div class="p-field">
-                   <p-dropdown 
-  [options]="batchOptions" 
-  [(ngModel)]="selectedBatchId" 
-  placeholder="Select Batch"
-  optionLabel="label" 
-  optionValue="value"
-  (onChange)="filterByBatch()">>
-</p-dropdown>
-                </div>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input 
@@ -35,11 +24,25 @@
                         (input)="dt.filterGlobal(globalFilterInput.value, 'contains')" 
                         placeholder="Search..." />
                 </span>
-                <p-button 
-                label="Change trainee status" 
-                icon="pi pi-cog" 
-                (onClick)="isSetStatusDialogVisible = true">
-            </p-button>
+                <div class="p-field">
+                   <p-dropdown 
+  [options]="batchOptions" 
+  [(ngModel)]="selectedBatchId" 
+  placeholder="Select Batch"
+  optionLabel="label" 
+  optionValue="value"
+  (onChange)="filterByBatch()">>
+</p-dropdown>
+<p-button 
+label=""
+pTooltip="Change trainee status" 
+tooltipPosition="top" 
+icon="pi pi-cog" 
+(onClick)="isSetStatusDialogVisible = true">
+</p-button>
+                </div>
+              
+             
             </div>
         </ng-template>
 
@@ -62,13 +65,12 @@
                 </th>
                 <th pSortableColumn="batchName"> <!-- Updated line -->
                     Batch
-                    <p-sortIcon field="batchName"></p-sortIcon> <!-- Updated line -->
                 </th>
                 <th pSortableColumn="isActive">
                     Active Status
-                  
+                    <p-sortIcon field="isActive"></p-sortIcon> <!-- Updated line -->
                 </th>
-                <th pSortableColumn="isActive">
+                <th pSortableColumn="Edit">
                     Edit</th>
             </tr>
         </ng-template>
@@ -84,8 +86,11 @@
                  <td>{{ getBatchName(trainee.batchId) }}</td> 
                 <td>
                     <p-tag 
-                        [value]="trainee.isActive ? 'Active' : 'Inactive'" 
-                        [severity]="trainee.isActive ? 'success' : 'danger'">
+                        [value]="trainee.isActive ? 'Active ' : 'Inactive'" 
+                        [severity]="trainee.isActive ? 'success' : 'danger'"
+                        class="equal-length-tag"
+                        >
+                        
                     </p-tag>
                 </td>
                 <td>
@@ -109,8 +114,15 @@
     [style]="{ width: '450px', height: '75vh' }" 
     header="Trainee Details" 
     [modal]="true" 
-    styleClass="p-fluid"
-    [contentStyle]="{ 'max-height': 'calc(100%)', 'overflow': 'auto' }">
+    styleClass="p-fluid trainee-dialog"
+    [contentStyle]="{ 'max-height': 'calc(100% - 50px)', 'overflow': 'auto' }"> <!-- Adjust max-height to allow proper scroll -->
+
+    <ng-template pTemplate="header">
+        <div class="header-container">
+            <span>Trainee Details</span>
+          
+        </div>
+    </ng-template>
 
     <ng-template pTemplate="content">
         <div class="field">
@@ -147,20 +159,16 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <!-- <p-button 
-            label="Cancel" 
-            icon="pi pi-times" 
-            [text]="true" 
-            (onClick)="hideDialog()">
-        </p-button> -->
         <p-button 
             label="Save" 
-            
+            styleClass="p-button-success"
             [text]="true" 
+           
             (onClick)="saveTrainee()">
         </p-button>
     </ng-template>
 </p-dialog>
+
 
 
 
@@ -169,33 +177,44 @@
 
     <!-- Dialog for Setting Trainee Status -->
     <p-dialog 
-        [(visible)]="isSetStatusDialogVisible" 
-        [style]="{ width: '300px' }" 
-        header="Set Trainee Status" 
-        [modal]="true" 
-        [draggable]="false" 
-        [resizable]="false"
-        [closable]="true"
-        appendTo="body"
-        styleClass="p-fluid">
-        
-        <div class="p-grid p-align-center p-justify-center">
-            <div class="p-col">
-                <p-button 
-                    label="Set Active" 
-                    icon="pi pi-check" 
-                    class="p-button-success" 
-                    (click)="setIsActiveForSelected(true)">
-                </p-button>
-            </div>
-            <div class="p-col">
-                <p-button 
-                    label="Set Inactive" 
-                    icon="pi pi-times" 
-                    class="p-button-danger" 
-                    (click)="setIsActiveForSelected(false)">
-                </p-button>
-            </div>
+    [(visible)]="isSetStatusDialogVisible" 
+    [style]="{ width: '300px' }" 
+    header="Set Trainee Status" 
+    [modal]="true" 
+    [draggable]="false" 
+    [resizable]="false"
+    [closable]="true"
+    appendTo="body"
+    styleClass="p-fluid set-status-dialog"
+    [contentStyle]="{ 'padding': '1rem', 'text-align': 'center' }">
+
+    <ng-template pTemplate="header">
+        <div class="header-container">
+            <span>Set Trainee Status</span>
+           
         </div>
-    </p-dialog>
+    </ng-template>
+
+    <div class="p-grid p-align-center p-justify-center">
+        <div class="p-col">
+            <p-button 
+                label="Set Active" 
+                icon="pi pi-check" 
+                class="p-button-success" 
+                (click)="setIsActiveForSelected(true)"
+              >
+            </p-button>
+        </div>
+        <div class="p-col">
+            <p-button 
+                label="Set Inactive" 
+                icon="pi pi-times" 
+                class="p-button-danger" 
+                (click)="setIsActiveForSelected(false)"
+               >
+            </p-button>
+        </div>
+    </div>
+</p-dialog>
+
 </div>

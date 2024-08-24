@@ -1,6 +1,6 @@
 .trainee-status-table {
   width: 100%;
-  border-collapse: collapse;
+ 
 }
 
 .trainee-status-table th{
@@ -80,3 +80,27 @@ border-radius: 6px;
 outline-color: transparent;
 }
 
+.trainee-dialog .p-dialog-content {
+  padding: 1rem;
+}
+
+.trainee-dialog .header-container {
+  position: relative;
+  padding-right: 2rem; /* Adjust padding to avoid overlap */
+}
+
+.trainee-dialog .p-dialog-footer {
+  padding-top: 1rem;
+}
+::ng-deep.equal-length-tag {
+  width: 100px; /* Adjust width as needed */
+  text-align: center;
+  display: inline-block;
+}
+::ng-deep.p-tag-value{
+  width: 70px;
+}
+::ng-deep.p-component{
+  margin-top: -10px;
+  margin-bottom: -10px;
+}

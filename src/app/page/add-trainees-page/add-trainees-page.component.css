@@ -1,5 +1,6 @@
 .enter-trainee-details {
     /* background-color: #f0f0f0; */
+    
     padding: 20px;
     border-radius: 5px;
   }
@@ -27,5 +28,10 @@
     margin-right: 5px;
   }
   .formui{
+    height: fit-content;
     gap: 10px;
+  }
+  h3{
+    padding: 0%;
+    margin-top: -10px;
   }
