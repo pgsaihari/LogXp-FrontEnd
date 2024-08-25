@@ -7,7 +7,7 @@ import { TableComponent } from "../../ui/table/table.component";
 import { CommonModule } from '@angular/common';
 import { WidgetTableComponent } from "../../ui/widget-table/widget-table.component";
 import { NgxSpinnerComponent } from 'ngx-spinner';
-
+//import for the spinner , which runs by the interceptor
 
 @Component({
   selector: 'app-home',
