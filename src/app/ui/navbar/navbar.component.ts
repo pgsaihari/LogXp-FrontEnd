@@ -15,7 +15,7 @@ export class NavbarComponent implements OnInit {
   role: string = ''; // Role variable
   
   constructor(
-    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
+    // @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
     private router: Router
@@ -33,23 +33,8 @@ export class NavbarComponent implements OnInit {
     this.activeIndex = index;
   }
 
-  logout() {
-    // Clear local storage/session storage
-    localStorage.removeItem('msal.account.keys');
-    sessionStorage.removeItem('logintoken');
-    
-    // Unset active MSAL account
-    this.authService.instance.setActiveAccount(null);
-    
-    // Trigger logout via redirect (no popup)
-    this.authService.logoutRedirect({
-      postLogoutRedirectUri: '/login' // Automatically redirects to login page after logout
-    });
-    
-    // Clear any remaining session or local storage
-    localStorage.clear();
-    sessionStorage.clear();
-  }
+ 
   
+
   
 }

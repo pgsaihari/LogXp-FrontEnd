@@ -1,4 +1,4 @@
-<div *ngIf="isLoggedIn(); else loginTemplate" class="main">
+<div *ngIf="isLogged; else loginTemplate" class="main">
   <app-navbar></app-navbar>
   <p-toast position="top-left" [showTransformOptions]="'translateX(100%)'"></p-toast>
   <div class="main-container">
