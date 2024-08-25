@@ -6,13 +6,13 @@ import { WidgetCardsComponent } from '../../Features/widget-cards/widgetcards/wi
 import { TableComponent } from "../../ui/table/table.component";
 import { CommonModule } from '@angular/common';
 import { WidgetTableComponent } from "../../ui/widget-table/widget-table.component";
-
+import { NgxSpinnerComponent } from 'ngx-spinner';
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [TopHeaderComponent, CurrentDateComponent, GraphComponent, WidgetCardsComponent, TableComponent, CommonModule, WidgetTableComponent],
+  imports: [NgxSpinnerComponent,TopHeaderComponent, CurrentDateComponent, GraphComponent, WidgetCardsComponent, TableComponent, CommonModule, WidgetTableComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

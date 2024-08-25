@@ -1,6 +1,13 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import {
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
@@ -10,6 +17,10 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { SpinnerInterceptorService } from './core/services/spinner-interceptor.service';
+import { BrowserModule } from '@angular/platform-browser';
 import { authConfig } from '../app/core/config/authConfig';
 import {
   IPublicClientApplication,
@@ -30,6 +41,7 @@ import {
   MsalBroadcastService,
 } from '@azure/msal-angular';
 
+// MSAL configuration functions
 export function loggerCallback(logLevel: LogLevel, message: string) {
   console.log(message);
 }
@@ -79,6 +91,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   };
 }
 
+// Final Merged Configuration
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -86,11 +99,29 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideNoopAnimations(),
     provideHttpClient(withInterceptorsFromDi(), withFetch()),
+
+    // Importing external modules like NgxSpinner and Browser Animations
+    importProvidersFrom(
+      BrowserModule,
+      BrowserAnimationsModule,
+      NgxSpinnerModule.forRoot({ type: 'ball-scale-multiple' })
+    ),
+
+    // Spinner Interceptor for managing loading spinners
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SpinnerInterceptorService,
+      multi: true,
+    },
+
+    // MSAL Interceptor for managing authentication and tokens
     {
       provide: HTTP_INTERCEPTORS,
       useClass: MsalInterceptor,
       multi: true,
     },
+
+    // MSAL services and configurations
     {
       provide: MSAL_INSTANCE,
       useFactory: MSALInstanceFactory,
