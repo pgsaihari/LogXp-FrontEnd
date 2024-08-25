@@ -1,0 +1,17 @@
+.widget-cards{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    /* width: 100%; */
+}
+
+app-widget-card {
+    flex: 0 1 200px; /* Allows flexibility if the container size changes */
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .widget-cards {
+        justify-content: flex-end;
+    }
+}

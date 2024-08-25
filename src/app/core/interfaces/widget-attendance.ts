@@ -6,6 +6,15 @@ export interface WidgetAttendance {
     status: string,
     date:string
 }
+
+export interface WidgetSummary{
+  earlyArrivalCount: number,
+  lateArrivalCount: number,
+  earlyDepartureCount: number,
+  absentCount: number,
+  latestDate: string
+}
+
 export interface EarlyArrivalLogs{
     earlyArrivals:WidgetAttendance[],
     message:string,

@@ -12,19 +12,69 @@
       </ng-template>
     </p-calendar>
   
-    <p-dialog header="Manage Holiday" [(visible)]="displayHolidayDialog" [modal]="true" [closable]="false">
-      <div class="holiday-dialog" *ngIf="selectedDate">
+    <p-dialog 
+    header="Manage Holiday" 
+    [(visible)]="displayHolidayDialog" 
+    [modal]="true" 
+    [closable]="false"
+    [style]="{ width: '350px' }"
+    styleClass="p-fluid manage-holiday-dialog">
+
+    <ng-template pTemplate="header">
+        <div class="header-container">
+            <span>Manage Holiday</span>
+            <button 
+                type="button" 
+                class="p-dialog-header-icon p-link"
+                (click)="displayHolidayDialog = false" 
+                style="position: absolute; right: 1rem; top: 0.75rem;">
+                <i class="pi pi-times"></i>
+            </button>
+        </div>
+    </ng-template>
+
+    <div class="holiday-dialog-content" *ngIf="selectedDate">
         <p>{{ selectedDate | date:'dd MMMM yyyy' }}</p>
         <p *ngIf="!isHoliday">Add this date as a holiday?</p>
         <p *ngIf="isHoliday">This date is already marked as a holiday. What would you like to do?</p>
         
-        <button *ngIf="!isHoliday" pButton type="button" label="Full Holiday" class="full-holiday-btn" (click)="setHoliday('full')"></button>
-        <button *ngIf="!isHoliday" pButton type="button" label="Half Holiday" class="half-holiday-btn" (click)="setHoliday('half')"></button>
-        <button *ngIf="isHoliday" pButton type="button" label="Remove Holiday" class="remove-holiday-btn" (click)="removeHoliday()"></button>
-        
-        <button pButton type="button" label="Cancel" class="cancel-btn" (click)="displayHolidayDialog = false"></button>
-      </div>
-    </p-dialog>
+        <p-button 
+            *ngIf="!isHoliday" 
+            type="button" 
+            label="Full Day" 
+            class="p-button-success full-holiday-btn" 
+            (click)="setHoliday('full')"
+            >
+        </p-button>
+
+        <p-button 
+            *ngIf="!isHoliday" 
+            type="button" 
+            label="Half Day" 
+            class="p-button-warning half-holiday-btn" 
+            (click)="setHoliday('half')"
+          >
+        </p-button>
+
+        <p-button 
+            *ngIf="isHoliday" 
+            type="button" 
+            label="Remove Holiday" 
+            class="p-button-danger remove-holiday-btn" 
+            (click)="removeHoliday()"
+           >
+        </p-button>
+
+        <!-- <p-button 
+            type="button" 
+            label="Cancel" 
+            class="p-button-secondary cancel-btn" 
+            (click)="displayHolidayDialog = false"
+           >
+        </p-button> -->
+    </div>
+</p-dialog>
+
     
   </div>
   
