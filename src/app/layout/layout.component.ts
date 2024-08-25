@@ -1,4 +1,4 @@
-import { Component, Renderer2, OnInit, Inject } from '@angular/core';
+import { Component, Renderer2, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from '../ui/navbar/navbar.component';
 import { TopHeaderComponent } from "../ui/top-header/top-header.component";
@@ -6,8 +6,8 @@ import { LoginComponent } from "../page/login/login.component";
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
-import { Subject, filter, takeUntil } from 'rxjs';
-import { AccountInfo, EventMessage, InteractionStatus } from '@azure/msal-browser';
+import { Subject, catchError, filter, of, takeUntil } from 'rxjs';
+import { AccountInfo,  InteractionStatus } from '@azure/msal-browser';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -18,21 +18,21 @@ import { NgIf } from '@angular/common';
   styleUrls: ['./layout.component.css'],
   providers: [MessageService]
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit, OnDestroy {
+ 
   /**
-   * @role The role of the user, used for role-based UI customization.
-   * Default value is 'trainee'.
+   * The role of the user, used for role-based UI customization.
+   * TODO: Right now hardcoded, implement roles based on role guards in the future.
    */
   role: string = 'admin';
 
   /**
-   * @private _destroying$ Subject used to trigger unsubscription from observables
-   * to avoid memory leaks when the component is destroyed.
+   * Subject used to trigger unsubscription from observables to avoid memory leaks when the component is destroyed.
    */
   private readonly _destroying$ = new Subject<void>();
 
   /**
-   * @isLogged Indicates whether the user is logged in or not.
+   * Indicates whether the user is logged in or not.
    */
   isLogged: boolean = false;
 
@@ -49,49 +49,77 @@ export class LayoutComponent implements OnInit {
    * It is used here to initialize the component, check the user's login status, and set up MSAL event listeners.
    */
   ngOnInit(): void {
-    // Handle potential redirects after login/authentication processes.
-    this.authService.handleRedirectObservable().subscribe();
+    try {
+      // Handle potential redirects after login/authentication processes.
+      this.authService.handleRedirectObservable()
+        .pipe(
+          catchError((error) => {
+            console.error("Error during handleRedirectObservable:", error);
+            return of(null); // Gracefully handle errors during redirect
+          })
+        )
+        .subscribe();
 
-    // Enable account storage events to listen for account changes in the MSAL library.
-    this.authService.instance.enableAccountStorageEvents();
+      // Enable account storage events to listen for account changes in the MSAL library.
+      this.authService.instance.enableAccountStorageEvents();
 
-    // Subscribe to MSAL events and navigate to the home page if no accounts are logged in.
-    this.msalBroadcastService.msalSubject$
-      .subscribe((result: EventMessage) => {
-        if (this.authService.instance.getAllAccounts().length === 0) {
-          this.router.navigate(['/home']);
-        }
-      });
+      // Subscribe to MSAL events and navigate to the home page if no accounts are logged in.
+      this.msalBroadcastService.msalSubject$
+        .pipe(
+          catchError((error) => {
+            console.error("Error subscribing to MSAL subject:", error);
+            return of(null); // Handle errors in the broadcast
+          })
+        )
+        .subscribe(() => {
+          if (this.authService.instance.getAllAccounts().length === 0) {
+            console.log("No active accounts found. Redirecting to /home.");
+            this.router.navigate(['/home']);
+          }
+        });
 
-    // Monitor the interaction status (e.g., login, logout) and check/set the active account when no interaction is in progress.
-    this.msalBroadcastService.inProgress$
-      .pipe(
-        filter(
-          (status: InteractionStatus) => status === InteractionStatus.None
-        ),
-        takeUntil(this._destroying$) // Automatically unsubscribe when the component is destroyed.
-      )
-      .subscribe(() => {
-        this.checkAndSetActiveAccount(); // Ensure the active account is set correctly.
-      });
+      // Monitor the interaction status (e.g., login, logout) and check/set the active account when no interaction is in progress.
+      this.msalBroadcastService.inProgress$
+        .pipe(
+          filter(
+            (status: InteractionStatus) => status === InteractionStatus.None
+          ),
+          takeUntil(this._destroying$),
+          catchError((error) => {
+            console.error("Error checking interaction status:", error);
+            return of(null); // Handle errors during the interaction status check
+          })
+        )
+        .subscribe(() => {
+          this.checkAndSetActiveAccount(); // Ensure the active account is set correctly.
+        });
 
-    // Check if the user is logged in and update the isLogged property.
-    this.isLogged = this.isLoggedIn();
+      // Check if the user is logged in and update the isLogged property.
+      this.isLogged = this.isLoggedIn();
+
+    } catch (error) {
+      console.error("Error during initialization in ngOnInit:", error);
+    }
   }
 
   /**
    * Checks if there is an active account set in MSAL. If not, it sets the first available account as the active account.
    * This is useful for applications where there might be multiple accounts, but you want to default to the first one.
    */
-  checkAndSetActiveAccount() {
-    let activeAccount = this.authService.instance.getActiveAccount();
+  checkAndSetActiveAccount(): void {
+    try {
+      const activeAccount: AccountInfo | null = this.authService.instance.getActiveAccount();
 
-    if (
-      !activeAccount && // If there is no active account
-      this.authService.instance.getAllAccounts().length > 0 // But there are accounts logged in
-    ) {
-      let accounts = this.authService.instance.getAllAccounts();
-      this.authService.instance.setActiveAccount(accounts[0]); // Set the first account as the active account.
+      if (!activeAccount && this.authService.instance.getAllAccounts().length > 0) {
+        const accounts = this.authService.instance.getAllAccounts();
+        this.authService.instance.setActiveAccount(accounts[0]); // Set the first account as the active account.
+        console.log("Active account set to:", accounts[0]);
+      } else if (!activeAccount) {
+        console.log("No accounts found. No active account set.");
+      }
+
+    } catch (error) {
+      console.error("Error during checkAndSetActiveAccount:", error);
     }
   }
 
@@ -100,26 +128,28 @@ export class LayoutComponent implements OnInit {
    * @returns {boolean} True if the user is logged in, otherwise false.
    */
   isLoggedIn(): boolean {
-    const localData = localStorage.getItem("msal.account.keys");
-    console.log(localData); // Debugging log to check the local storage value.
+    try {
+      const localData = localStorage.getItem("msal.account.keys");
+      console.log("MSAL account keys in local storage:", localData);
 
-    return localData !== null; // If localData exists, the user is considered logged in.
+      return localData !== null; // If localData exists, the user is considered logged in.
+    } catch (error) {
+      console.error("Error checking logged-in status:", error);
+      return false; // Return false in case of an error
+    }
   }
-
-  /**
-   * Sets the background color of the body based on the user's role.
-   * This method is currently commented out but can be activated if role-based styling is needed.
-   */
-  // setBodyBackgroundColor(): void {
-  //   this.renderer.setStyle(document.body, 'background-color', this.getBackgroundColor());
-  // }
 
   /**
    * Lifecycle hook that is called when the component is destroyed.
    * It triggers the completion of the _destroying$ subject, which unsubscribes from all observables.
    */
   ngOnDestroy(): void {
-    this._destroying$.next(undefined);
-    this._destroying$.complete();
+    try {
+      this._destroying$.next(undefined);
+      this._destroying$.complete();
+      console.log("Component destroyed and observables unsubscribed.");
+    } catch (error) {
+      console.error("Error during ngOnDestroy:", error);
+    }
   }
 }
