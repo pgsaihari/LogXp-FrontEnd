@@ -122,3 +122,13 @@
 /* ::ng-deep .p-datepicker-calendar tbody tr td{
   padding: 0;
 } */
+::ng-deep.p-button {
+  color: #EA454C;
+  background: none;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  
+  border-radius: 6px;
+  outline-color: transparent;
+  }
