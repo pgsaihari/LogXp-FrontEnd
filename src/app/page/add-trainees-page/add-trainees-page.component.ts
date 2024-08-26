@@ -7,19 +7,23 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { TraineeServiceService } from '../../core/services/trainee-service.service';
 import { Trainee } from '../../core/model/trainee.model';
+import { NgClass } from '@angular/common';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-add-trainees-page',
   standalone: true,
-  imports: [TopHeaderComponent, FormComponent, ToastModule],
+  imports: [ FormComponent, ToastModule,NgClass,DialogModule],
   templateUrl: './add-trainees-page.component.html',
   styleUrls: ['./add-trainees-page.component.css'],
   providers: [MessageService]
 })
 export class AddTraineesPageComponent {
-
+  displayPopup: boolean = false;
   constructor(private messageService: MessageService, private traineeService: TraineeServiceService) {}
-
+  showPopup() {
+    this.displayPopup = true;
+  }
   triggerFileInput() {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput.click();

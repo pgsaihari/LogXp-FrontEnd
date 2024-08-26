@@ -34,14 +34,16 @@ export class UserService {
   }
 
   // Function to add a new user
-  addUser(user: User): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/add`, user).pipe(
-      catchError((error: any) => {
-        console.error('Error adding user:', error);
-        return throwError(() => new Error(error.message || 'Server error'));
-      })
-    );
-  }
+  addUser(user: User): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/addUsers`, [user]) // Wrap user in an array
+      .pipe(
+        catchError((error: any) => {
+          console.error('Error adding user:', error);
+          return throwError(() => new Error(error.message || 'Server error'));
+        })
+      );
+}
+
 
   // Function to add multiple users
   addUsers(users: User[]): Observable<void> {
