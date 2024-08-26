@@ -211,3 +211,124 @@ p-table th {
 .trainee-name{
     cursor: pointer;
 }
+
+.p-overlaypanel {
+    padding: 10px;
+}
+
+.p-overlaypanel-content {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.p-button-secondary {
+    background-color: #EA454C; /* Customize the background color */
+    border: none;              /* Remove the border */
+    color: white;              /* Set the text color */
+}
+
+.p-button-secondary:hover {
+    background-color: #f3333d; /* Darken the background color on hover */
+}
+
+/* Styling for the Status heading */
+.status-heading {
+    font-weight: bold;
+    margin-bottom: 8px;
+    cursor: pointer;  /* Indicates that this element is clickable */
+    transition: background-color 0.3s;  /* Smooth transition for background color */
+}
+
+.status-heading:hover {
+    background-color: #f0f0f0;  /* Light grey background on hover */
+}
+
+.filters {
+    display: flex;
+    flex-direction: column; /* Stack filters vertically */
+    gap: 10px; /* Space between filter sections */
+    padding: 10px;
+  }
+  
+  .filter-section {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .filter-section label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .filter-section label:hover {
+    color: #007bff; /* Change color on hover */
+  }
+  
+  mat-selection-list {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    max-height: 200px; /* Adjust as needed */
+    overflow-y: auto;
+    margin-top: 10px;
+  }
+  
+  mat-list-option {
+    cursor: pointer;
+  }
+  
+  /* Responsive adjustments for tablets and mobile */
+  @media (max-width: 1024px) {
+    .filters {
+      gap: 15px; /* Adjust gap for tablet screens */
+    }
+  
+    .filter-section label {
+      font-size: 16px; /* Adjust font size for tablets */
+    }
+  
+    mat-selection-list {
+      max-height: 180px; /* Adjust height for tablets */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .filters {
+      gap: 15px; /* Increase gap between sections on small screens */
+    }
+  
+    mat-selection-list {
+      max-height: 150px; /* Adjust height for small screens */
+    }
+  
+    .filter-section label {
+      font-size: 14px; /* Adjust font size for small screens */
+    }
+  }
+  
+  /* Mobile-specific adjustments */
+  @media (max-width: 480px) {
+    .filters {
+      padding: 5px; /* Reduce padding on mobile screens */
+      gap: 10px; /* Smaller gap for mobile screens */
+    }
+  
+    .filter-section label {
+      font-size: 12px; /* Smaller font size for mobile screens */
+    }
+  
+    mat-selection-list {
+      max-height: 120px; /* Reduce list height on mobile screens */
+      font-size: 12px; /* Smaller font size in the list */
+    }
+  
+    mat-list-option {
+      padding: 5px; /* Adjust padding for list options on mobile */
+    }
+  }
+  
