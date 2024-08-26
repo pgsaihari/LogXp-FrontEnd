@@ -4,6 +4,7 @@ export interface TraineeAttendanceLogs {
         ilp: string;
         date: string;
         status: string;
+        batch: string;
         checkin?: string;
         checkout?: string;
         workhours?: string;

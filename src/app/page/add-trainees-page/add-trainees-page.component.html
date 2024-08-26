@@ -11,10 +11,23 @@
       (change)="onFileSelected($event)"
       style="display: none;"
     />
-    <button class="upload-button" (click)="triggerFileInput()">
-      <i class="pi pi-upload"></i> Upload Sheet
+    <button class="open-popup-button" (click)="showPopup()">
+      <i class="pi pi-cog"></i> Upload sheet
     </button>
+  
+   
   </div>
+  <p-dialog [(visible)]="displayPopup" [modal]="true" [closable]="true" header="Upload trianee details">
+    <div class="popup-options">
+      <button class="download-template-button" (click)="downloadTemplate()">
+        <i class="pi pi-download"></i> Download Template
+      </button>
+
+      <button class="upload-button" (click)="triggerFileInput()">
+        <i class="pi pi-upload"></i> Upload Sheet
+      </button>
+    </div>
+  </p-dialog>
   <div class="formui">
     <app-form></app-form>
   </div>
