@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
-import { CommonModule, NgClass, NgFor, NgIf, } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { TopHeaderComponent } from '../top-header/top-header.component';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
@@ -17,7 +17,7 @@ import { DatePipe } from '@angular/common';
 import { SideUserProfileComponent } from '../../Features/side-user-profile/side-user-profile.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
-
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -33,7 +33,6 @@ import { MatListModule, MatSelectionListChange } from '@angular/material/list';
     NgClass,
     NgIf,
     NgFor,
-    CommonModule,
     SideUserProfileComponent,
     OverlayPanelModule,
 
@@ -69,13 +68,7 @@ export class TableComponent implements OnInit {
   batches = ['Batch 1','Batch 2', 'Batch 3','Batch 4','Batch 5'];
   selectedBatches: string[] = [];
 
-  // toggleList(): void {
-  //   this.showList = !this.showList;
-  // }
-
-  // toggleBatchList(): void {
-  //   this.showBatchList = !this.showBatchList;
-  // }
+  
   toggleVisibility(section: string) {
     if (section === 'status') {
       this.showList = !this.showList;
@@ -89,8 +82,6 @@ export class TableComponent implements OnInit {
 
   filteredTrainees: TraineeAttendanceLogs[] = [];
   originalTraineeLogs: TraineeAttendanceLogs[] = [];
-
-  
 
 
 
@@ -106,7 +97,8 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getTraineeAttendanceLogs(); // Fetch data from the API
-    this.setDefaultDateFilter();
+
+    this.getLatestDate();
   }
 
   getTraineeAttendanceLogs() {
@@ -142,6 +134,17 @@ export class TableComponent implements OnInit {
     this.filterTrainees(query);
   }
   
+  getLatestDate(): void {
+    this.traineeAttendancelogService.getLatestDate().subscribe({
+      next: (response) => {
+        this.selectedDate = new Date(response.latestDate);
+        this.getTraineeAttendanceLogs(); // Fetch data from the API after getting the latest date
+      },
+      error: (error) => {
+        console.error('Error fetching latest date:', error);
+      }
+    });
+  }
 
   filterTrainees(query: string): void {
     if (query) {
@@ -182,12 +185,7 @@ export class TableComponent implements OnInit {
 }
 
   
-  setDefaultDateFilter(): void {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    this.selectedDate = yesterday;
-    this.filterByDate(); // Apply the filter for yesterday's date by default
-  }
+
 
 
   applyStatusFilter(event: MatSelectionListChange) {

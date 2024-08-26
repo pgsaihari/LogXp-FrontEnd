@@ -58,17 +58,14 @@
             </div>
           </p-overlayPanel>
           
-        
-        
       
-        
 
             </div>
         </div>
   
         <div class="card table-container">
             <p-table [value]="filteredTrainees" [scrollable]="true" [scrollHeight]="'400px'" [sortMode]="'single'" paginatorPosition="top">
-                <ng-template pTemplate="header" *ngIf="filteredTrainees.length > 0">
+                <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="id">Code <p-sortIcon field="id"></p-sortIcon></th>
                         <th>Trainee Name</th>
@@ -93,12 +90,7 @@
                         
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="emptymessage">
-                  <div class="empty-state-container">
-                  <i class="fas fa-exclamation-circle not-found-icon"></i>
-                  <p>No data found on <span>{{selectedDate | date: 'mediumDate' }}</span> </p>
-                  </div>
-                  </ng-template>
+                
             </p-table>
         </div>
     </div>
