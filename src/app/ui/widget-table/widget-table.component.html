@@ -1,14 +1,13 @@
-<div class="container {{containerVisibility}}">
+<div class="container">
     <div class="search-filter">
         <h2>{{tableHeader}}</h2>
-        <p-calendar id="datepick" [(ngModel)]="date" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+        <p-calendar id="datepick" [(ngModel)]="date" [maxDate]="yesterday" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
             placeholder="{{date}}" (onSelect)="dateChange()" />
     </div>
     <div class="card table-container">
 
         <p-table [value]="widgetAttendance" [scrollable]="true" scrollHeight="300px" [rows]="4" [sortMode]="'single'">
-
-            <ng-template pTemplate="header" *ngIf="widgetAttendance.length > 0">
+            <ng-template pTemplate="header" *ngIf="showTableHeader">
                 <tr>
                     <th>ID</th>
                     <th>Trainee</th>
