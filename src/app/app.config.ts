@@ -19,7 +19,7 @@ import {
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { SpinnerInterceptorService } from './core/services/spinner-interceptor.service';
+import { SpinnerInterceptorService } from './core/interceptor/spinner-interceptor.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { authConfig } from '../app/core/config/authConfig';
 import {

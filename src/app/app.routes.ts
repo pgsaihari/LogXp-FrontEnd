@@ -46,10 +46,10 @@ export const routes: Routes = [
         data: { expectedRole: 'admin' },
       },
       {
-        path: 'user-profile:id',
+        path: 'user-profile/:id',
         component: UserProfilePageComponent,
         canActivate: [RoleGuard],
-        data: { expectedRole: 'admin' },
+        data: { expectedRole: 'user' },
       },
       { path: 'test', component: TestPageComponent },
       {

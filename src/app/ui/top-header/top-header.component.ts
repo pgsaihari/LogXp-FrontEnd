@@ -3,11 +3,12 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
 import { filter } from 'rxjs';
 import { AuthenticationResult, EventMessage, EventType } from '@azure/msal-browser';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-top-header',
   templateUrl: './top-header.component.html',
-  imports:[NgIf],
+  imports:[NgIf,TooltipModule],
   standalone:true,
   styleUrls: ['./top-header.component.css']
 })

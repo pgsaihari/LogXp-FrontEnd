@@ -2,11 +2,11 @@ import { NgIf } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
-
+import { TooltipModule } from 'primeng/tooltip';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [NgIf, RouterLink],
+  imports: [NgIf, RouterLink,TooltipModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

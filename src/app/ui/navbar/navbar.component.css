@@ -40,14 +40,14 @@
 }
 
 .navbar li.active i {
-  background-color: red;  /* Red background when active */
-  color: white;           /* White icon color when active */
+  background-color:var(--primary-color);  /* Red background when active */
+  color: var(--text-color-white);           /* White icon color when active */
   border-radius: 50%;     /* Circular background */
   padding: 10px;          /* Padding for better visual appearance */
 }
 
 .navbar li:hover i {
-  color: #414141;
+  color: var(--nav-bar-hover-color);
 }
 
 .logo-container {
