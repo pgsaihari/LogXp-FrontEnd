@@ -54,4 +54,12 @@ export class TraineeAttendancelogService {
     const url = `${this.apiUrl}/filterLogs`;
     return this.http.get<{ logs: TraineeAttendanceLogs[], count: number, message: string }>(url, { params });
   }
+
+   /**
+   * Retrieves the latest attendance date.
+   * @returns {Observable<{ latestDate: string }>} - An observable containing the latest attendance date.
+   */
+   getLatestDate(): Observable<{ latestDate: string }> {
+    return this.http.get<{ latestDate: string }>(`${this.apiUrl}/latestAttendanceSummary`);
+  }
 }
