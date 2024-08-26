@@ -18,7 +18,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { BatchService } from '../../core/services/batch.service';  // Import BatchService
 import { TooltipModule } from 'primeng/tooltip';
 
-
 @Component({
   selector: 'app-user-table',
   standalone: true,
@@ -35,13 +34,15 @@ import { TooltipModule } from 'primeng/tooltip';
     InputTextModule,
     DropdownModule,
     MultiSelectModule,
-    TagModule,TooltipModule
+    TagModule,
+    TooltipModule
   ],
   providers: [MessageService, ConfirmationService, TraineeServiceService, BatchService],
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.css'],
 })
 export class UserTableComponent implements OnInit {
+
   traineeDialog: boolean = false;
   trainees: Trainee[] = [];
   trainee: Trainee = {};
@@ -52,27 +53,34 @@ export class UserTableComponent implements OnInit {
   batchOptions: { label: string; value: number }[] = [];
   allTrainees: Trainee[] = [];
 
-
   constructor(
     private traineeService: TraineeServiceService,
     private batchService: BatchService,  // Inject BatchService
     private messageService: MessageService
   ) {}
 
+  /**
+   * Initialize the component by loading trainees and batch options.
+   */
   ngOnInit() {
     this.traineeService.getTrainees().subscribe((data) => {
       this.trainees = data;
       this.allTrainees = data; 
     });
-  // Fetch batches from the backend
-  this.batchService.getBatches().subscribe((batches) => {
-    this.batchOptions = batches.map((batch) => ({
-        label: batch.batchName,  // Make sure batchName is a string
-        value: batch.batchId     // Make sure batchId is a number
-    }));
-});
-}
-filterByBatch() {
+
+    // Fetch batches from the backend
+    this.batchService.getBatches().subscribe((batches) => {
+      this.batchOptions = batches.map((batch) => ({
+          label: batch.batchName,  // Ensure batchName is a string
+          value: batch.batchId     // Ensure batchId is a number
+      }));
+    });
+  }
+
+  /**
+   * Filter trainees based on the selected batch.
+   */
+  filterByBatch() {
     if (this.selectedBatchId) {
       this.trainees = this.allTrainees.filter(
         trainee => trainee.batchId === this.selectedBatchId
@@ -81,28 +89,46 @@ filterByBatch() {
       this.trainees = [...this.allTrainees];
     }
   }
-getBatchName(batchId: number): string {
+
+  /**
+   * Get the batch name based on the batch ID.
+   * @param {number} batchId - The ID of the batch.
+   * @returns {string} - The name of the batch.
+   */
+  getBatchName(batchId: number): string {
     const batch = this.batchOptions.find(option => option.value === batchId);
     return batch ? batch.label : 'Unknown';
-}
+  }
 
-
+  /**
+   * Open a new trainee dialog for adding a trainee.
+   */
   openNew() {
     this.trainee = {};
     this.submitted = false;
     this.traineeDialog = true;
   }
 
+  /**
+   * Edit the details of an existing trainee.
+   * @param {Trainee} trainee - The trainee to edit.
+   */
   editTrainee(trainee: Trainee) {
     this.trainee = { ...trainee };
     this.traineeDialog = true;
   }
 
+  /**
+   * Hide the trainee dialog without saving changes.
+   */
   hideDialog() {
     this.traineeDialog = false;
     this.submitted = false;
   }
 
+  /**
+   * Save the trainee details and update the list.
+   */
   saveTrainee() {
     if (!this.trainee.employeeCode || !this.trainee.name) {
       this.submitted = true;
@@ -112,13 +138,17 @@ getBatchName(batchId: number): string {
     this.traineeService.updateTrainee(this.trainee.employeeCode, this.trainee).subscribe({
       next: () => {
         this.updateTraineeList(this.trainee);
-        this.showMessage('success', 'Successful', `Details of ${this.trainee.name } updated `);
+        this.showMessage('success', 'Successful', `Details of ${this.trainee.name} updated`);
         this.hideDialog();
       },
       error: (err) => this.showError('Failed to update trainee', err),
     });
   }
 
+  /**
+   * Set the active status for all trainees in the selected batch.
+   * @param {boolean} isActive - The active status to set.
+   */
   setIsActiveForBatch(isActive: boolean) {
     if (!this.selectedBatchId) {
       this.showMessage('warn', 'Warning', 'No batch selected');
@@ -132,6 +162,10 @@ getBatchName(batchId: number): string {
     );
   }
 
+  /**
+   * Set the active status for the selected trainees.
+   * @param {boolean} isActive - The active status to set.
+   */
   setIsActiveForSelected(isActive: boolean) {
     if (!this.selectedTrainees.length) {
       this.showMessage('warn', 'Warning', 'No trainees selected');
@@ -141,12 +175,22 @@ getBatchName(batchId: number): string {
     this.updateTrainees(this.selectedTrainees, isActive, `${traineeNames} updated successfully`);
   }
 
+  /**
+   * Update the list of trainees with the updated trainee information.
+   * @param {Trainee} updatedTrainee - The trainee with updated information.
+   */
   private updateTraineeList(updatedTrainee: Trainee) {
     this.trainees = this.trainees.map((t) =>
       t.employeeCode === updatedTrainee.employeeCode ? updatedTrainee : t
     );
   }
 
+  /**
+   * Update the active status for a list of trainees.
+   * @param {Trainee[]} trainees - The list of trainees to update.
+   * @param {boolean} isActive - The active status to set.
+   * @param {string} successMessage - The message to show on successful update.
+   */
   private updateTrainees(trainees: Trainee[], isActive: boolean, successMessage: string) {
     trainees.forEach((trainee) => {
       const updatedTrainee = { ...trainee, isActive };
@@ -160,10 +204,21 @@ getBatchName(batchId: number): string {
     });
   }
 
+  /**
+   * Show a message to the user.
+   * @param {string} severity - The severity of the message (e.g., success, warn, error).
+   * @param {string} summary - The summary of the message.
+   * @param {string} detail - The detailed message.
+   */
   private showMessage(severity: string, summary: string, detail: string) {
     this.messageService.add({ severity, summary, detail, life: 3000 });
   }
 
+  /**
+   * Handle an error and show an error message.
+   * @param {string} summary - The summary of the error.
+   * @param {any} err - The error object.
+   */
   private showError(summary: string, err: any) {
     console.error(summary, err);
     this.showMessage('error', 'Error', `${summary}: ${err.message}`);
