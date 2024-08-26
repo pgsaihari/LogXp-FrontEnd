@@ -29,8 +29,8 @@ export class SpinnerInterceptorService implements HttpInterceptor  {
           console.log("inside spinner");
           
           this.spinner.hide();
-        }, 100);
+        }, 2000);
       })
-    );
+    );  
   }
 }
