@@ -15,6 +15,11 @@ export interface WidgetSummary{
   latestDate: string
 }
 
+export interface UserWidgetSummary{
+    numberOfDaysAbsent : number,
+    numberOfDaysLate: number
+}
+
 export interface EarlyArrivalLogs{
     earlyArrivals:WidgetAttendance[],
     message:string,

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
-import {  AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, WidgetAttendance, WidgetSummary } from '../interfaces/widget-attendance';
+import {  AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, UserWidgetSummary, WidgetAttendance, WidgetSummary } from '../interfaces/widget-attendance';
 
 @Injectable({
   providedIn: 'root'
@@ -61,5 +61,10 @@ export class AttendanceLogsService {
   getWidgetCount(): Observable<WidgetSummary> {
     const url = `${this.apiUrl}/latestAttendanceSummary`
     return this.http.get<WidgetSummary>(url)
+  }
+
+  getUserWidgetCount(traineeCode:number): Observable<UserWidgetSummary>{
+    const url = `${this.apiUrl}/GetAbsenceOfTrainee?traineeCode=${traineeCode}`;
+    return this.http.get<UserWidgetSummary>(url)
   }
 }  
