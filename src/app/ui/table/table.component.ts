@@ -3,6 +3,8 @@ import {
   AutoCompleteCompleteEvent,
   AutoCompleteModule,
 } from 'primeng/autocomplete';
+import * as XLSX from 'xlsx';
+import {saveAs} from 'file-saver';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -40,6 +42,7 @@ import { forkJoin, Observable } from 'rxjs';
 })
 export class TableComponent implements OnInit {
 
+
   private datePipe = new DatePipe('en-US');
   selectedTraineeCode: string = '';
   isSideProfileVisible?: boolean | undefined = false;
@@ -65,13 +68,7 @@ export class TableComponent implements OnInit {
   batches = ['Batch 1','Batch 2', 'Batch 3','Batch 4','Batch 5'];
   selectedBatches: string[] = [];
 
-  // toggleList(): void {
-  //   this.showList = !this.showList;
-  // }
-
-  // toggleBatchList(): void {
-  //   this.showBatchList = !this.showBatchList;
-  // }
+  
   toggleVisibility(section: string) {
     if (section === 'status') {
       this.showList = !this.showList;
@@ -85,8 +82,6 @@ export class TableComponent implements OnInit {
 
   filteredTrainees: TraineeAttendanceLogs[] = [];
   originalTraineeLogs: TraineeAttendanceLogs[] = [];
-
-  
 
 
 
@@ -102,7 +97,8 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getTraineeAttendanceLogs(); // Fetch data from the API
-    this.setDefaultDateFilter();
+
+    this.getLatestDate();
   }
 
   getTraineeAttendanceLogs() {
@@ -137,6 +133,18 @@ export class TableComponent implements OnInit {
     const query = event.query;
     this.filterTrainees(query);
   }
+  
+  getLatestDate(): void {
+    this.traineeAttendancelogService.getLatestDate().subscribe({
+      next: (response) => {
+        this.selectedDate = new Date(response.latestDate);
+        this.getTraineeAttendanceLogs(); // Fetch data from the API after getting the latest date
+      },
+      error: (error) => {
+        console.error('Error fetching latest date:', error);
+      }
+    });
+  }
 
   filterTrainees(query: string): void {
     if (query) {
@@ -153,21 +161,31 @@ export class TableComponent implements OnInit {
   }
 
   filterByDate(): void {
-    if (this.selectedDate) {
-      const selectedDateString = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
-      this.filteredTrainees = this.originalTraineeLogs.filter(
-        (trainee) => this.datePipe.transform(new Date(trainee.date), 'yyyy-MM-dd') === selectedDateString
-      );
-    } else {
-      this.filteredTrainees = [...this.originalTraineeLogs];
-    }
+  if (this.selectedDate) {
+    const selectedDateString = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
+
+    this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs('', selectedDateString, [])
+      .subscribe({
+        next: (response: { logs: TraineeAttendanceLogs[], count: number, message: string }) => {
+          if (response && Array.isArray(response.logs)) {
+            this.filteredTrainees = response.logs;
+          } else {
+            console.error('API did not return an array:', response);
+            this.filteredTrainees = [];
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching filtered trainee logs:', error);
+          this.filteredTrainees = [];
+        }
+      });
+  } else {
+    this.filteredTrainees = [...this.originalTraineeLogs]; // Reset to original data if no date is selected
   }
-  setDefaultDateFilter(): void {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    this.selectedDate = yesterday;
-    this.filterByDate(); // Apply the filter for yesterday's date by default
-  }
+}
+
+  
+
 
 
   applyStatusFilter(event: MatSelectionListChange) {
@@ -184,40 +202,50 @@ export class TableComponent implements OnInit {
   }
 
   applyFilters() {
-    const date = this.selectedDate ? this.selectedDate.toISOString().split('T')[0] : '';
+    const dateFilter = this.selectedDate ? this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') : '';
   
-    // Create an array to hold all the selected statuses
-    const selectedStatuses = this.selectedStatuses;
+    // Apply status and batch filters
+    const filteredByStatusAndBatches = this.originalTraineeLogs.filter(trainee => {
+      const statusMatch = this.selectedStatuses.length > 0 ? this.selectedStatuses.includes(trainee.status) : true;
+      const batchMatch = this.selectedBatches.length > 0 ? this.selectedBatches.includes(trainee.batch) : true;
+      return statusMatch && batchMatch;
+    });
   
-    if ((selectedStatuses.length > 0 || this.selectedBatches.length > 0) && date) {
-      // Create an array to hold the observables for each status
-      const observables: Observable<any>[] = [];
-  
-      // Add observables based on selected statuses
-      if (selectedStatuses.length > 0) {
-        selectedStatuses.forEach(status => {
-          observables.push(this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs(status, date, this.selectedBatches));
-        });
-      } else {
-        observables.push(this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs('', date, this.selectedBatches));
-      }
-
-      forkJoin(observables).subscribe({
-        next: (responses: any[]) => {
-          const allLogs = responses.flatMap(response => response.logs || []);
-          this.filteredTrainees = allLogs;
-        },
-        error: (error) => {
-          console.error('Error fetching filtered trainee logs:', error);
-          this.filteredTrainees = [];
-        }
+    // Apply date filter to the already filtered data
+    if (dateFilter) {
+      this.filteredTrainees = filteredByStatusAndBatches.filter(trainee => {
+        const traineeDate = this.datePipe.transform(new Date(trainee.date), 'yyyy-MM-dd');
+        return traineeDate === dateFilter;
       });
     } else {
-      this.filteredTrainees = [...this.originalTraineeLogs];
+      this.filteredTrainees = filteredByStatusAndBatches;
     }
-    this.filterByDate();
   }
+  
 
+  
+  
+  downloadData() {
+    // Convert the filteredTrainees data into a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(this.filteredTrainees.map(trainee => ({
+      Date: this.formatDate(trainee.date ?? ''),  // Format the date
+      Name: trainee.name ?? 'N/A',                // Default to 'N/A' if name is undefined
+      Status: trainee.status ?? 'N/A',            // Default to 'N/A' if status is undefined
+      'Check-in Time': this.getDisplayTime(trainee.checkin ?? '', trainee.status ?? ''),  // Format check-in time
+      'Check-out Time': this.getDisplayTime(trainee.checkout ?? '', trainee.status ?? ''), // Format check-out time
+      'Work Hours': trainee.workhours ?? '0',  // Use default '0' if work hours are undefined
+    })));
+  
+    // Create a workbook and add the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance Logs');
+  
+    // Generate a buffer and save the file
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(data, 'Trainee_Attendance_Logs.xlsx');
+  }
+  
   
   
   

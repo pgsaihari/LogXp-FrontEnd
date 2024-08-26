@@ -29,6 +29,13 @@
                 class="p-button-rounded-rectangle p-button-secondary"
                 (click)="filterPanel.toggle($event)">
         </button>
+        <button pButton 
+        type="button" 
+        icon="pi pi-download" 
+        label="Download"
+        class="p-button-rounded-rectangle p-button-secondary"
+        (click)="downloadData()">
+        </button>
         
         <p-overlayPanel #filterPanel>
             <div class="filters">
@@ -51,10 +58,7 @@
             </div>
           </p-overlayPanel>
           
-        
-        
       
-        
 
             </div>
         </div>
@@ -86,6 +90,7 @@
                         
                     </tr>
                 </ng-template>
+                
             </p-table>
         </div>
     </div>

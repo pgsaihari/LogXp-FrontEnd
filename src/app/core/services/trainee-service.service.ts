@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Trainee } from '../model/trainee.model';
 
@@ -36,10 +36,10 @@ export class TraineeServiceService {
   }
 
   // Function to add multiple trainees
-  addTrainees(trainees: Trainee[]): Observable<any> {
-    return this.http.post<Trainee[]>(this.apiUrl, trainees);
+   addTrainees(trainees: Trainee[]): Observable<void> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<void>(this.apiUrl, trainees, { headers });
   }
-
   // Function to update an existing trainee
   updateTrainee(employeeCode: string, trainee: Trainee): Observable<Trainee> {
     const url = `${this.apiUrl}/${employeeCode}`;

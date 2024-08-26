@@ -69,6 +69,7 @@ export class FormComponent implements OnInit {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message });
           this.traineeForm.reset(); // Reset the form after successful submission
           this.traineeForm.patchValue({ isActive: true });  // Reset isActive to true
+          
         },
         error: (error) => {
           console.error('Error adding trainee:', error);
