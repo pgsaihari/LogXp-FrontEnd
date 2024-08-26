@@ -7,12 +7,15 @@ import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { TopHeaderComponent } from '../top-header/top-header.component';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { DatePipe } from '@angular/common';
 import { SideUserProfileComponent } from '../../Features/side-user-profile/side-user-profile.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { MatListModule, MatSelectionListChange } from '@angular/material/list';
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -21,21 +24,27 @@ import { SideUserProfileComponent } from '../../Features/side-user-profile/side-
     TopHeaderComponent,
     AutoCompleteModule,
     FormsModule,
+    MatListModule,
     CalendarModule,
     MultiSelectModule,
     TableModule,
     NgClass,
     NgIf,
+    NgFor,
     SideUserProfileComponent,
+    OverlayPanelModule,
+
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
 })
 export class TableComponent implements OnInit {
+
   private datePipe = new DatePipe('en-US');
   selectedTraineeCode: string = '';
   isSideProfileVisible?: boolean | undefined = false;
   selectedDate: Date | undefined;
+
   constructor(
     private traineeAttendancelogService: TraineeAttendancelogService
   ) {}
@@ -44,20 +53,43 @@ export class TableComponent implements OnInit {
   suggestions: any[] = [];
   todayDate: string | undefined;
   selectedOptions: any[] = [];
+  yesterday : Date = new Date();
+  
+  selectedStatuses: string[] = [];
 
-  filterOptions = [
-    { name: 'All', code: 'ALL' },
-    { name: 'Present', code: 'Present' },
-    { name: 'Half Day', code: 'Half Day' },
-    { name: 'Absent', code: 'Absent' },
-    { name: 'Late Arrival', code: 'Late Arrival' },
-    { name: 'Batch 2', code: 'Batch 2' },
-    { name: 'Batch 3', code: 'Batch 3' },
-    { name: 'Batch 4', code: 'Batch 4' },
-  ];
+
+  
+  showList = false;  // Controls the visibility of the mat-selection-list
+  showBatchList = false;
+  statuses = ['Present','On Leave', 'Late Arrival','Early Departure','Late Arrival and Early Departure'];  // List of statuses
+  batches = ['Batch 1','Batch 2', 'Batch 3','Batch 4','Batch 5'];
+  selectedBatches: string[] = [];
+
+  // toggleList(): void {
+  //   this.showList = !this.showList;
+  // }
+
+  // toggleBatchList(): void {
+  //   this.showBatchList = !this.showBatchList;
+  // }
+  toggleVisibility(section: string) {
+    if (section === 'status') {
+      this.showList = !this.showList;
+      this.showBatchList = false; // Optionally hide the batch section
+    } else if (section === 'batch') {
+      this.showBatchList = !this.showBatchList;
+      this.showList = false; // Optionally hide the status section
+    }
+  }
+  
 
   filteredTrainees: TraineeAttendanceLogs[] = [];
   originalTraineeLogs: TraineeAttendanceLogs[] = [];
+
+  
+
+
+
 
   formatDate(dateString: string): string {
     return this.datePipe.transform(dateString, 'dd-MM-yyyy') || '';
@@ -122,27 +154,79 @@ export class TableComponent implements OnInit {
 
   filterByDate(): void {
     if (this.selectedDate) {
-      // Transform the selected date to a string format (yyyy-MM-dd) for comparison
-      const selectedDateString =
-        this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
-      // Filter the trainees based on the selected date
+      const selectedDateString = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
       this.filteredTrainees = this.originalTraineeLogs.filter(
-        (trainee) =>
-          this.datePipe.transform(new Date(trainee.date), 'yyyy-MM-dd') ===
-          selectedDateString
+        (trainee) => this.datePipe.transform(new Date(trainee.date), 'yyyy-MM-dd') === selectedDateString
       );
     } else {
-      // If no date is selected, reset to original data
       this.filteredTrainees = [...this.originalTraineeLogs];
     }
   }
-
   setDefaultDateFilter(): void {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     this.selectedDate = yesterday;
     this.filterByDate(); // Apply the filter for yesterday's date by default
   }
+
+
+  applyStatusFilter(event: MatSelectionListChange) {
+    // Update selected statuses based on the selected options
+    this.selectedStatuses = event.source.selectedOptions.selected.map(option => option.value);
+    
+    // Apply filters based on selected statuses
+    this.applyFilters();
+  }
+
+  applyBatchFilter(event: MatSelectionListChange) {
+    this.selectedBatches = event.source.selectedOptions.selected.map(option => option.value);
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    const date = this.selectedDate ? this.selectedDate.toISOString().split('T')[0] : '';
+  
+    // Create an array to hold all the selected statuses
+    const selectedStatuses = this.selectedStatuses;
+  
+    if ((selectedStatuses.length > 0 || this.selectedBatches.length > 0) && date) {
+      // Create an array to hold the observables for each status
+      const observables: Observable<any>[] = [];
+  
+      // Add observables based on selected statuses
+      if (selectedStatuses.length > 0) {
+        selectedStatuses.forEach(status => {
+          observables.push(this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs(status, date, this.selectedBatches));
+        });
+      } else {
+        observables.push(this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs('', date, this.selectedBatches));
+      }
+
+      forkJoin(observables).subscribe({
+        next: (responses: any[]) => {
+          const allLogs = responses.flatMap(response => response.logs || []);
+          this.filteredTrainees = allLogs;
+        },
+        error: (error) => {
+          console.error('Error fetching filtered trainee logs:', error);
+          this.filteredTrainees = [];
+        }
+      });
+    } else {
+      this.filteredTrainees = [...this.originalTraineeLogs];
+    }
+    this.filterByDate();
+  }
+
+  
+  
+  
+  
+  
+  
+ 
+
+
 
   getStatusClass(status: string): string {
     switch (status) {
