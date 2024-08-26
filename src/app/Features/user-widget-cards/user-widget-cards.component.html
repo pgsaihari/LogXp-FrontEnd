@@ -1,8 +1,8 @@
 <div class="widget-cards-container">
     <div class="widget-cards">
-        <app-widget-card routerLink="/search" [card_number]= 24 card_header="Total Working Days" header_icon="fa-solid fas fa-calendar-alt"></app-widget-card>
-        <app-widget-card  [card_number]= 1 card_header="Absent" header_icon="fa-solid fas fa-suitcase"></app-widget-card>
-        <app-widget-card  [card_number]= 2 card_header="Half-Day Leave" header_icon="fa-solid fas fa-hourglass-half"></app-widget-card>
-        <app-widget-card  [card_number]= 3 card_header="Late Arrivals" header_icon="fa-solid fa-user-clock"></app-widget-card>
+        <app-widget-card [card_number]= "onTimeNum" card_header="Total Working Days" header_icon="fa-solid fas fa-calendar-alt"></app-widget-card>
+        <app-widget-card [card_number]= "absent" card_header="Absent" header_icon="fa-solid fas fa-suitcase"></app-widget-card>
+        <app-widget-card [card_number]= "earlyDepartures" card_header="Half-Day Leave" header_icon="fa-solid fas fa-hourglass-half"></app-widget-card>
+        <app-widget-card [card_number]= "lateArrivals" card_header="Late Arrivals" header_icon="fa-solid fa-user-clock"></app-widget-card>
     </div>
 </div>
