@@ -1,6 +1,9 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
+import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
+import { catchError, of } from 'rxjs';
+import { AttendanceLogsService } from '../../core/services/attendance-logs.service';
 
 @Component({
   selector: 'app-current-date',
@@ -12,10 +15,14 @@ import { CardModule } from 'primeng/card';
 export class CurrentDateComponent implements OnInit{
   currentTime!: Date;
   currentDate!: Date;
+  latestLogDate: string = '';
   timeIcon: string = '';
   timeOfDay: string = '';
+  error: any;
+  constructor(private api: AttendanceLogsService) {}
 
   ngOnInit() {
+    this.getThelatestDate();
     this.updateTime();
     setInterval(() => this.updateTime(), 1000);
   }
@@ -46,5 +53,13 @@ export class CurrentDateComponent implements OnInit{
       this.timeOfDay = 'night';
     }
 
+  }
+
+  getThelatestDate(){
+    this.api.getWidgetCount()
+    .subscribe(data => {
+      this.latestLogDate = data.latestDate;
+      console.log(this.latestLogDate);
+    }); 
   }
 }
