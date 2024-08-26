@@ -3,7 +3,7 @@ import { TopHeaderComponent } from "../../ui/top-header/top-header.component";
 import { FormComponent } from '../../ui/form/form.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-
+import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { TraineeServiceService } from '../../core/services/trainee-service.service';
 import { Trainee } from '../../core/model/trainee.model';
@@ -43,33 +43,34 @@ export class AddTraineesPageComponent {
   }
 
   processExcel(data: Uint8Array) {
+    // Parse the Excel file using XLSX
     const workbook = XLSX.read(data, { type: 'array' });
     const firstSheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[firstSheetName];
-  
+    
+    // Type the result of the sheet_to_json as any[][]
     const rows: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-  
-    const trainees: Trainee[] = rows.slice(1)
+
+    // Map over the rows to create an array of Trainee objects
+    const trainees: Trainee[] = rows.slice(1) // Skip header row
       .map((row: any[]) => ({
-        employeeCode: row[0]?.toString().trim() || '',
-        name: row[1]?.toString().trim() || '',
-        email: row[2]?.toString().trim() || '',
-        isActive: row[3]?.toString().toLowerCase() === 'true',  // Handle true/false strings
-        batchId: Number(row[4]) || 0                             // Convert to number
+        employeeCode: row[0]?.toString(),
+        name: row[1]?.toString(),
+        email: row[2]?.toString(),
+        isActive: row[3]?.toString() === 'true',
+        batchId: Number(row[4])
       }));
-  
-    // Validate data before sending
-    if (trainees.some(t => !t.employeeCode || !t.name || !t.email || t.batchId === 0)) {
-      this.showError(new Error('Invalid data in Excel sheet. Please ensure all fields are correctly filled.'));
-      return;
-    }
-  
+console.log(trainees);
+    // Send parsed data to the backend
     this.traineeService.addTrainees(trainees).subscribe({
+      
       next: () => this.showSuccess(),
-      error: (error) => this.showError(error)
+      error: (error) => {
+        console.error('Upload failed:', error);
+        this.showError(error);
+      }
     });
   }
-  
 
   showSuccess() {
     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel sheet uploaded and trainees added successfully!' });
@@ -78,4 +79,23 @@ export class AddTraineesPageComponent {
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: `Failed to upload trainees: ${error.message}` });
   }
+    // Function to download Excel template
+    downloadTemplate() {
+      // Define the header row
+      const header = [
+        ['Employee Code', 'Name', 'Email', 'Is Active (true/false)', 'Batch ID']
+      ];
+  
+      // Create a new workbook and add the header to the first sheet
+      const worksheet = XLSX.utils.aoa_to_sheet(header);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Trainee Template');
+  
+      // Convert the workbook to a binary array
+      const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  
+      // Save the file
+      const blob = new Blob([wbout], { type: 'application/octet-stream' });
+      saveAs(blob, 'Trainee_Template.xlsx');
+    }
 }

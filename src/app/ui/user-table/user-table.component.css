@@ -4,13 +4,15 @@
 }
 
 .trainee-status-table th{
+ 
   font-size: small;
 }
 ::ng-deep.p-sortable-column{
   font-size: small;
 }
-::ng-deep.p-datatable-tbody{
+::ng-deep.p-datatable-tbody tr{
   font-size: small;
+  padding: 0rem 1rem;
 }
 .trainee-status-table td {
  text-align: center;
@@ -58,9 +60,7 @@
   font-weight: bold;
   font-size: 0.25rem;
 }
-::ng-deep.p-datatable-header{
-padding: 0rem, 1rem;
-}
+
 ::ng-deep.p-datatable-body{
   padding: 0rem,1rem;
 }
@@ -81,7 +81,7 @@ outline-color: transparent;
 }
 
 .trainee-dialog .p-dialog-content {
-  padding: 1rem;
+  padding: 2rem;
 }
 
 .trainee-dialog .header-container {
@@ -101,6 +101,11 @@ outline-color: transparent;
   width: 70px;
 }
 ::ng-deep.p-component{
-  margin-top: -10px;
-  margin-bottom: -10px;
+ 
 }
+:host ::ng-deep .p-datatable .p-datatable-header{
+  padding: 0.25rem
+}
+ /* :host ::ng-deep .p-inputtext {
+  padding: 0.50rem 0.5rem
+}  */

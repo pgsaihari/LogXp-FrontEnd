@@ -112,7 +112,7 @@ getBatchName(batchId: number): string {
     this.traineeService.updateTrainee(this.trainee.employeeCode, this.trainee).subscribe({
       next: () => {
         this.updateTraineeList(this.trainee);
-        this.showMessage('success', 'Successful', 'Trainee Updated');
+        this.showMessage('success', 'Successful', `Details of ${this.trainee.name } updated `);
         this.hideDialog();
       },
       error: (err) => this.showError('Failed to update trainee', err),
@@ -137,8 +137,8 @@ getBatchName(batchId: number): string {
       this.showMessage('warn', 'Warning', 'No trainees selected');
       return;
     }
-
-    this.updateTrainees(this.selectedTrainees, isActive, 'Selected trainees updated successfully');
+    const traineeNames = this.selectedTrainees.map(trainee => trainee.name).join(', ');
+    this.updateTrainees(this.selectedTrainees, isActive, `${traineeNames} updated successfully`);
   }
 
   private updateTraineeList(updatedTrainee: Trainee) {
