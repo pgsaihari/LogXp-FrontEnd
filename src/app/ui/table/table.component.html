@@ -29,6 +29,13 @@
                 class="p-button-rounded-rectangle p-button-secondary"
                 (click)="filterPanel.toggle($event)">
         </button>
+        <button pButton 
+        type="button" 
+        icon="pi pi-download" 
+        label="Download"
+        class="p-button-rounded-rectangle p-button-secondary"
+        (click)="downloadData()">
+        </button>
         
         <p-overlayPanel #filterPanel>
             <div class="filters">
@@ -61,7 +68,7 @@
   
         <div class="card table-container">
             <p-table [value]="filteredTrainees" [scrollable]="true" [scrollHeight]="'400px'" [sortMode]="'single'" paginatorPosition="top">
-                <ng-template pTemplate="header">
+                <ng-template pTemplate="header" *ngIf="filteredTrainees.length > 0">
                     <tr>
                         <th pSortableColumn="id">Code <p-sortIcon field="id"></p-sortIcon></th>
                         <th>Trainee Name</th>
@@ -86,6 +93,12 @@
                         
                     </tr>
                 </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <div class="empty-state-container">
+                  <i class="fas fa-exclamation-circle not-found-icon"></i>
+                  <p>No data found on <span>{{selectedDate | date: 'mediumDate' }}</span> </p>
+                  </div>
+                  </ng-template>
             </p-table>
         </div>
     </div>
