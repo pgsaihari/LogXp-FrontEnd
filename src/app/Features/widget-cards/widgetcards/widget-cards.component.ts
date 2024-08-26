@@ -51,25 +51,27 @@ export class WidgetCardsComponent implements OnInit {
         })
 
        //Early Arrivals Count
-        this.AttendanceLogsService.getEarlyArrivalsCount().subscribe(count => {
-          console.log('Count of early arrivals:', count);
-          this.onTimeNum = count;
+        this.AttendanceLogsService.getWidgetCount().subscribe(count => {
+          console.log('Count of early arrivals:', count.earlyArrivalCount);
+          this.onTimeNum = count.earlyArrivalCount;
         });
 
         //Absentees Count
-        this.AttendanceLogsService.getAbsenteesCount().subscribe(count => {
-          console.log('Count of absent:', count);
-          this.absentees = count;
+        this.AttendanceLogsService.getWidgetCount().subscribe(count => {
+          console.log('Count of absent:', count.absentCount);
+          this.absentees = count.absentCount;
         });
-        this.AttendanceLogsService.lateArrivalsCount().subscribe(count => {
-          console.log('Count of late arrivals:', count);
-          this.lateArrivals = count;
+
+        //Late Arrivals Count
+        this.AttendanceLogsService.getWidgetCount().subscribe(count => {
+          console.log('Count of late arrivals:', count.lateArrivalCount);
+          this.lateArrivals = count.lateArrivalCount;
         });
 
         //Early Departures Count
-        this.AttendanceLogsService.earlyDeparturesCount().subscribe(count => {
-          console.log('Count of late arrivals:', count);
-          this.earlyDepartures = count;
+        this.AttendanceLogsService.getWidgetCount().subscribe(count => {
+          console.log('Count of early departures:', count.earlyDepartureCount);
+          this.earlyDepartures = count.earlyDepartureCount;
         });
 
   }

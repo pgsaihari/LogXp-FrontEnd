@@ -1,26 +1,37 @@
 export interface WidgetAttendance {
-    // id:string;
-    // traineeName:string;
-    // batch:string;
-    // date:string;
-    // checkin?: string;
-    // checkout?: string;
-
     employeeCode: string,
     name: string,
     batch: string,
     loginTime: string,
-    status: string
+    status: string,
+    date:string
 }
 
-export interface EarlyArrivalsLog{
+export interface WidgetSummary{
+  earlyArrivalCount: number,
+  lateArrivalCount: number,
+  earlyDepartureCount: number,
+  absentCount: number,
+  latestDate: string
+}
+
+export interface EarlyArrivalLogs{
     earlyArrivals:WidgetAttendance[],
     message:string,
     count:number
 }
-
 export interface LateArrivalsLog{
     lateArrivals:WidgetAttendance[],
+    message:string,
+    count:number
+}
+export interface EarlyDepartureLog{
+    earlyDepartures:WidgetAttendance[],
+    message:string,
+    count:number
+}
+export interface AbsenteeLog{
+    absentees:WidgetAttendance[],
     message:string,
     count:number
 }
