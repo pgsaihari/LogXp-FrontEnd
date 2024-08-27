@@ -18,7 +18,7 @@ import { NgxSpinnerComponent } from 'ngx-spinner';
   selector: 'app-add-trainees-page',
   standalone: true,
 
-  imports: [ FormComponent, ToastModule,NgClass,DialogModule,TooltipModule, NgxSpinnerComponent],
+  imports: [ FormComponent, ToastModule,NgClass,DialogModule, NgxSpinnerComponent],
 
   templateUrl: './add-trainees-page.component.html',
   styleUrls: ['./add-trainees-page.component.css'],
