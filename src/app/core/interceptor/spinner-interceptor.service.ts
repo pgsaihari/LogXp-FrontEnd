@@ -14,22 +14,10 @@ export class SpinnerInterceptorService implements HttpInterceptor  {
     this.spinner.show();
 
     return next.handle(req).pipe(
-      map((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          // this.toastr.success('Request successful');
-        }
-        return event;
-      }),
-      catchError((error: HttpErrorResponse) => {
-        // this.toastr.error(`Request failed: ${error.message}`);
-        return throwError(error);
-      }),
       finalize(() => {
         setTimeout(() => {
-          console.log("inside spinner");
-          
           this.spinner.hide();
-        }, 2000);
+        }, 500);
       })
     );  
   }
