@@ -49,7 +49,7 @@ export const routes: Routes = [
         path: 'user-profile/:id',
         component: UserProfilePageComponent,
         canActivate: [RoleGuard],
-        data: { expectedRole: 'user' },
+        data: { expectedRole: 'trainee' },
       },
       { path: 'test', component: TestPageComponent },
       {
