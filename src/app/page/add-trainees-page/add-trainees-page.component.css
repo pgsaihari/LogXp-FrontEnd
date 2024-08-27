@@ -7,7 +7,8 @@
   
   .upload-container {
     display: flex;
-    justify-content: space-between;
+    
+    justify-content: space-around;
     align-items: center;
     background-color: white;
     padding: 10px;
@@ -23,6 +24,26 @@
     border-radius: 5px;
     cursor: pointer;
   }
+  .download-template-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .open-popup-button{
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  :hover.open-popup-button{
+    background-color: #0056b3;
+  }
   
   .upload-button i {
     margin-right: 5px;
@@ -34,4 +55,8 @@
   h3{
     padding: 0%;
     margin-top: -10px;
+  }
+  .popup-options{
+    display: flex;
+    gap: 5px;
   }

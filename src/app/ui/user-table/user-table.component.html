@@ -7,14 +7,14 @@
         [scrollable]="true"
         scrollHeight="350px"
         [globalFilterFields]="['employeeCode', 'name', 'email', 'batch']"
-        [tableStyle]="{ 'min-width': '20rem' }"
+        [tableStyle]="{ 'min-width': '25rem' }"
         [(selection)]="selectedTrainees"
         [rowHover]="true"
         dataKey="employeeCode"
     >
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <h3 class="m-0">Manage Trainees</h3>
+                <h3 class="m-0">Update Trainee</h3>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input 
@@ -25,7 +25,7 @@
                         placeholder="Search..." />
                 </span>
                 <div class="p-field">
-                   <p-dropdown 
+                   <p-dropdown  class="batch"
   [options]="batchOptions" 
   [(ngModel)]="selectedBatchId" 
   placeholder="Select Batch"
@@ -111,7 +111,7 @@ icon="pi pi-cog"
 
     <p-dialog 
     [(visible)]="traineeDialog" 
-    [style]="{ width: '450px', height: '75vh' }" 
+    [style]="{ width: '450px', height: '60vh' }" 
     header="Trainee Details" 
     [modal]="true" 
     styleClass="p-fluid trainee-dialog"

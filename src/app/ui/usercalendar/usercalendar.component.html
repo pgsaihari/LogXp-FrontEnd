@@ -1,0 +1,14 @@
+<div class="calendar-wrapper">
+    <p-calendar 
+        class="full-size-calendar" 
+        [(ngModel)]="date" 
+        [inline]="true" 
+        [showWeek]="false" 
+        >
+      <ng-template pTemplate="date" let-date>
+        <span [ngClass]="[ isSunday(date) ? 'sunday-holiday' : '']">
+          {{ date.day }}
+        </span>
+      </ng-template>
+    </p-calendar>
+  </div>

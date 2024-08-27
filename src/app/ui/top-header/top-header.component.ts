@@ -18,7 +18,7 @@ export class TopHeaderComponent implements OnInit {
   userAvatar: string = 'assets/avatar.png'; // Default avatar image
 
   constructor(@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
-  private authService: MsalService,
+  private authService:MsalService,
   private msalBroadcastService: MsalBroadcastService) {}
 
   ngOnInit(): void {
