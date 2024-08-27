@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Trainee } from '../../core/model/trainee.model';
@@ -52,12 +52,19 @@ export class UserTableComponent implements OnInit {
   selectedBatchId: number | null = null;
   batchOptions: { label: string; value: number }[] = [];
   allTrainees: Trainee[] = [];
-
+  
   constructor(
     private traineeService: TraineeServiceService,
     private batchService: BatchService,  // Inject BatchService
     private messageService: MessageService
   ) {}
+  onSelectionChange(event: any) {
+    if (this.selectedTrainees.length === this.trainees.length && this.trainees.length > 0) {
+      this.isSetStatusDialogVisible = true;
+    } else {
+      this.isSetStatusDialogVisible = false;
+    }
+  }
 
   /**
    * Initialize the component by loading trainees and batch options.
@@ -76,6 +83,8 @@ export class UserTableComponent implements OnInit {
       }));
     });
   }
+
+
 
   /**
    * Filter trainees based on the selected batch.
@@ -171,8 +180,7 @@ export class UserTableComponent implements OnInit {
       this.showMessage('warn', 'Warning', 'No trainees selected');
       return;
     }
-    const traineeNames = this.selectedTrainees.map(trainee => trainee.name).join(', ');
-    this.updateTrainees(this.selectedTrainees, isActive, `${traineeNames} updated successfully`);
+    this.updateTrainees(this.selectedTrainees, isActive, `Selected trainees updated successfully`);
   }
 
   /**
@@ -192,17 +200,31 @@ export class UserTableComponent implements OnInit {
    * @param {string} successMessage - The message to show on successful update.
    */
   private updateTrainees(trainees: Trainee[], isActive: boolean, successMessage: string) {
+    // Track the number of successful updates
+    let updatesCompleted = 0;
+    const totalUpdates = trainees.length;
+
     trainees.forEach((trainee) => {
-      const updatedTrainee = { ...trainee, isActive };
-      this.traineeService.updateTrainee(updatedTrainee.employeeCode!, updatedTrainee).subscribe({
-        next: () => {
-          this.updateTraineeList(updatedTrainee);
-          this.showMessage('success', 'Successful', successMessage);
-        },
-        error: (err) => this.showError('Failed to update trainees', err),
-      });
+        const updatedTrainee = { ...trainee, isActive };
+        this.traineeService.updateTrainee(updatedTrainee.employeeCode!, updatedTrainee).subscribe({
+            next: () => {
+                this.updateTraineeList(updatedTrainee);
+                updatesCompleted++;
+
+                // Check if all updates are completed
+                if (updatesCompleted === totalUpdates) {
+                    this.showMessage('success', 'Successful', successMessage);
+                }
+            },
+            error: (err) => this.showError('Failed to update trainees', err),
+        });
     });
-  }
+
+    // In case there are no trainees to update
+    if (totalUpdates === 0) {
+        this.showMessage('warn', 'Warning', 'No trainees to update');
+    }
+}
 
   /**
    * Show a message to the user.

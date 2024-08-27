@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 
 <div class="enter-trainee-details">
-  <h3>Enter Trainee Details</h3>
+  <h3>Add New Trainee</h3>
   <div class="upload-container">
     <p>Upload an Excel sheet with the trainee data for bulk entry.</p>
     <input
@@ -18,11 +18,17 @@
    
   </div>
   <p-dialog [(visible)]="displayPopup" [modal]="true" [closable]="true" header="Upload trianee details">
+    
+    <p style="font-size:  small;">please download the template</p>
     <div class="popup-options">
-      <button class="download-template-button" (click)="downloadTemplate()">
-        <i class="pi pi-download"></i> Download Template
-      </button>
-
+      <div class="info-icon-container">
+        
+      
+        <div class="tooltip-content">
+          
+          <a href="javascript:void(0);" style="color: var(--primary-color); font-size: small;" (click)="downloadTemplate()">Download Template</a>
+        </div>
+      </div>
       <button class="upload-button" (click)="triggerFileInput()">
         <i class="pi pi-upload"></i> Upload Sheet
       </button>
