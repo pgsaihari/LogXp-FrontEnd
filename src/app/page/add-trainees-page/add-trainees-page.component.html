@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 
 <div class="enter-trainee-details">
-  <h3>Enter Trainee Details</h3>
+  <h3>Add New Trainee</h3>
   <div class="upload-container">
     <p>Upload an Excel sheet with the trainee data for bulk entry.</p>
     <input
@@ -11,11 +11,32 @@
       (change)="onFileSelected($event)"
       style="display: none;"
     />
-    <button class="upload-button" (click)="triggerFileInput()">
-      <i class="pi pi-upload"></i> Upload Sheet
+    <button class="open-popup-button" (click)="showPopup()">
+      <i class="pi pi-cog"></i> Upload sheet
     </button>
+  
+   
   </div>
+  <p-dialog [(visible)]="displayPopup" [modal]="true" [closable]="true" header="Upload trianee details">
+    
+    <p style="font-size:  small;">Please download the template</p>
+    <div class="popup-options">
+      <div class="info-icon-container">
+        
+      
+        <div class="tooltip-content">
+          
+          <a href="javascript:void(0);" style="color: var(--primary-color); font-size: small;" (click)="downloadTemplate()">Download Template</a>
+        </div>
+      </div>
+      <button class="upload-button" (click)="triggerFileInput()">
+        <i class="pi pi-upload"></i> Upload Sheet
+      </button>
+    </div>
+  </p-dialog>
   <div class="formui">
     <app-form></app-form>
   </div>
 </div>
+<!-- spinner, uses the interceptor to work -->
+<ngx-spinner [bdColor]="'rgba(0, 0, 0, 0.8)'"></ngx-spinner>

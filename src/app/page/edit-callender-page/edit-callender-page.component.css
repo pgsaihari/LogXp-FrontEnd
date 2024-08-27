@@ -1,5 +1,4 @@
 .page {
-  gap: 5%;
   padding: 20px;
   width: 100%;
 }
@@ -9,8 +8,8 @@
   font-weight: bold;
   color: black;
   text-align: center;
-  margin-top: 0;
-  margin-bottom: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .buttons-section {
@@ -77,19 +76,12 @@
   background-color: #0056b3;
 }
 
-.calendar-container{
-  display: flex;
-  justify-content: space-evenly;
-  width: 100%;
-  gap: 5%;
+::ng-deep .buttons-section p-button .p-button{
+  background: red !important
 }
 
-.calendarcard-button-right{
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: left;
+::ng-deep .buttons-section p-button .p-button{
+  color: white !important
 }
 
 .month-summary-card{
@@ -108,5 +100,80 @@
   width: min-content;
 }
 
+::ng-deep .p-card {
+  background-color: rgb(254, 225, 229);
+}
 
+.holiday-summary{
+  font-size: 22px;
+  font-weight: 400;
+}
 
+/* Styling for navbar */
+::ng-deep .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
+  background: #ffffff;
+  border-color: red;
+  color: red;
+}
+
+@media (min-width: 1024px) {
+  .calendar-container{
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    gap: 5%;
+  }
+}
+
+@media (max-width: 1023px) {
+  
+  .buttons-section {
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 30px;
+  }
+  
+  .calendar-container{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  :host ::ng-deep .holiday-summary-card .p-card .p-card-body {
+    width: max-content;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  :host ::ng-deep .p-card-body {
+    padding-top: 15px;
+    padding-bottom: 5px;
+  }
+
+  :host ::ng-deep .p-card-content {
+    padding: 0;
+  }
+
+  .buttons-section {
+    gap: 10px;
+    margin-bottom: 75px;
+  }
+
+  p-card p{
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 425px) {
+  :host ::ng-deep .p-card-body {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}

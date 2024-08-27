@@ -1,213 +1,393 @@
 .container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+  background-color: white;
+  padding: 10px; /* Reduce padding to decrease height */
+  margin-top: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  max-height: calc(100vh - 20px); /* Set max height relative to viewport height to avoid page scrolling */
 }
 
 .search-filter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  width: 200px; /* Decrease the width */
+  height: 10px; /* Increase the height */
+  font-size: 16px; /* Adjust font size for better readability */
+  padding: 10px; /* Adjust padding for better spacing */
+  border-radius: 5px; /* Optional: rounded corners */
+  border: 1px solid #ccc; /* Optional: border styling */
 }
 
 #search-bar {
-    flex: 1;
-    margin-right: 20px;
-    font-size: 14px; /* Adjust font size */
+  flex: 1;
+  font-size: 14px;
+  margin-left: 50px; /* Reduce margin to decrease the space around the search bar */
+  font-size: 12px; /* Reduce font size for a more compact appearance */
+  padding: 14px; /* Reduce padding to decrease height */
+  height: auto; /* Allow height to adjust automatically */
 }
 
 .right-filters {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Reduce gap to minimize height */
+  flex: 1;
+  padding: 4px; /* Reduce padding to decrease height */
+  height: auto; /* Allow height to adjust automatically */
 }
 
 #datepick {
-    margin-right: 20px;
-    font-size: 14px; /* Adjust font size */
+  margin-right: 10px; /* Reduce margin to decrease the space around the date picker */
+  font-size: 12px; /* Reduce font size for a more compact appearance */
+  padding: 4px; /* Reduce padding to decrease height */
+  height: auto; /* Allow height to adjust automatically */
 }
 
 /* Make all table data bold and adjust font size */
 p-table td {
-    font-weight: bold;
-    font-size: 14px; /* Adjust font size */
+  font-weight: bold;
+  font-size: 14px; /* Adjust font size */
+  line-height: 1.2;
 }
 
 /* Table headings styles */
 p-table th {
-    font-weight: bold;
-    font-size: 14px; /* Adjust font size */
+  font-weight: bold;
+  font-size: 14px; /* Adjust font size */
 }
 
 /* Status Colors */
 .status-present {
-    color: green;
-    background-color: #e0f7e9; /* Light green background */
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 12px; /* Adjust font size */
+  color: green;
+  background-color: #e0f7e9; /* Light green background */
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px; /* Adjust font size */
 }
 
-
 .status-absent {
-    color: #EA454C;
-    background-color: #ffe0e0; /* Light red background */
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 12px; /* Adjust font size */
+  color: #ea454c;
+  background-color: #ffe0e0; /* Light red background */
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px; /* Adjust font size */
 }
 
 .status-late-arrival {
-    color: orange;
-    background-color: #fff4e0; /* Light orange background */
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 12px; /* Adjust font size */
+  color: orange;
+  background-color: #fff4e0; /* Light orange background */
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px; /* Adjust font size */
 }
 
 /* Time Colors */
 .time-on-time {
-    color: green;
-    background-color: #e0f7e9; /* Light green background */
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 12px; /* Adjust font size */
+  color: green;
+  background-color: #e0f7e9; /* Light green background */
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px; /* Adjust font size */
 }
 
 .time-late {
-    color: orange;
-    background-color: #fff4e0; /* Light orange background */
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 12px; /* Adjust font size */
+  color: orange;
+  background-color: #fff4e0; /* Light orange background */
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px; /* Adjust font size */
 }
-
 
 /* Dropdown Header */
 .dropdown-header {
-    padding: 8px;
-    background-color: #f0f0f0; /* Light background for the header */
-    border-bottom: 1px solid #ddd; /* Add a border below the header */
+  padding: 8px;
+  background-color: #f0f0f0; /* Light background for the header */
+  border-bottom: 1px solid #ddd; /* Add a border below the header */
 }
 
 .dropdown-header h3 {
-    margin: 0;
-    font-size: 12px; /* Adjust font size */
-    font-weight: bold;
+  margin: 0;
+  font-size: 12px; /* Adjust font size */
+  font-weight: bold;
 }
 
 /* Hide default search input inside p-multiSelect dropdown */
 .ui-multiselect .ui-multiselect-filter-container {
-    display: none;
+  display: none;
 }
 
 .filter-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
-.left-filters, .right-filters {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.left-filters,
+.right-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .right-filters {
-    flex: 1;
+  flex: 1;
 }
 
 .table-container {
-    margin-top: 20px;
-    overflow-x: auto; /* Adds horizontal scrolling if needed */
+  margin-top: 1px;
+  overflow-x: auto; /* Adds horizontal scrolling if needed */
 }
 
 .p-table {
-    width: 100%; /* Full width of the container */
-    box-sizing: border-box; /* Includes padding and border in width */
-}
-
-.p-table .p-paginator {
-    margin-top: 20px; /* Space above paginator */
-    width: 100%; /* Full width */
+  width: 100%; /* Full width of the container */
+  box-sizing: border-box; /* Includes padding and border in width */
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .filter-row {
-        flex-direction: column; /* Stack filters vertically */
-    }
+  .filter-row {
+    flex-direction: column; /* Stack filters vertically */
+  }
 
-    .left-filters, .right-filters {
-        width: 100%; /* Full width on small screens */
-        margin-bottom: 10px; /* Space below each section */
-    }
+  .left-filters,
+  .right-filters {
+    width: 100%; /* Full width on small screens */
+    margin-bottom: 10px; /* Space below each section */
+  }
 
-    #search-bar {
-        margin-right: 0; /* Remove margin on small screens */
-        margin-bottom: 10px; /* Add space below search bar */
-        font-size: 12px; /* Adjust font size for small screens */
-    }
+  #search-bar {
+    margin-right: 0; /* Remove margin on small screens */
+    margin-bottom: 10px; /* Add space below search bar */
+    font-size: 12px; /* Adjust font size for small screens */
+  }
 
-/* Adjust the size of the date picker */
-#datepick {
+  /* Adjust the size of the date picker */
+  #datepick {
     width: 150px; /* Adjust width as needed */
     font-size: 12px; /* Adjust font size */
     padding: 5px; /* Adjust padding inside the input */
-}
+  }
 
-/* Additional styles to ensure the calendar icon is properly sized */
-.p-calendar .p-calendar .p-inputtext {
+  /* Additional styles to ensure the calendar icon is properly sized */
+  .p-calendar .p-calendar .p-inputtext {
     font-size: 12px; /* Adjust font size inside the input */
     padding: 5px; /* Adjust padding inside the input */
-}
+  }
 
-/* Ensure the calendar icon itself is sized correctly */
-.p-calendar .p-calendar-icon {
+  /* Ensure the calendar icon itself is sized correctly */
+  .p-calendar .p-calendar-icon {
     font-size: 14px; /* Adjust icon size */
-}
+  }
 
-/* Adjust the dropdown calendar to fit better */
-.p-calendar .p-calendar-header {
+  /* Adjust the dropdown calendar to fit better */
+  .p-calendar .p-calendar-header {
     font-size: 12px; /* Adjust font size in the calendar header */
-}
+  }
 
-.p-calendar .p-calendar-title {
+  .p-calendar .p-calendar-title {
     font-size: 12px; /* Adjust font size in the calendar title */
-}
+  }
 
-.p-calendar .p-calendar-month {
+  .p-calendar .p-calendar-month {
     font-size: 12px; /* Adjust font size in the calendar month */
-}
+  }
 
-.p-calendar .p-calendar-weekday {
+  .p-calendar .p-calendar-weekday {
     font-size: 12px; /* Adjust font size in the calendar weekdays */
-}
+  }
 
-.p-calendar .p-calendar-day {
+  .p-calendar .p-calendar-day {
     font-size: 12px; /* Adjust font size in the calendar days */
+  }
+
+  p-table td {
+    font-size: 12px; /* Adjust font size for small screens */
+  }
+
+  p-table th {
+    font-size: 12px; /* Adjust font size for small screens */
+  }
+
+  .dropdown-header h3 {
+    font-size: 10px; /* Adjust font size for small screens */
+  }
 }
 
-
-    p-table td {
-        font-size: 12px; /* Adjust font size for small screens */
-    }
-
-    p-table th {
-        font-size: 12px; /* Adjust font size for small screens */
-    }
-
-    .dropdown-header h3 {
-        font-size: 10px; /* Adjust font size for small screens */
-    }
+.trainee-name {
+  cursor: pointer;
 }
-.trainee-name{
-    cursor: pointer;
+
+.p-overlaypanel {
+  padding: 10px;
 }
+
+.p-overlaypanel-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.p-button-secondary {
+  background-color: #ea454c;
+  border: none;
+  color: white;
+  padding: 8px 16px; /* Adjust padding for better appearance */
+}
+
+.p-button-secondary:hover {
+  background-color: #f3333d; /* Darken on hover */
+}
+
+/* Styling for the Status heading */
+.status-heading {
+  font-weight: bold;
+  margin-bottom: 8px;
+  cursor: pointer; /* Indicates that this element is clickable */
+  transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.status-heading:hover {
+  background-color: #f0f0f0; /* Light grey background on hover */
+}
+
+.filters {
+  display: flex;
+  flex-direction: column; /* Stack filters vertically */
+  gap: 10px; /* Space between filter sections */
+  padding: 10px;
+}
+
+.filter-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-section label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.filter-section label:hover {
+  color: #007bff; /* Change color on hover */
+}
+
+mat-selection-list {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  max-height: 200px; /* Adjust as needed */
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+mat-list-option {
+  cursor: pointer;
+}
+
+/* Responsive adjustments for tablets and mobile */
+@media (max-width: 1024px) {
+  .filters {
+    gap: 15px; /* Adjust gap for tablet screens */
+  }
+
+  .filter-section label {
+    font-size: 16px; /* Adjust font size for tablets */
+  }
+
+  mat-selection-list {
+    max-height: 180px; /* Adjust height for tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .filters {
+    gap: 15px; /* Increase gap between sections on small screens */
+  }
+
+  mat-selection-list {
+    max-height: 150px; /* Adjust height for small screens */
+  }
+
+  .filter-section label {
+    font-size: 14px; /* Adjust font size for small screens */
+  }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 480px) {
+  .filters {
+    padding: 5px; /* Reduce padding on mobile screens */
+    gap: 10px; /* Smaller gap for mobile screens */
+  }
+
+  .filter-section label {
+    font-size: 12px; /* Smaller font size for mobile screens */
+  }
+
+  mat-selection-list {
+    max-height: 120px; /* Reduce list height on mobile screens */
+    font-size: 12px; /* Smaller font size in the list */
+  }
+
+  mat-list-option {
+    padding: 5px; /* Adjust padding for list options on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .table-container {
+    padding: 0 10px; /* Add padding for mobile screens */
+  }
+
+  p-table {
+    font-size: 10px; /* Smaller font size for mobile */
+  }
+
+  p-table td,
+  p-table th {
+    padding: 5px; /* Adjust padding for table cells on mobile */
+  }
+}
+
+.no-data-img {
+  /* height: 10%; */
+  width: 25%;
+}
+
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  padding: 20px;
+  color: #555; /* Main text color */
+  font-family: "Roboto", sans-serif; /* Use a clean and modern font */
+}
+
+.empty-state-container .not-found-icon {
+  font-size: 7em; /* Adjust size as needed */
+  color: #f38c89; /* Red color for the "not found" theme */
+  margin-bottom: 30px;
+}
+
+.empty-state-container p {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.2em; /* Slightly larger font size */
+  /* font-weight: 500; Medium font weight for better emphasis */
+  color: #333; /* Darker text color for better contrast */
+  line-height: 1.5; /* Improve readability */
+  margin: 0;
+}
+
+.empty-state-container p span {
+  color: #ea454c; /* Highlight key information like dates with a subtle accent color */
+  font-weight: bold;
+}
+

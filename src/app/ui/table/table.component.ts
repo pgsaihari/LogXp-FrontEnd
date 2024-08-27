@@ -3,16 +3,20 @@ import {
   AutoCompleteCompleteEvent,
   AutoCompleteModule,
 } from 'primeng/autocomplete';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { TopHeaderComponent } from '../top-header/top-header.component';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { DatePipe } from '@angular/common';
 import { SideUserProfileComponent } from '../../Features/side-user-profile/side-user-profile.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 
 @Component({
   selector: 'app-table',
@@ -21,12 +25,17 @@ import { SideUserProfileComponent } from '../../Features/side-user-profile/side-
     TopHeaderComponent,
     AutoCompleteModule,
     FormsModule,
+    MatListModule,
     CalendarModule,
     MultiSelectModule,
     TableModule,
     NgClass,
     NgIf,
+    NgFor,
     SideUserProfileComponent,
+    OverlayPanelModule,
+    DatePipe
+
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
@@ -36,6 +45,8 @@ export class TableComponent implements OnInit {
   selectedTraineeCode: string = '';
   isSideProfileVisible?: boolean | undefined = false;
   selectedDate: Date | undefined;
+  searchQuery: string = '';
+
   constructor(
     private traineeAttendancelogService: TraineeAttendancelogService
   ) {}
@@ -44,17 +55,31 @@ export class TableComponent implements OnInit {
   suggestions: any[] = [];
   todayDate: string | undefined;
   selectedOptions: any[] = [];
+  yesterday: Date = new Date();
 
-  filterOptions = [
-    { name: 'All', code: 'ALL' },
-    { name: 'Present', code: 'Present' },
-    { name: 'Half Day', code: 'Half Day' },
-    { name: 'Absent', code: 'Absent' },
-    { name: 'Late Arrival', code: 'Late Arrival' },
-    { name: 'Batch 2', code: 'Batch 2' },
-    { name: 'Batch 3', code: 'Batch 3' },
-    { name: 'Batch 4', code: 'Batch 4' },
-  ];
+  selectedStatuses: string[] = [];
+
+  showList = false; // Controls the visibility of the mat-selection-list
+  showBatchList = false;
+  statuses = [
+    'Present',
+    'On Leave',
+    'Late Arrival',
+    'Early Departure',
+    'Late Arrival and Early Departure',
+  ]; // List of statuses
+  batches = ['Batch 4'];
+  selectedBatches: string[] = [];
+
+  toggleVisibility(section: string) {
+    if (section === 'status') {
+      this.showList = !this.showList;
+      this.showBatchList = false; // Optionally hide the batch section
+    } else if (section === 'batch') {
+      this.showBatchList = !this.showBatchList;
+      this.showList = false; // Optionally hide the status section
+    }
+  }
 
   filteredTrainees: TraineeAttendanceLogs[] = [];
   originalTraineeLogs: TraineeAttendanceLogs[] = [];
@@ -70,7 +95,7 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getTraineeAttendanceLogs(); // Fetch data from the API
-    this.setDefaultDateFilter();
+    this.getLatestDate();
   }
 
   getTraineeAttendanceLogs() {
@@ -101,9 +126,21 @@ export class TableComponent implements OnInit {
     });
   }
 
-  search(event: AutoCompleteCompleteEvent) {
-    const query = event.query;
+  search(query: string): void {
+    // const query = this.searchQuery;
     this.filterTrainees(query);
+  }
+
+  getLatestDate(): void {
+    this.traineeAttendancelogService.getLatestDate().subscribe({
+      next: (response) => {
+        this.selectedDate = new Date(response.latestDate);
+        this.getTraineeAttendanceLogs(); // Fetch data from the API after getting the latest date
+      },
+      error: (error) => {
+        console.error('Error fetching latest date:', error);
+      },
+    });
   }
 
   filterTrainees(query: string): void {
@@ -122,26 +159,115 @@ export class TableComponent implements OnInit {
 
   filterByDate(): void {
     if (this.selectedDate) {
-      // Transform the selected date to a string format (yyyy-MM-dd) for comparison
       const selectedDateString =
         this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
-      // Filter the trainees based on the selected date
-      this.filteredTrainees = this.originalTraineeLogs.filter(
-        (trainee) =>
-          this.datePipe.transform(new Date(trainee.date), 'yyyy-MM-dd') ===
-          selectedDateString
-      );
+
+      this.traineeAttendancelogService
+        .getFilteredTraineeAttendanceLogs('', selectedDateString, [])
+        .subscribe({
+          next: (response: {
+            logs: TraineeAttendanceLogs[];
+            count: number;
+            message: string;
+          }) => {
+            if (response && Array.isArray(response.logs)) {
+              this.filteredTrainees = response.logs;
+            } else {
+              console.error('API did not return an array:', response);
+              this.filteredTrainees = [];
+            }
+          },
+          error: (error) => {
+            console.error('Error fetching filtered trainee logs:', error);
+            this.filteredTrainees = [];
+          },
+        });
     } else {
-      // If no date is selected, reset to original data
-      this.filteredTrainees = [...this.originalTraineeLogs];
+      this.filteredTrainees = [...this.originalTraineeLogs]; // Reset to original data if no date is selected
     }
   }
 
-  setDefaultDateFilter(): void {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    this.selectedDate = yesterday;
-    this.filterByDate(); // Apply the filter for yesterday's date by default
+  applyStatusFilter(event: MatSelectionListChange) {
+    // Update selected statuses based on the selected options
+    this.selectedStatuses = event.source.selectedOptions.selected.map(
+      (option) => option.value
+    );
+
+    // Apply filters based on selected statuses
+    this.applyFilters();
+  }
+
+  applyBatchFilter(event: MatSelectionListChange) {
+    this.selectedBatches = event.source.selectedOptions.selected.map(
+      (option) => option.value
+    );
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    const dateFilter = this.selectedDate
+      ? this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')
+      : '';
+
+    // Apply status and batch filters
+    const filteredByStatusAndBatches = this.originalTraineeLogs.filter(
+      (trainee) => {
+        const statusMatch =
+          this.selectedStatuses.length > 0
+            ? this.selectedStatuses.includes(trainee.status)
+            : true;
+        const batchMatch =
+          this.selectedBatches.length > 0
+            ? this.selectedBatches.includes(trainee.batch)
+            : true;
+        return statusMatch && batchMatch;
+      }
+    );
+
+    // Apply date filter to the already filtered data
+    if (dateFilter) {
+      this.filteredTrainees = filteredByStatusAndBatches.filter((trainee) => {
+        const traineeDate = this.datePipe.transform(
+          new Date(trainee.date),
+          'yyyy-MM-dd'
+        );
+        return traineeDate === dateFilter;
+      });
+    } else {
+      this.filteredTrainees = filteredByStatusAndBatches;
+    }
+  }
+
+  downloadData() {
+    // Convert the filteredTrainees data into a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(
+      this.filteredTrainees.map((trainee) => ({
+        Date: this.formatDate(trainee.date ?? ''), // Format the date
+        Name: trainee.name ?? 'N/A', // Default to 'N/A' if name is undefined
+        Status: trainee.status ?? 'N/A', // Default to 'N/A' if status is undefined
+        'Check-in Time': this.getDisplayTime(
+          trainee.checkin ?? '',
+          trainee.status ?? ''
+        ), // Format check-in time
+        'Check-out Time': this.getDisplayTime(
+          trainee.checkout ?? '',
+          trainee.status ?? ''
+        ), // Format check-out time
+        'Work Hours': trainee.workhours ?? '0', // Use default '0' if work hours are undefined
+      }))
+    );
+
+    // Create a workbook and add the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance Logs');
+
+    // Generate a buffer and save the file
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(data, 'Trainee_Attendance_Logs.xlsx');
   }
 
   getStatusClass(status: string): string {

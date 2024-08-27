@@ -4,8 +4,11 @@ import { NgIf } from '@angular/common';
 import { TraineeServiceService } from '../../core/services/trainee-service.service';
 import { Trainee } from '../../core/model/trainee.model';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
-import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
+import {  TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 import { catchError, finalize, tap, throwError } from 'rxjs';
+import { BatchService } from '../../core/services/batch.service';
+import { Batch } from '../../core/model/batch.model';
+import { AbsenceAndLate } from '../../core/interfaces/side-profile';
 
 @Component({
   selector: 'app-side-user-profile',
@@ -15,14 +18,26 @@ import { catchError, finalize, tap, throwError } from 'rxjs';
   styleUrl: './side-user-profile.component.css'
 })
 export class SideUserProfileComponent implements OnInit {
-totalLeaves: any="NA"
-lateArrivals: any="NA"
+
+totalLeaves: any=0;
+lateArrivals: any=0;
+absenceAndLate:AbsenceAndLate = {
+  numberOfDaysAbsent: 0,
+  numberOfDaysLate: 0
+}
+  
   ngOnInit(): void {
-     console.log("hii")
-      this.getTraineeDetails(this.employeeCode);
-      this.getLogsByEmployeeCode(this.employeeCode);  // Fetch trainee details on component load
-    
+
+      //Getting batch name from batch id
+      if (this.employeeCode) {
+        this.getBatches(); 
+        this.getTraineeDetails(this.employeeCode);
+        this.getLogsByEmployeeCode(this.employeeCode);
+        this.getAbsenceOfTrainee(this.employeeCode);
+      }
+
   }
+
   @Input() employeeCode: string ="";  // Employee code passed from the parent component
   @Input() isVisible: boolean |undefined = false;  // Visibility control passed from parent
   @Output() closeProfile = new EventEmitter<void>();
@@ -30,7 +45,14 @@ lateArrivals: any="NA"
   trainee: Trainee ={}  // Store the trainee data
   traineeLogs:TraineeAttendanceLogs[]=[];
   logsCount:number=0;
-  constructor(private traineeService: TraineeServiceService,private traineeAttendancelogService:TraineeAttendancelogService) {}  
+
+  batchId: number = 0;
+  batches: Batch[] = [];
+  batchName: string = '';
+
+  error: boolean = false;
+  
+  constructor(private traineeService: TraineeServiceService,private traineeAttendancelogService:TraineeAttendancelogService, private batchService: BatchService) {}  
 
 
   // Method to hide the side profile when the close button is clicked
@@ -77,5 +99,44 @@ lateArrivals: any="NA"
       },
       
   );
+  }
+
+  //Function to get batch number from batch id
+  getBatches(): void {
+    this.batchService.getBatches().pipe(
+      catchError((error) => {
+        console.error('Error fetching batches:', error);
+        this.error = true;
+        return throwError(() => new Error(error));
+      }),
+      finalize(() => {
+        console.log('Fetch batches operation complete');
+      })
+    ).subscribe((data) => {
+      this.batches = data;
+      console.log('Batches:', this.batches[0].batchName);
+      this.batchName = this.batches[0].batchName;
+    });
+  }
+
+
+  // Function to get absences and leave count of a trainee
+  getAbsenceOfTrainee(employeeCode: string): void {
+    this.traineeAttendancelogService.getAbsenceOfTrainee(employeeCode).pipe(
+      catchError((error) => {
+        console.error('Error fetching absence and late data:', error);
+        return throwError(() => new Error(error));
+      }),
+      finalize(() => {
+        console.log('Fetch absence and leave data operation complete');
+      })
+    ).subscribe(
+      (data: AbsenceAndLate) => {
+        this.absenceAndLate = data; // Store the absence and leave data
+        console.log('Absence and Late data:', this.absenceAndLate.numberOfDaysAbsent);
+        this.totalLeaves = this.absenceAndLate.numberOfDaysAbsent;
+        this.lateArrivals = this.absenceAndLate.numberOfDaysLate;
+      }
+    );
   }
 }

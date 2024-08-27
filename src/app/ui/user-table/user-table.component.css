@@ -1,16 +1,39 @@
-.trainee-status-table {
-  width: 100%;
- 
+
+::ng-deep.card{
+  border: 2px grey;
+  border-radius: 20px;
 }
 
+
+::ng-deep .card .p-datatable {
+  border-radius: 10px;
+  overflow: hidden; /* Ensures child elements respect the border radius */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+  background-color: #ffffff; /* Ensures a white background */
+}
+
+::ng-deep.p-table tbody tr td {
+  height: 5rem; /* Adjust the height as needed */
+  line-height: 1.2;
+ padding: 0rem, 1rem !important;
+}
+
+/* Optionally, you can adjust padding for table cells */
+.p-table tbody td {
+  padding: 0.5rem; /* Adjust the padding as needed */
+}
 .trainee-status-table th{
+  display:  flex;
+  justify-content: center;
   font-size: small;
 }
 ::ng-deep.p-sortable-column{
   font-size: small;
 }
-::ng-deep.p-datatable-tbody{
+::ng-deep.p-datatable-tbody tr{
   font-size: small;
+  font-weight: bold;
+  padding: 0rem 1rem;
 }
 .trainee-status-table td {
  text-align: center;
@@ -25,7 +48,7 @@
 .status {
   padding: 4px ; /* Reduced padding */
   border-radius: 4px;
-  color: #fff;
+  color: var(text-color-white);
   font-weight: bold;
 }
 
@@ -34,7 +57,7 @@
 }
 
 .status.disabled {
-  background-color: #dc3545;
+  background-color: var(--primary-color);
 }
 
 
@@ -58,9 +81,7 @@
   font-weight: bold;
   font-size: 0.25rem;
 }
-::ng-deep.p-datatable-header{
-padding: 0rem, 1rem;
-}
+
 ::ng-deep.p-datatable-body{
   padding: 0rem,1rem;
 }
@@ -70,7 +91,7 @@ flex-direction: column;
 gap: 7px;
 }
 ::ng-deep.p-button {
-color: #EA454C;
+color: var(--primary-color);
 background: none;
 border: none;
 padding: 0.75rem 1.25rem;
@@ -81,7 +102,7 @@ outline-color: transparent;
 }
 
 .trainee-dialog .p-dialog-content {
-  padding: 1rem;
+  padding: 2rem;
 }
 
 .trainee-dialog .header-container {
@@ -100,7 +121,160 @@ outline-color: transparent;
 ::ng-deep.p-tag-value{
   width: 70px;
 }
-::ng-deep.p-component{
-  margin-top: -10px;
-  margin-bottom: -10px;
+:host ::ng-deep .p-datatable .p-datatable-header{
+  padding: 0.25rem
+}
+
+::ng-deep .batch-filter {
+ 
+    display: inline-block;
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 0;
+    text-align: center; /* Center the dropdown text */
+    font-weight: bold;
+    font-size: 0.875rem;
+    color: #495057; /* Adjust the color as needed */
+    border-radius: 4px;
+}
+
+::ng-deep .batch-dropdown .batch-filter{
+  width: 2rem; /* Adjust the width to fit the icon */
+  height: 2rem; /* Adjust the height to fit the icon */
+  padding: 0; /* Remove padding */
+  border: none; /* Remove border */
+  background: none; /* Remove background */
+  text-align: center; /* Center the icon */
+}
+
+::ng-deep .batch-dropdown .p-dropdown-trigger {
+  padding: 0; /* Remove padding around the trigger */
+  border: none; /* Remove border around the trigger */
+  background: none; /* Remove background */
+}
+
+::ng-deep .batch-dropdown .p-dropdown-trigger .pi-chevron-down {
+  font-size: 1rem; /* Adjust font size for the icon */
+  color: #000; /* Set color for the icon */
+}
+
+::ng-deep .p-dropdown-panel {
+  min-width: 150px; /* Adjust dropdown width as needed */
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-items {
+  max-height: 200px; /* Set max height for dropdown items */
+  overflow-y: auto; /* Add scroll if needed */
+}
+:host::ng-deep 
+  .p-dropdown {
+    display: inline-flex;
+    cursor: pointer;
+    position: relative;
+    -webkit-user-select: none;
+    user-select: none;
+    border: none;
+    background: transparent;
+    padding: 0%;
+
+}
+:host::ng-deep .p-dropdown-label{
+  font-weight: bold;
+  font-size:small;
+}
+:host::ng-deep.p-placeholder {
+    color: black;
+    padding: 0%;
+}
+/* Styles for p-table */
+.p-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Make the table headers responsive */
+.p-table thead th {
+  text-align: center;
+}
+
+/* Responsive design for the dropdown in the table header */
+.batch-filter {
+  width: 100%;
+  max-width: 200px;
+}
+
+/* Style for the dialog */
+.trainee-dialog {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.set-status-dialog {
+  max-width: 100%;
+}
+
+/* Responsive grid for dialog content */
+.p-grid {
+  flex-wrap: wrap;
+}
+
+/* Media Queries for mobile devices */
+@media (max-width: 768px) {
+  .p-table thead th, .p-table tbody td {
+      font-size: 0.9rem;
+      padding: 0.5rem;
+  }
+
+  .p-input-icon-left {
+      font-size: 0.8rem;
+  }
+
+  .p-dialog {
+      width: 90vw; /* Adjust dialog width for smaller screens */
+      height: auto;
+  }
+}
+
+
+::ng-deep .p-datatable .p-datatable-thead >tr >th
+{
+  padding: 15px 15px;
+}
+::ng-deep .p-datatable .p-datatable-tbody > tr > td
+{
+  padding: 5px 15px;
+}
+::ng-deep .p-dialog .p-dialog-content {
+  padding: 1.5em;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.p-float-label input[type="text"], 
+.p-float-label input[type="email"], 
+.p-float-label p-dropdown {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.p-error {
+  color:var(--primary-color);
+  font-size: 0.75em;
+  margin-top: -0.5em;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.p-button-success {
+  width: 100%;
+  margin-top: 1em;
 }

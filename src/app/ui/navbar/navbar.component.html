@@ -3,23 +3,53 @@
   <div class="logo-container">
     <img src="assets/experionlogo.png" alt="Logo" class="logo" />
   </div>
-  
+
   <ul>
-    <li *ngIf="role === 'user' || role === 'trainer' || role === 'admin'" [routerLink]="['/home']" [class.active]="activeIndex === 0" (click)="setActive(0)">
+    <li
+      *ngIf="role === 'admin'"
+      [routerLink]="['/home']"
+      [class.active]="activeIndex === 0"
+      (click)="setActive(0)"
+      pTooltip="Dashboard"
+    >
       <i class="fas fa-th"></i>
     </li>
-    <li *ngIf=" role === 'trainer' || role === 'admin'" [routerLink]="['/search']" [class.active]="activeIndex === 1" (click)="setActive(1)">
-      <i class="fa-solid fa-magnifying-glass"></i>
+    <li
+      *ngIf="role === 'admin'"
+      [routerLink]="['/search']"
+      [class.active]="activeIndex === 1"
+      (click)="setActive(1)"
+      pTooltip="Trainee Report"
+    >
+    <i class="fa-solid fa-clipboard"></i>
     </li>
-    <li *ngIf="role === 'user'" [routerLink]="['/user-profile:id']" [class.active]="activeIndex === 1" (click)="setActive(1)">
+    <li
+      *ngIf="role === 'trainee'"
+      [routerLink]="['/user-profile/1']"
+      [class.active]="activeIndex === 1"
+      (click)="setActive(1)"
+
+    >
       <i class="fa-solid fa-user"></i>
     </li>
-    <li *ngIf="role === 'admin'" [routerLink]="['/add-trainee']" [class.active]="activeIndex === 2" (click)="setActive(2)">
+    <li
+      *ngIf="role === 'admin'"
+      [routerLink]="['/add-trainee']"
+      [class.active]="activeIndex === 2"
+      (click)="setActive(2)"
+      pTooltip="Add Trainee"
+    >
       <i class="fa-solid fa-user-plus"></i>
     </li>
-    <li *ngIf="role === 'admin'" [routerLink]="['/edit-callender']" [class.active]="activeIndex === 3" (click)="setActive(3)">
+    <li
+      *ngIf="role === 'admin'"
+      [routerLink]="['/edit-callender']"
+      [class.active]="activeIndex === 3"
+      (click)="setActive(3)"
+      pTooltip="Settings"
+    >
       <i class="fa-solid fa-gear"></i>
     </li>
-    <hr>
+    <hr />
   </ul>
 </div>
