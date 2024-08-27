@@ -23,6 +23,38 @@ p {
     margin: 0;
 }
 
+.empty-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    padding: 20px;
+    color: #555; /* Main text color */
+    font-family: 'Roboto', sans-serif; /* Use a clean and modern font */
+}
+
+.empty-state-container .not-found-icon {
+    font-size: 7em; /* Adjust size as needed */
+    color: #f38c89; /* Red color for the "not found" theme */
+    margin-bottom: 30px;
+}
+
+.empty-state-container p {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.2em; /* Slightly larger font size */
+    /* font-weight: 500; Medium font weight for better emphasis */
+    color: #333; /* Darker text color for better contrast */
+    line-height: 1.5; /* Improve readability */
+    margin: 0;
+}
+
+.empty-state-container p span {
+    color: #EA454C; /* Highlight key information like dates with a subtle accent color */
+    font-weight: bold;
+}
+
 @media (max-width: 1200px) {
     .graphContainer {
         width: 95%; /* Slightly smaller width for medium to large screens */
@@ -46,8 +78,3 @@ p {
     }
 }
 
-/* @media (min-width: 1200px) {
-    .graphContainer {
-        width: 85vw; 
-    }
-} */

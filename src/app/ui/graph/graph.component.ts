@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ChartModule } from 'primeng/chart';
@@ -12,7 +12,7 @@ import { catchError, of } from 'rxjs';
 @Component({
   selector: 'app-graph',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ChartModule, FormsModule, CalendarModule, ],
+  imports: [CommonModule, RouterOutlet, ChartModule, FormsModule, CalendarModule ],
   templateUrl: './graph.component.html',
   styleUrls: ['./graph.component.css']
 })
@@ -27,16 +27,24 @@ export class GraphComponent  {
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
-  currentMonth:string = '';
   maxDate!: Date;
   dailyAttendanceData?:DailyAttendanceOfMonth[] | never[];
-  // this.graphInit();
+  isAttendanceLogEmpty?: boolean;
+  noDataDate?:Date;
+
   ngOnInit() {
     this.graphDataMonth = new Date();
     this.maxDate = this.graphDataMonth;
-    this.currentMonth = this.monthNames[this.graphDataMonth.getMonth()]
-     
-    this.api.getAttendanceOfAMonth(8,2024)
+    this.getAttendanceData(this.graphDataMonth.getMonth()+1, this.graphDataMonth.getFullYear());
+  }
+  /**
+   * function to get the data containing number of absenties and the total number of traineers of a month.
+   * After getting the data, the graph is initialized.
+   * @param day 
+   * @param month 
+   */
+  getAttendanceData(day:number, month:number){
+    this.api.getAttendanceOfAMonth(day, month)
     .pipe(
       catchError(error => {
         this.error = error.message;
@@ -45,106 +53,105 @@ export class GraphComponent  {
     )
     .subscribe(data => {
       this.dailyAttendanceData = data;
-      console.log(this.dailyAttendanceData.length);
-      
-      this.graphInit(this.dailyAttendanceData.length);
+      if(this.dailyAttendanceData.length == 0 ){
+        this.isAttendanceLogEmpty = true;
+        this.noDataDate = this.graphDataMonth;       
+      }
+      else{this.isAttendanceLogEmpty = false;}
+      this.graphInit();
     });   
   }
-
-  generateRandomData(length: number): number[] {
-    const min = 35;
-    const max = 39;
-    const result: number[] = [];
-    for (let i = 0; i < length; i++) {
-      const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-      result.push(randomNumber);
-    }
-    return result;
-  }
-
-  // calculateYaxis(dailyAttendanceData:any): number[]{
-  //   //hardcoded
-  //   let result: number[] = []; 
-  //   for (let i = 1; i <= 25; i++) {
-  //     dailyAttendanceData.forEach((element) => {
-  //       if(element.day.getDate() == i){
-  //         result.push(element.totalEmployees-element.absentees);
-  //       }
-  //       else{
-  //         result.push(0);
-  //       }
-  //     });
-      
-  //   }
-  //   console.log(result);
-    
-  //   return result
-  // }
-
-  generateXaxisLabel(length: number): string[] {
+  /**
+   * uses the response from the api call to get the days in which attendance logs are preset to be used as the X-axis of the graph
+   * @returns an array of string containing the X-axis of the graph 
+   */
+  generateXaxisLabel(): string[] {
     const result: string[] = []; 
-    for (let i = 1; i <= length; i++) {
-      result.push(i+this.currentMonth);
-    }
+      this.dailyAttendanceData?.forEach(item => {
+        let convertToDate = new Date(<any>item.day);
+        result.push(convertToDate.getDate() + " " + this.monthNames[convertToDate.getMonth()])
+      });
     return result;
-  } // for testing with data
-
-  monthSelection() {
-    this.currentMonth = this.monthNames[<number>this.graphDataMonth?.getMonth()]
-    this.graphInit(2)
   }
-
-  graphInit(numberOfWorkingDays:number){
+  /**
+   * calculates the percentage of each working day to be set as the Y-axis
+   * @returns array of numbers containting attendance percentage of each day of the month
+   */
+  generateYaxisData():number[]{
+    let result: number[] = []; 
+    this.dailyAttendanceData?.forEach(item => {
+      let total:any = item.totalEmployees;
+      let absent:any = item.absentees;
+      let percentage:number = ((total - absent)/total) * 100;
+      result.push(percentage);
+    });
+    return result
+  }
+  /**
+   * Function to call getAttendanceData() with the new month and year data.
+   * Is called when the month picker registers a new month selection.
+   * @param graphDataMonth 
+   */
+  monthSelection(graphDataMonth:any) {
+    this.getAttendanceData(graphDataMonth.getMonth()+1, graphDataMonth.getFullYear());    
+  }
+  /**
+   * Initializes the graph with X and Y cordinates as well as other configurations and settings.
+   */
+  graphInit(){
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
+    this.generateYaxisData();
     this.data = {
-        labels: this.generateXaxisLabel(this.numberOfWorkingDays),
-        datasets: [
-            {
-                label: 'Present',
-                // data: this.calculateYaxis(this.dailyAttendanceData),
-                data: this.generateRandomData(this.numberOfWorkingDays),
-                fill: true,
-                borderColor: "#EA454C",
-                tension: 0.4,
-                backgroundColor: 'rgba(234, 69, 76, 0.1)'
-            },
-        ]
+      labels: this.generateXaxisLabel(),
+      datasets: [
+        {
+          label: 'Present',
+          data: this.generateYaxisData(),
+          fill: true,
+          borderColor: "#EA454C",
+          tension: 0.4,
+          backgroundColor: 'rgba(234, 69, 76, 0.1)'
+        },
+      ]
     };
     //remove aspect ration to alter height, or change it to alter height
     this.options = {
-        maintainAspectRatio: false,
-        aspectRatio: 0.9,
-        plugins: {
-            legend: {
-                labels: {
-                    color: textColor
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder,
-                    drawBorder: false
-                }
-            },
-            y: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder,
-                    drawBorder: false
-                }
-            }
+      maintainAspectRatio: false,
+      aspectRatio: 0.9,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor
+          }
         }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Attendance %' 
+          },
+          ticks: {
+            color: textColorSecondary
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false
+          }
+        }
+      }
     };
   }
 }        
