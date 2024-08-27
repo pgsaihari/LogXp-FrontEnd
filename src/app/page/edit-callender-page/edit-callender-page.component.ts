@@ -7,11 +7,12 @@ import { UserTableComponent } from "../../ui/user-table/user-table.component";
 import { TabMenuModule } from 'primeng/tabmenu';
 import { MenuItem } from 'primeng/api';
 import { RippleModule } from 'primeng/ripple';
+import { NgxSpinnerComponent } from 'ngx-spinner';
 
 @Component({
   selector: 'app-edit-callender-page',
   standalone: true,
-  imports: [CommonModule, CallenderComponent, ButtonModule, CardModule, UserTableComponent, TabMenuModule, RippleModule],
+  imports: [CommonModule, CallenderComponent, ButtonModule, CardModule, UserTableComponent, TabMenuModule, RippleModule, NgxSpinnerComponent],
   templateUrl: './edit-callender-page.component.html',
   styleUrl: './edit-callender-page.component.css'
 })
