@@ -2,16 +2,12 @@
   background-color: white;
   padding: 10px; /* Reduce padding to decrease height */
   margin-top: 10px;
-
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  overflow-y: auto; /* Allow content to scroll within the container if needed */
-  max-height: calc(
-    100vh - 20px
-  ); /* Set max height relative to viewport height to avoid page scrolling */
+  max-height: calc(100vh - 20px); /* Set max height relative to viewport height to avoid page scrolling */
 }
 
 .search-filter {
@@ -394,3 +390,4 @@ mat-list-option {
   color: #ea454c; /* Highlight key information like dates with a subtle accent color */
   font-weight: bold;
 }
+
