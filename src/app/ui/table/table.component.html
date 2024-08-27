@@ -1,14 +1,17 @@
 <div class="contents">
     <div class="container">
         <div class="filter-row">
-            <div class="left-filters">
-                <p-autoComplete id="search-bar"
-                [(ngModel)]="selectedItem" 
-                [suggestions]="suggestions" 
-                (completeMethod)="search($event)"
-                
-                placeholder="Search Trainee" />
-            </div>
+          <h3 id="Heading">Attendance Overview</h3>
+          <div class="left-filters">
+            <input 
+                class="search-filter"
+                id="search-bar"
+                type="text"
+                [(ngModel)]="searchQuery"
+                (input)="search(searchQuery)"
+                placeholder="Search Trainee"
+            />
+        </div>
             <div class="right-filters">
                 <p-calendar 
                 id="datepick"
@@ -72,15 +75,15 @@
                         <th> Batch </th>
                         <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
                         <th>Status </th>
-                        <th pSortableColumn="checkin">Check-In <p-sortIcon field="checkin"></p-sortIcon></th>
-                        <th pSortableColumn="checkout">Check-Out <p-sortIcon field="checkout"></p-sortIcon></th>
-                        <th pSortableColumn="workhours">Work Hours <p-sortIcon field="workhours"></p-sortIcon></th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Work Hours</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-trainee>
                     <tr>
                         <td><strong>{{ trainee.employeeCode }}</strong></td>
-                        <td (click)="showSideProfile(trainee.employeeCode)"><strong><span class="trainee-name">{{ trainee.name }} </span></strong></td>
+                        <td (click)="showSideProfile(trainee.employeeCode)"><strong><span class="trainee-name"><u>{{ trainee.name }}</u></span></strong></td>
                         <td><strong>{{ trainee.batch }}</strong></td>
                         <td><strong>{{ formatDate(trainee.date)}}</strong></td>
                         <td><strong><span [ngClass]="getStatusClass(trainee.status)">{{ trainee.status }}</span></strong></td>

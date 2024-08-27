@@ -47,6 +47,7 @@ export class TableComponent implements OnInit {
   selectedTraineeCode: string = '';
   isSideProfileVisible?: boolean | undefined = false;
   selectedDate: Date | undefined;
+  searchQuery: string = '';
 
   constructor(
     private traineeAttendancelogService: TraineeAttendancelogService
@@ -129,8 +130,8 @@ export class TableComponent implements OnInit {
     });
   }
 
-  search(event: AutoCompleteCompleteEvent) {
-    const query = event.query;
+  search(query: string): void {
+    // const query = this.searchQuery;
     this.filterTrainees(query);
   }
   

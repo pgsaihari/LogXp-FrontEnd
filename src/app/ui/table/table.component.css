@@ -1,43 +1,58 @@
 .container {
     background-color: white;
-    padding: 20px;
+    padding: 10px; /* Reduce padding to decrease height */
+    margin-top: 10px;
+   
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    overflow-y: auto; /* Allow content to scroll within the container if needed */
+    max-height: calc(100vh - 20px); /* Set max height relative to viewport height to avoid page scrolling */
 }
 
 .search-filter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+    width: 200px;      /* Decrease the width */
+    height: 10px;      /* Increase the height */
+    font-size: 16px;   /* Adjust font size for better readability */
+    padding: 10px;     /* Adjust padding for better spacing */
+    border-radius: 5px; /* Optional: rounded corners */
+    border: 1px solid #ccc; /* Optional: border styling */
+    
 }
 
 #search-bar {
     flex: 1;
-    margin-right: 20px;
-    font-size: 14px; /* Adjust font size */
+    font-size: 14px;
+    margin-left: 50px; /* Reduce margin to decrease the space around the search bar */
+    font-size: 12px; /* Reduce font size for a more compact appearance */
+    padding: 14px; /* Reduce padding to decrease height */
+    height: auto; /* Allow height to adjust automatically */
 }
 
 .right-filters {
     display: flex;
     align-items: center;
-    gap: 10px;
-    flex: 1; /* Ensure this takes up available space */
+    gap: 5px; /* Reduce gap to minimize height */
+    flex: 1;
+    padding: 4px; /* Reduce padding to decrease height */
+    height: auto; /* Allow height to adjust automatically */
 }
 
 #datepick {
-    margin-right: 20px;
-    font-size: 14px; /* Adjust font size */
+    margin-right: 10px; /* Reduce margin to decrease the space around the date picker */
+    font-size: 12px; /* Reduce font size for a more compact appearance */
+    padding: 4px; /* Reduce padding to decrease height */
+    height: auto; /* Allow height to adjust automatically */
 }
+
 
 /* Make all table data bold and adjust font size */
 p-table td {
     font-weight: bold;
     font-size: 14px; /* Adjust font size */
+    line-height: 1.2;
 }
 
 /* Table headings styles */
@@ -108,7 +123,7 @@ p-table th {
 
 .filter-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     margin-bottom: 10px;
     flex-wrap: wrap;
@@ -125,7 +140,7 @@ p-table th {
 }
 
 .table-container {
-    margin-top: 20px;
+    margin-top: 1px;
     overflow-x: auto; /* Adds horizontal scrolling if needed */
 }
 
@@ -134,10 +149,6 @@ p-table th {
     box-sizing: border-box; /* Includes padding and border in width */
 }
 
-.p-table .p-paginator {
-    margin-top: 20px; /* Space above paginator */
-    width: 100%; /* Full width */
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -342,15 +353,10 @@ mat-list-option {
 
     p-table td, p-table th {
         padding: 5px; /* Adjust padding for table cells on mobile */
+        
     }
 
-    p-table .p-paginator {
-        font-size: 12px; /* Smaller font size for the paginator */
-    }
-
-    .p-table .p-paginator .p-paginator-element {
-        padding: 5px; /* Adjust padding for paginator elements */
-    }
+ 
 }
 
 .no-data-img{
