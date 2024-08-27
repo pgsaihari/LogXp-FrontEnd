@@ -1,104 +1,168 @@
 <div class="contents">
-    <div class="container">
-        <div class="filter-row">
-          <h3 id="Heading">Attendance Overview</h3>
-          <div class="left-filters">
-            <input 
-                class="search-filter"
-                id="search-bar"
-                type="text"
-                [(ngModel)]="searchQuery"
-                (input)="search(searchQuery)"
-                placeholder="Search Trainee"
-            />
-        </div>
-            <div class="right-filters">
-                <p-calendar 
-                id="datepick"
-                [(ngModel)]="selectedDate" 
-                [iconDisplay]="'input'" 
-                [showIcon]="true"
-                [maxDate]="yesterday" 
-                inputId="icondisplay" 
-                placeholder="Select Date"
-                [dateFormat]="'dd-MM-yy'"
-                (onSelect)="filterByDate()">
-                </p-calendar>
-                
-                <button pButton 
-                type="button" 
-                icon="pi pi-filter" 
-                label="Filters" 
-                class="p-button-rounded-rectangle p-button-secondary"
-                (click)="filterPanel.toggle($event)">
-        </button>
-        <button pButton 
-        type="button" 
-        icon="pi pi-download" 
-        label="Download"
-        class="p-button-rounded-rectangle p-button-secondary"
-        (click)="downloadData()">
-        </button>
-        
-        <p-overlayPanel #filterPanel>
-            <div class="filters">
-              <div class="filter-section">
-                <label class="toggle-heading" (click)="toggleVisibility('status')">Status</label>
-                <mat-selection-list *ngIf="showList" (selectionChange)="applyStatusFilter($event)">
-                  <mat-list-option *ngFor="let status of statuses" [value]="status">
-                    {{ status }}
-                  </mat-list-option>
-                </mat-selection-list>
-              </div>
-              <div class="filter-section">
-                <label class="toggle-heading" (click)="toggleVisibility('batch')">Batches</label>
-                <mat-selection-list *ngIf="showBatchList" (selectionChange)="applyBatchFilter($event)">
-                  <mat-list-option *ngFor="let batch of batches" [value]="batch">
-                    {{ batch }}
-                  </mat-list-option>
-                </mat-selection-list>
-              </div>
-            </div>
-          </p-overlayPanel>
-          
-      
+  <div class="container">
+    <div class="filter-row">
+      <h3 id="Heading">Attendance Overview</h3>
+      <div class="left-filters">
+        <input
+          class="search-filter"
+          id="search-bar"
+          type="text"
+          [(ngModel)]="searchQuery"
+          (input)="search(searchQuery)"
+          placeholder="Search Trainee"
+        />
+      </div>
+      <div class="right-filters">
+        <p-calendar
+          id="datepick"
+          [(ngModel)]="selectedDate"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          [maxDate]="yesterday"
+          inputId="icondisplay"
+          placeholder="Select Date"
+          [dateFormat]="'dd-MM-yy'"
+          (onSelect)="filterByDate()"
+        >
+        </p-calendar>
 
+        <button
+          pButton
+          type="button"
+          icon="pi pi-filter"
+          label="Filters"
+          class="p-button-rounded-rectangle p-button-secondary"
+          (click)="filterPanel.toggle($event)"
+        ></button>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-download"
+          label="Download"
+          class="p-button-rounded-rectangle p-button-secondary"
+          (click)="downloadData()"
+        ></button>
+
+        <p-overlayPanel #filterPanel>
+          <div class="filters">
+            <div class="filter-section">
+              <label class="toggle-heading" (click)="toggleVisibility('status')"
+                >Status</label
+              >
+              <mat-selection-list
+                *ngIf="showList"
+                (selectionChange)="applyStatusFilter($event)"
+              >
+                <mat-list-option
+                  *ngFor="let status of statuses"
+                  [value]="status"
+                >
+                  {{ status }}
+                </mat-list-option>
+              </mat-selection-list>
             </div>
-        </div>
-  
-        <div class="card table-container">
-            <p-table [value]="filteredTrainees" [scrollable]="true" [scrollHeight]="'400px'" [sortMode]="'single'" paginatorPosition="top">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th pSortableColumn="id">Code <p-sortIcon field="id"></p-sortIcon></th>
-                        <th>Trainee Name</th>
-                        <th> Batch </th>
-                        <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
-                        <th>Status </th>
-                        <th>Check-In</th>
-                        <th>Check-Out</th>
-                        <th>Work Hours</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-trainee>
-                    <tr>
-                        <td><strong>{{ trainee.employeeCode }}</strong></td>
-                        <td (click)="showSideProfile(trainee.employeeCode)"><strong><span class="trainee-name"><u>{{ trainee.name }}</u></span></strong></td>
-                        <td><strong>{{ trainee.batch }}</strong></td>
-                        <td><strong>{{ formatDate(trainee.date)}}</strong></td>
-                        <td><strong><span [ngClass]="getStatusClass(trainee.status)">{{ trainee.status }}</span></strong></td>
-                        <td><strong><span [ngClass]="getCheckinTimeClass(trainee.loginTime, trainee.status)">{{ getDisplayTime(trainee.loginTime, trainee.status) }}</span></strong></td>
-                        <td><strong> <span [ngClass]="getCheckoutTimeClass(trainee.logoutTime, trainee.status)">{{ getDisplayTime(trainee.logoutTime, trainee.status) }}</span></strong></td>
-                        <td><strong>{{ trainee.totalWorkHour}} Hrs</strong></td>
-                        
-                    </tr>
-                </ng-template>
-                
-            </p-table>
-        </div>
+            <div class="filter-section">
+              <label class="toggle-heading" (click)="toggleVisibility('batch')"
+                >Batches</label
+              >
+              <mat-selection-list
+                *ngIf="showBatchList"
+                (selectionChange)="applyBatchFilter($event)"
+              >
+                <mat-list-option *ngFor="let batch of batches" [value]="batch">
+                  {{ batch }}
+                </mat-list-option>
+              </mat-selection-list>
+            </div>
+          </div>
+        </p-overlayPanel>
+      </div>
+    </div>
+
+    <div class="card table-container">
+      <p-table
+        [value]="filteredTrainees"
+        [scrollable]="true"
+        [scrollHeight]="'400px'"
+        [sortMode]="'single'"
+        paginatorPosition="top"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id">
+              Code <p-sortIcon field="id"></p-sortIcon>
+            </th>
+            <th>Trainee Name</th>
+            <th>Batch</th>
+            <th pSortableColumn="date">
+              Date <p-sortIcon field="date"></p-sortIcon>
+            </th>
+            <th>Status</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
+            <th>Work Hours</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-trainee>
+          <tr>
+            <td>
+              <strong>{{ trainee.employeeCode }}</strong>
+            </td>
+            <td (click)="showSideProfile(trainee.employeeCode)">
+              <strong
+                ><span class="trainee-name"
+                  ><u>{{ trainee.name }}</u></span
+                ></strong
+              >
+            </td>
+            <td>
+              <strong>{{ trainee.batch }}</strong>
+            </td>
+            <td>
+              <strong>{{ formatDate(trainee.date) }}</strong>
+            </td>
+            <td>
+              <strong
+                ><span [ngClass]="getStatusClass(trainee.status)">{{
+                  trainee.status
+                }}</span></strong
+              >
+            </td>
+            <td>
+              <strong
+                ><span
+                  [ngClass]="
+                    getCheckinTimeClass(trainee.loginTime, trainee.status)
+                  "
+                  >{{ getDisplayTime(trainee.loginTime, trainee.status) }}</span
+                ></strong
+              >
+            </td>
+            <td>
+              <strong>
+                <span
+                  [ngClass]="
+                    getCheckoutTimeClass(trainee.logoutTime, trainee.status)
+                  "
+                  >{{
+                    getDisplayTime(trainee.logoutTime, trainee.status)
+                  }}</span
+                ></strong
+              >
+            </td>
+            <td>
+              <strong>{{ trainee.totalWorkHour }} Hrs</strong>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
   </div>
-  @if (isSideProfileVisible) {
-    <app-side-user-profile  [employeeCode]="selectedTraineeCode" [isVisible]="isSideProfileVisible" (closeProfile)="closeSideProfile()"></app-side-user-profile>
-  }
-  
+</div>
+@if (isSideProfileVisible) {
+<app-side-user-profile
+  [employeeCode]="selectedTraineeCode"
+  [isVisible]="isSideProfileVisible"
+  (closeProfile)="closeSideProfile()"
+></app-side-user-profile>
+}
