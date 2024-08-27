@@ -52,8 +52,8 @@ export class GraphComponent  {
   }
 
   generateRandomData(length: number): number[] {
-    const min = 34;
-    const max = 37;
+    const min = 35;
+    const max = 39;
     const result: number[] = [];
     for (let i = 0; i < length; i++) {
       const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
