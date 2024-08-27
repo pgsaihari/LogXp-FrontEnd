@@ -8,7 +8,7 @@ import { NgxSpinnerComponent } from 'ngx-spinner';
 @Component({
   selector: 'app-search-trainee-page',
   standalone: true,
-  imports: [TableComponent, UserInfoComponent, SingleUserTableComponent,SideUserProfileComponent,NgxSpinnerComponent],
+  imports: [TableComponent, UserInfoComponent, SingleUserTableComponent,SideUserProfileComponent, NgxSpinnerComponent],
   templateUrl: './search-trainee-page.component.html',
   styleUrl: './search-trainee-page.component.css'
 })

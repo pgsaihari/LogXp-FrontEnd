@@ -11,10 +11,11 @@ import { UserTableComponent } from "../../ui/user-table/user-table.component";
 import { SingleUserTableComponent } from "../../ui/single-user-table/single-user-table.component";
 import { SideUserProfileComponent } from "../../Features/side-user-profile/side-user-profile.component";
 import { UserWidgetCardsComponent } from "../../Features/user-widget-cards/user-widget-cards.component";
+import { NgxSpinnerComponent } from 'ngx-spinner';
 @Component({
   selector: 'app-test-page',
   standalone: true,
-  imports: [CardModule, ButtonModule, WidgetCardComponent, FormComponent, CallenderComponent, WidgetTableComponent, UserTableComponent, SingleUserTableComponent, SideUserProfileComponent, UserWidgetCardsComponent],
+  imports: [CardModule, ButtonModule, WidgetCardComponent, FormComponent, CallenderComponent, WidgetTableComponent, UserTableComponent, SingleUserTableComponent, SideUserProfileComponent, UserWidgetCardsComponent, NgxSpinnerComponent],
   templateUrl: './test-page.component.html',
   styleUrl: './test-page.component.css'
 })
