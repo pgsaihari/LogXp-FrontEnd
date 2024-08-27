@@ -34,6 +34,8 @@ import { MatListModule, MatSelectionListChange } from '@angular/material/list';
     NgFor,
     SideUserProfileComponent,
     OverlayPanelModule,
+    DatePipe
+
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
@@ -66,7 +68,7 @@ export class TableComponent implements OnInit {
     'Early Departure',
     'Late Arrival and Early Departure',
   ]; // List of statuses
-  batches = ['Batch 1', 'Batch 2', 'Batch 3', 'Batch 4', 'Batch 5'];
+  batches = ['Batch 4'];
   selectedBatches: string[] = [];
 
   toggleVisibility(section: string) {
@@ -93,7 +95,6 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getTraineeAttendanceLogs(); // Fetch data from the API
-
     this.getLatestDate();
   }
 
