@@ -2,8 +2,12 @@
   <div class="card">
     <p-tabMenu [model]="items"  [activeItem]="activeItem"/>
   </div>
+
+  <ng-container *ngIf="traineeDiv">
+    <app-user-table></app-user-table>
+  </ng-container>
   
-  <ng-container *ngIf="showDiv1">
+  <ng-container *ngIf="holidayDiv">
     <p class="section-heading">Add Holiday</p>
     <!-- <h2 class="section-heading">Add Holiday</h2> -->
     <div class="calendar-container">
@@ -12,23 +16,20 @@
       </div>
       <div class="buttons-section">
         <div class="card flex justify-content-center">
-          <p-card header="Holiday Summary">
-              <p class="m-0">
-                  
-              </p>
+          <p-card header="Holiday Summary" class="holiday-summary-card">
+            <p class="m-0 holiday-summary">
+              Total full holidays:  {{ totalFullHolidays }}
+            </p>
+            <p class="m-0 holiday-summary">
+              Total half holidays:  {{ totalHalfHolidays }}
+            </p>
           </p-card>
         </div>
-        <p-button label="Download Attendance Report" severity="danger"/>
       </div>      
     </div>
   </ng-container>
 
-  <ng-container *ngIf="showDiv2">
-   
-    <!-- <h2 class="section-heading">Update Trainee Status</h2> -->
-    <app-user-table></app-user-table>
+  <ng-container *ngIf="batchDiv">
+    <p class="section-heading">Update Batch Status</p>
   </ng-container>
 </div>
-
-<!-- spinner, uses the interceptor to work -->
-<ngx-spinner [bdColor]="'rgba(0, 0, 0, 0.8)'"></ngx-spinner>
