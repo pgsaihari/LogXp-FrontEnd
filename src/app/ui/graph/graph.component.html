@@ -7,10 +7,14 @@
                 view="month" 
                 dateFormat="M yy"
                 [readonlyInput]="true"
-                (onSelect)="monthSelection()"
+                (onSelect)="monthSelection(graphDataMonth)"
                 [maxDate]="maxDate"  />
         </div>
     </div>
     
-    <p-chart type="line" height="300px" [data]="data" [options]="options" class="mychart"/>
+    <p-chart type="line" height="300px" [data]="data" [options]="options" class="mychart" *ngIf="!isAttendanceLogEmpty"/>
+    <div class="empty-state-container" *ngIf="isAttendanceLogEmpty">
+        <i class="fas fa-exclamation-circle not-found-icon"></i>
+        <p>No data found for "<span>{{ noDataDate | date: 'MMMM y' }}</span>" </p>
+    </div>
 </div>
