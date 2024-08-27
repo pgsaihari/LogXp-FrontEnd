@@ -67,6 +67,8 @@ export class WidgetTableComponent implements OnChanges {
     const month = this.tableDate.getMonth() + 1;
     const year = this.tableDate.getFullYear();
 
+    this.traineeAttendancelogService.setUpdatedData(day, month, year )
+
     // Map table headers to their corresponding API calls
     const dataFetchMap: Record<string, () => any> = {
       'On Time': () => this.traineeAttendancelogService.onTimeLogs(day, month, year),

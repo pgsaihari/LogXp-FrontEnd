@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 import {  AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, UserWidgetSummary, WidgetAttendance, WidgetSummary } from '../interfaces/widget-attendance';
 
@@ -9,7 +9,18 @@ import {  AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, Use
 })
 export class AttendanceLogsService {
   private apiUrl = "https://localhost:7074/api/LogXP/traineeAttendanceLogs"
+
+  // BehaviorSubject to keep track of the selected date
+  private selectedDateSubject = new BehaviorSubject<{ day: number, month: number, year: number }>({
+    day: new Date().getDate(),
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear()
+  });
+
   constructor(private http: HttpClient) { }
+
+
+
   /**
    * FUNC : To make an API call to get the data of trainees with the status "Early Arrival" on a particular day, along with the count and a success message.
    * @param day
@@ -66,5 +77,15 @@ export class AttendanceLogsService {
   getUserWidgetCount(traineeCode:number): Observable<UserWidgetSummary>{
     const url = `${this.apiUrl}/GetAbsenceOfTrainee?traineeCode=${traineeCode}`;
     return this.http.get<UserWidgetSummary>(url)
+  }
+
+  // Method to set updated date
+  setUpdatedData(day: number, month: number, year: number) {
+    this.selectedDateSubject.next({ day, month, year });
+  }
+
+  // Observable to subscribe to the selected date changes
+  getUpdatedData(): Observable<{ day: number, month: number, year: number }> {
+    return this.selectedDateSubject.asObservable();
   }
 }  
