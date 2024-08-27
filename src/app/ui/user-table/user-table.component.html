@@ -5,16 +5,18 @@
         [value]="trainees"
         [rows]="10"
         [scrollable]="true"
-        scrollHeight="350px"
+        scrollHeight="390px"
         [globalFilterFields]="['employeeCode', 'name', 'email', 'batch']"
-        [tableStyle]="{ 'min-width': '25rem' }"
+        [tableStyle]="{ 'min-width': '20rem' }"
         [(selection)]="selectedTrainees"
         [rowHover]="true"
+        (selectionChange)="onSelectionChange($event)"
         dataKey="employeeCode"
+        
     >
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <h3 class="m-0">Update Trainee</h3>
+               
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input 
@@ -25,21 +27,14 @@
                         placeholder="Search..." />
                 </span>
                 <div class="p-field">
-                   <p-dropdown  class="batch"
-  [options]="batchOptions" 
-  [(ngModel)]="selectedBatchId" 
-  placeholder="Select Batch"
-  optionLabel="label" 
-  optionValue="value"
-  (onChange)="filterByBatch()">>
-</p-dropdown>
-<p-button 
-label=""
-pTooltip="Change trainee status" 
-tooltipPosition="top" 
-icon="pi pi-cog" 
-(onClick)="isSetStatusDialogVisible = true">
-</p-button>
+                 
+                    <p-button 
+                    label=""
+                    pTooltip="Change trainee status" 
+                    tooltipPosition="top" 
+                    icon="pi pi-cog" 
+                    (onClick)="isSetStatusDialogVisible = true">
+                    </p-button>
                 </div>
               
              
@@ -49,26 +44,40 @@ icon="pi pi-cog"
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 4rem">
-                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+    
+    
+    <p-tableHeaderCheckbox  pTooltip="Change trainee status" 
+        tooltipPosition="top" >
+       
+    </p-tableHeaderCheckbox>
                 </th>
                 <th pSortableColumn="employeeCode">
                     Trainee Id
                     <p-sortIcon field="employeeCode"></p-sortIcon>
                 </th>
-                <th pSortableColumn="name">
+                <th >
                     Name
-                    <p-sortIcon field="name"></p-sortIcon>
+                   
                 </th>
-                <th pSortableColumn="email">
+                <th pSortableColumn="email" style="width: 7rem;" >
                     Email
-                    <p-sortIcon field="email"></p-sortIcon>
+                   
                 </th>
                 <th pSortableColumn="batchName"> <!-- Updated line -->
-                    Batch
+                      <p-dropdown 
+                    class="batch-filter"
+                    [options]="batchOptions" 
+                    [(ngModel)]="selectedBatchId"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Batch"
+                    (onChange)="filterByBatch()">
+                </p-dropdown>
+
                 </th>
                 <th pSortableColumn="isActive">
                     Active Status
-                    <p-sortIcon field="isActive"></p-sortIcon> <!-- Updated line -->
+                   
                 </th>
                 <th pSortableColumn="Edit">
                     Edit</th>
@@ -111,63 +120,70 @@ icon="pi pi-cog"
 
     <p-dialog 
     [(visible)]="traineeDialog" 
-    [style]="{ width: '450px', height: '60vh' }" 
     header="Trainee Details" 
-    [modal]="true" 
-    styleClass="p-fluid trainee-dialog"
-    [contentStyle]="{ 'max-height': 'calc(100% - 50px)', 'overflow': 'auto' }"> <!-- Adjust max-height to allow proper scroll -->
-
+    [modal]="true"
+    [style]="{'width': '400px', 'max-width': '90vw'}"
+    [contentStyle]="{'padding': '1em'}"
+>
     <ng-template pTemplate="header">
         <div class="header-container">
             <span>Trainee Details</span>
-          
         </div>
     </ng-template>
 
     <ng-template pTemplate="content">
         <div class="field">
-            <label for="name">Name</label>
-            <input 
-                type="text" 
-                pInputText 
-                id="name" 
-                [(ngModel)]="trainee.name" 
-                required />
+            <label for="name" class="p-float-label">
+                <span>Name</span>
+                <input 
+                    type="text" 
+                    pInputText 
+                    id="name" 
+                    [(ngModel)]="trainee.name" 
+                    required />
+               
+            </label>
             <small class="p-error" *ngIf="submitted && !trainee.name">
                 Name is required.
             </small>
         </div>
-        <div class="field">
-            <label for="email">Email</label>
-            <input 
-                type="email" 
-                pInputText 
-                id="email" 
-                [(ngModel)]="trainee.email" />
+        <span>Email</span>
+        <div class="field" style="margin-bottom: 1em;">
+            <label for="email" class="p-float-label">
+                <input 
+                    type="email" 
+                    pInputText 
+                    id="email" 
+                    [(ngModel)]="trainee.email" />
+                
+            </label>
         </div>
+        <span style="padding-bottom: 10px;">Batch</span>
         <div class="field">
-            <label for="batch">Batch</label>
-            <p-dropdown 
-                [options]="batchOptions" 
-                [(ngModel)]="trainee.batchId" 
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Select Batch"
-                [scrollHeight]="'400px'"> <!-- Set scroll height for the dropdown -->
-            </p-dropdown>
+            <label for="batch" class="p-float-label">
+                <p-dropdown 
+                    [options]="batchOptions" 
+                    [(ngModel)]="trainee.batchId" 
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Select Batch"
+                    [scrollHeight]="'200px'">
+                </p-dropdown>
+                
+            </label>
         </div>
     </ng-template>
 
     <ng-template pTemplate="footer">
         <p-button 
             label="Save" 
-            styleClass="p-button-success"
-            [text]="true" 
-           
+            styleClass="p-button-success" 
+            [text]="true"
             (onClick)="saveTrainee()">
         </p-button>
     </ng-template>
 </p-dialog>
+
 
 
 
