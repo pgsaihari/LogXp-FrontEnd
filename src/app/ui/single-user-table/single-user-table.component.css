@@ -2,10 +2,9 @@
 .card {
     padding: 0.2rem;
     width: 100%;
-    max-width: 500px;  /* Smaller max width for dashboard */
+    max-width: 400px;  /* Smaller max width for dashboard */
     overflow: hidden;  /* Prevent the card from overflowing */
 }
-
 #check-in{
     color: green;
 }
@@ -63,62 +62,8 @@
     font-size: 0.65rem;  /* Very small overall font size */
 }
 
-/* Status badges */
-.status-badge {
-    color: white;
-    padding: 4px 8px;  /* Add more padding for a better look */
-    border-radius: 12px;  /* Larger border-radius for rounded badges */
-    font-size: 12px;  /* Small font size for badges */
-    font-weight: bold;  /* Bold text for emphasis */
-    display: inline-block;  /* Ensure the badge is inline */
-    text-transform: uppercase;  /* Make the text uppercase for uniformity */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
-    letter-spacing: 0.5px;  /* Slight letter spacing for a cleaner look */
-}
 
-/* Specific status badge styles */
-.status-badge-late {
-    color: #ffffff;
-    background-color: orange;
-    border: 1px solid #ff9800;  
-    color: white;
-    padding: 4px 8px;  /* Add more padding for a better look */
-    border-radius: 12px;  /* Larger border-radius for rounded badges */
-    font-size: 12px;  /* Small font size for badges */
-    font-weight: bold;  /* Bold text for emphasis */
-    display: inline-block;  /* Ensure the badge is inline */
-    text-transform: uppercase;  /* Make the text uppercase for uniformity */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
-    letter-spacing: 0.5px; /* Add a border with a darker shade */
-}
 
-.status-badge-leave {
-    background-color: red;
-    border: 1px solid #d32f2f; 
-    color: white;
-    padding: 4px 8px;  /* Add more padding for a better look */
-    border-radius: 12px;  /* Larger border-radius for rounded badges */
-    font-size: 12px;  /* Small font size for badges */
-    font-weight: bold;  /* Bold text for emphasis */
-    display: inline-block;  /* Ensure the badge is inline */
-    text-transform: uppercase;  /* Make the text uppercase for uniformity */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
-    letter-spacing: 0.5px;  /* Add a border with a darker shade */
-}
-
-.status-badge-present {
-    background-color: green;
-    border: 1px solid #388e3c; 
-    color: white;
-    padding: 4px 8px;  /* Add more padding for a better look */
-    border-radius: 12px;  /* Larger border-radius for rounded badges */
-    font-size: 12px;  /* Small font size for badges */
-    font-weight: bold;  /* Bold text for emphasis */
-    display: inline-block;  /* Ensure the badge is inline */
-    text-transform: uppercase;  /* Make the text uppercase for uniformity */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
-    letter-spacing: 0.5px;  /* Add a border with a darker shade */
-}
 
 /* Hover effect for status badges */
 .status-badge:hover {
@@ -147,9 +92,9 @@
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
-    .card {
+    /* .card {
         max-width: 100%;
-    }
+    } */
     
     .p-inputgroup {
         width: 120px;  /* Very compact input group on small screens */
@@ -168,4 +113,138 @@
         font-size: 0.55rem;  /* Smaller button text on mobile */
         padding: 0.15rem 0.4rem;  /* Reduce button padding for mobile */
     }
+}
+
+/* ::ng-deep .name-log-status{
+    height: 1000px !important
+} */
+
+
+.trainee-status:hover{
+    cursor: pointer;
+}
+
+.patchFormContainer{
+    width: 10%;
+}
+
+.formCard{
+    width: min-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+::ng-deep .p-grid{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+::ng-deep .align-items-center{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Test style */
+
+/* Trainee details table */
+::ng-deep.p-sortable-column{
+    font-size: small;
+}
+::ng-deep.p-datatable-tbody{
+    font-size: small;
+}
+
+::ng-deep.p-datatable-header{
+    padding: 0rem, 1rem;
+}
+::ng-deep.p-datatable-body{
+    padding: 0rem,1rem;
+}
+::ng-deep.p-grid{
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+::ng-deep.p-button {
+    color: #EA454C;
+    background: none;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    outline-color: transparent;
+}
+::ng-deep.equal-length-tag {
+    width: 100px; /* Adjust width as needed */
+    text-align: center;
+    display: inline-block;
+}
+::ng-deep.p-tag-value{
+    width: 70px;
+}
+::ng-deep.p-component{
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+/* Status Colors */
+.status-present {
+    color: green;
+    background-color: #e0f7e9; /* Light green background */
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+}
+
+.status-absent {
+    color: #EA454C;
+    background-color: #ffe0e0; /* Light red background */
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+}
+
+.status-late-arrival {
+    color: orange;
+    background-color: #fff4e0; /* Light orange background */
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+}
+
+/* Time Colors */
+.time-on-time {
+    color: green;
+    background-color: #e0f7e9; /* Light green background */
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+}
+
+.time-late {
+    color: orange;
+    background-color: #fff4e0; /* Light orange background */
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 12px; /* Adjust font size */
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+}
+
+.table-heading-fields{
+    font-size: 12px;
 }
