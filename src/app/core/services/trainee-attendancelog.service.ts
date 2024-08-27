@@ -1,8 +1,9 @@
 import { HttpClient, HttpParams, } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TraineeAttendanceLogs } from '../model/traineeAttendanceLogs.model';
+import {  TraineeAttendanceLogs } from '../model/traineeAttendanceLogs.model';
 import { DailyAttendanceOfMonth } from '../interfaces/daily-attendance-of-month';
+import { AbsenceAndLate, CurrentTraineeLog, PatchResponse } from '../interfaces/side-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -68,5 +69,16 @@ export class TraineeAttendancelogService {
    */
    getLatestDate(): Observable<{ latestDate: string }> {
     return this.http.get<{ latestDate: string }>(`${this.apiUrl}/latestAttendanceSummary`);
+  }
+
+  // Function to update status and remark of a trainee
+  updateTraineeLog(id: number, updatedLog: CurrentTraineeLog): Observable<PatchResponse> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.patch<PatchResponse>(url, updatedLog);
+  }
+
+  // Function to get absences and leave count of a trainee
+  getAbsenceOfTrainee(traineeCode: string): Observable<AbsenceAndLate> {
+    return this.http.get<AbsenceAndLate>(`${this.apiUrl}/GetAbsenceOfTrainee?traineeCode=${traineeCode}`);
   }
 }

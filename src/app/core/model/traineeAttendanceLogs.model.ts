@@ -1,5 +1,5 @@
 export interface TraineeAttendanceLogs {
-        id: string;
+        id: number;
         name: string;
         ilp: string;
         date: string;
@@ -8,4 +8,6 @@ export interface TraineeAttendanceLogs {
         checkin?: string;
         checkout?: string;
         workhours?: string;
+        remark?:string;
 }
+

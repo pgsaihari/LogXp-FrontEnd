@@ -5,31 +5,117 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms'; // For [(ngModel)] two-way binding
-import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
+import {  TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
+import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { RippleModule } from 'primeng/ripple';
+import { catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { CurrentTraineeLog } from '../../core/interfaces/side-profile';
 
 @Component({
   selector: 'app-singleuser-table',
   standalone: true,
-  imports: [CommonModule, TableModule, CheckboxModule, InputTextModule, ButtonModule, FormsModule],
+  imports: [CommonModule, TableModule, CheckboxModule, InputTextModule, ButtonModule, FormsModule, ReactiveFormsModule, DropdownModule, CardModule, DialogModule, ToastModule, RippleModule],
   templateUrl: './single-user-table.component.html',
   styleUrls: ['./single-user-table.component.css']
 })
-export class SingleUserTableComponent implements OnInit {
-  ngOnInit(): void {
-    console.log("traineelog");
-  }
-  // Sample data for the customers array
- @Input() traineelogs: TraineeAttendanceLogs[] = [
-    
-    // Add more customer data as needed
+
+export class SingleUserTableComponent{
+
+  visible: boolean = false;
+ @Input() traineelogs: TraineeAttendanceLogs[] = [];
+ traineeId!: number;
+  
+  currentTraineeLog: CurrentTraineeLog = {
+    status: '',
+    remark: ''
+  };
+
+  statusOptions: { label: string; value: string }[] = [
+        { label: 'Present', value: 'Present' },
+        { label: 'Late Arrival', value: 'Late Arrival' },
+        { label: 'Early Departure', value: 'Early Departure' },
+        { label: 'Late Arrival and Early Departure', value: 'Late Arrival and Early Departure' },
+        { label: 'On Leave', value: 'On Leave' },
+        { label: 'Early Arrival', value: 'Early Arrival' }
   ];
 
-  globalFilter: string = ''; // For search input filter
-  selectAll: boolean = false; // For handling "select all" checkbox
+  constructor(private traineeAttendancelogService: TraineeAttendancelogService, private messageService: MessageService){}
 
-  // Toggle the "select all" checkbox
-  
 
-  // Filter event
-  
+  showDialog(traineelog: TraineeAttendanceLogs) {
+    this.visible = true;
+    this.currentTraineeLog.status = traineelog.status;
+    this.currentTraineeLog.remark = traineelog.remark;
+    this.traineeId = traineelog.id;
+    console.log(this.currentTraineeLog);
+  }
+
+  get isFormValid(): boolean {
+    return this.currentTraineeLog.status !== '' && this.currentTraineeLog.remark !== '';
+  }
+
+  onSubmit() {
+
+    if (!this.isFormValid) return;
+
+    // Prepare the object with only the fields to be updated
+    const updatedLog:CurrentTraineeLog = {
+      status: this.currentTraineeLog.status,
+      remark: this.currentTraineeLog.remark,
+    };
+
+    this.traineeAttendancelogService.updateTraineeLog(Number(this.traineeId), updatedLog)
+      .pipe(
+        tap((response) => {
+          console.log('Update successful:', response.message);
+          this.showMessage('success', 'Successful', 'Status and Remarks updated');
+          this.visible = false;
+
+          const index = this.traineelogs.findIndex(log => log.id === this.traineeId);
+          if (index !== -1) {
+            this.traineelogs[index] = { ...this.traineelogs[index], ...response.traineeAttendanceLogs };
+          }
+        }),
+        catchError((error) => {
+          console.error('Error updating trainee log:', error);
+          this.showError('Failed to update trainee', error)
+          return of(); // Return an observable that emits no items (you can also return of(null) or a more meaningful fallback value)
+        })
+      )
+      .subscribe();
+
+  }
+
+  //Toast
+  showMessage(severity: string, summary: string, detail: string) {
+    this.messageService.add({ severity, summary, detail, life: 3000 });
+  }
+
+  private showError(summary: string, err: any) {
+    console.error(summary, err);
+    this.showMessage('error', 'Error', `${summary}: ${err.message}`);
+  }
+
+  //Styling for status field
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Present':
+        return 'status-present';
+      case 'On Leave':
+        return 'status-absent';
+      case 'Late Arrival':
+      case 'Early Departure':
+      case 'Late Arrival and Early Departure':
+        return 'status-late-arrival';
+      default:
+        return '';
+    }
+  }
 }

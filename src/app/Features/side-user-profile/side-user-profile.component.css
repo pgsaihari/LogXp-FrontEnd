@@ -23,7 +23,6 @@
     align-items: center;
     justify-content: center; /* Center content vertically */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
-    height: 30%; /* Make the details section take up 30% of the container height */
 }
 
 /* Styling for the avatar */
@@ -55,10 +54,12 @@
 
 /* Additional info styling */
 .additional-info {
+    padding-left: 0;
     margin-top: 10px; /* Add space above the additional info */
-    text-align: left;
     font-size: 12px; /* Smaller font for additional details */
     color: #555;
+    display: flex;
+    justify-content: space-around;
 }
 
 /* Table Section */
@@ -120,6 +121,15 @@
     border-bottom: 1px solid #e0e0e0;  /* Subtle border for clean separation */
 }
 
+::ng-deep th{
+    text-align: center;
+}
+
+::ng-deep .check-and-status td{
+    padding: 6px;
+    text-align: center;
+}
+
 /* Status Badges */
 .status-badge-open,
 .status-badge-paid,
@@ -149,7 +159,7 @@
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .container {
-        width: 100%;  /* Make container full width on smaller screens */
+        width: 70%;  /* Make container full width on smaller screens */
     }
 
     .p-inputgroup {
@@ -215,3 +225,19 @@
     color: #555; /* Softer text color */
 }
 
+.trainee-details-flex{
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+}
+
+.trainee-details-flex-row{
+    display: flex;
+    gap: 5px;
+    font-size: 15px;
+    width: 50%;
+}
+
+.trainee-details h3{
+    margin-top: 0;
+}
