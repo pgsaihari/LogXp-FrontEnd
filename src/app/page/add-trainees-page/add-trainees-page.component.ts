@@ -9,11 +9,12 @@ import { TraineeServiceService } from '../../core/services/trainee-service.servi
 import { Trainee } from '../../core/model/trainee.model';
 import { NgClass } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
+import { NgxSpinnerComponent } from 'ngx-spinner';
 
 @Component({
   selector: 'app-add-trainees-page',
   standalone: true,
-  imports: [ FormComponent, ToastModule,NgClass,DialogModule],
+  imports: [ FormComponent, ToastModule,NgClass,DialogModule, NgxSpinnerComponent],
   templateUrl: './add-trainees-page.component.html',
   styleUrls: ['./add-trainees-page.component.css'],
   providers: [MessageService]
