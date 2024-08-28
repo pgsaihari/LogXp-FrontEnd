@@ -6,11 +6,15 @@
     <!-- Trainee Details Section -->
     <div class="trainee-details">
         <h3>TRAINEE DETAILS</h3>
-        <div class="trainee-info">
-            <h4>{{trainee.name}}</h4>
-            <p>{{trainee.employeeCode}}</p>
-            <p>{{trainee.batchId}}</p>
-            <p>{{trainee.email}}</p>
+        <div class="trainee-details-flex">
+            <div class="trainee-details-flex-row">
+                <div><b>Name: </b></div>
+                <div>{{trainee.name}}</div>
+            </div>
+            <div class="trainee-details-flex-row">
+                <div><b>Batch: </b></div>
+                <div>{{this.batchName}}</div>
+            </div>   
         </div>
     </div>
 

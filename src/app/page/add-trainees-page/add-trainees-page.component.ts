@@ -26,7 +26,7 @@ import { NgxSpinnerComponent } from 'ngx-spinner';
   imports: [ FormComponent, ToastModule,NgClass,DialogModule, NgxSpinnerComponent,TooltipModule],
 =======
 
-  imports: [ FormComponent, ToastModule,NgClass,DialogModule,TooltipModule, NgxSpinnerComponent],
+  imports: [ FormComponent, ToastModule,NgClass,DialogModule, NgxSpinnerComponent],
 
 >>>>>>> 7081d8f02f276df450cbe7d5236e80d69e35a74f
   templateUrl: './add-trainees-page.component.html',
