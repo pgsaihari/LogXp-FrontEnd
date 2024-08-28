@@ -21,7 +21,7 @@ import { NgxSpinnerComponent } from 'ngx-spinner';
   selector: 'app-user-profile-page',
   standalone: true,
 
-  imports: [TopHeaderComponent, CardModule, ButtonModule, WidgetCardComponent, FormComponent, CallenderComponent, WidgetTableComponent, UserTableComponent, SingleUserTableComponent, SideUserProfileComponent, UserWidgetCardsComponent, NgxSpinnerComponent],
+  imports: [ UserWidgetCardsComponent, NgxSpinnerComponent],
 
   templateUrl: './user-profile-page.component.html',
   styleUrl: './user-profile-page.component.css'
