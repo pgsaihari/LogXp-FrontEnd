@@ -9,13 +9,26 @@ import { TraineeServiceService } from '../../core/services/trainee-service.servi
 import { Trainee } from '../../core/model/trainee.model';
 import { NgClass } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
+<<<<<<< HEAD
 import { NgxSpinnerComponent } from 'ngx-spinner';
 import { TooltipModule } from 'primeng/tooltip';
+=======
+
+
+import { NgxSpinnerComponent } from 'ngx-spinner';
+
+>>>>>>> 7081d8f02f276df450cbe7d5236e80d69e35a74f
 
 @Component({
   selector: 'app-add-trainees-page',
   standalone: true,
+<<<<<<< HEAD
   imports: [ FormComponent, ToastModule,NgClass,DialogModule, NgxSpinnerComponent,TooltipModule],
+=======
+
+  imports: [ FormComponent, ToastModule,NgClass,DialogModule,TooltipModule, NgxSpinnerComponent],
+
+>>>>>>> 7081d8f02f276df450cbe7d5236e80d69e35a74f
   templateUrl: './add-trainees-page.component.html',
   styleUrls: ['./add-trainees-page.component.css'],
   providers: [MessageService]
