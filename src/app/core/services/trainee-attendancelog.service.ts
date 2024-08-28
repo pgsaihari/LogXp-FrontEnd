@@ -45,6 +45,13 @@ export class TraineeAttendancelogService {
     return this.http.get<{ logs: TraineeAttendanceLogs[], count: number, message: string }>(url);
   }
 
+   /**
+   * Fetch filtered trainee attendance logs based on status, date, and batches.
+   * @param status The status filter (e.g., "Present", "Absent").
+   * @param date The date filter in 'yyyy-MM-dd' format.
+   * @param batches An array of batch filters.
+   * @returns An observable containing logs, count, and a message.
+   */
   getFilteredTraineeAttendanceLogs(status: string, date: string, batches: string[]): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
     let params = new HttpParams();
     if (status) params = params.set('status', status);
