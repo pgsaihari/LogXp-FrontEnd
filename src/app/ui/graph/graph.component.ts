@@ -230,4 +230,69 @@ export class GraphComponent  {
         }
     };
   }
+
+  bargraphInit(){
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    
+    this.data = {
+        labels: this.generateXaxisLabel(),
+        datasets: [
+            {
+                label: 'Present',
+                backgroundColor: documentStyle.getPropertyValue('--primary-color'),
+                borderColor: documentStyle.getPropertyValue('--primary-color'),
+                data: this.generateYaxisData()
+            },
+            {
+                label: 'Late arrivals',
+                backgroundColor: documentStyle.getPropertyValue('--secondary-color'),
+                borderColor: documentStyle.getPropertyValue('--secondary-color'),
+                data: this.generateYaxisDataLateArrivals()
+            }
+        ]
+    };
+
+    this.options = {
+        maintainAspectRatio: false,
+        aspectRatio: 0.8,
+        plugins: {
+            legend: {
+                labels: {
+                    color: textColor
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: textColorSecondary,
+                    font: {
+                        weight: 500
+                    }
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Attendance %' 
+              },
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            }
+
+        }
+    };
+  }
 }        
