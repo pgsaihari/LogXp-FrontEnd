@@ -12,7 +12,8 @@
         </div>
     </div>
     
-    <p-chart type="line" height="300px" [data]="data" [options]="options" class="mychart" *ngIf="!isAttendanceLogEmpty"/>
+    <!-- <p-chart type="line" height="300px" [data]="data" [options]="options" class="mychart" *ngIf="!isAttendanceLogEmpty"/> -->
+    <p-chart type="bar" height="300px" [data]="data" [options]="options" class="mychart" />
     <div class="empty-state-container" *ngIf="isAttendanceLogEmpty">
         <i class="fas fa-exclamation-circle not-found-icon"></i>
         <p>No data found for "<span>{{ noDataDate | date: 'MMMM y' }}</span>" </p>

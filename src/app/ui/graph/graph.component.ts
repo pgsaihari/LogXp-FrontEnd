@@ -58,7 +58,8 @@ export class GraphComponent  {
         this.noDataDate = this.graphDataMonth;       
       }
       else{this.isAttendanceLogEmpty = false;}
-      this.graphInit();
+      // this.graphInit();
+      this.bargraphInit();
     });   
   }
   /**
@@ -83,7 +84,17 @@ export class GraphComponent  {
       let total:any = item.totalEmployees;
       let absent:any = item.absentees;
       let percentage:number = ((total - absent)/total) * 100;
-      result.push(percentage);
+      result.push(Math.round(percentage * Math.pow(10, 2)) / Math.pow(10, 2));
+    });
+    return result
+  }
+  generateYaxisDataLateArrivals():number[]{
+    let result: number[] = []; 
+    this.dailyAttendanceData?.forEach(item => {
+      let total:any = item.totalEmployees;
+      let lateArrivals:any = item.lateArrivals;
+      let percentage:number = ((lateArrivals)/total) * 100;
+      result.push(Math.round(percentage * Math.pow(10, 2)) / Math.pow(10, 2));
     });
     return result
   }
@@ -152,6 +163,71 @@ export class GraphComponent  {
           }
         }
       }
+    };
+  }
+
+  bargraphInit(){
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    
+    this.data = {
+        labels: this.generateXaxisLabel(),
+        datasets: [
+            {
+                label: 'Present',
+                backgroundColor: documentStyle.getPropertyValue('--primary-color'),
+                borderColor: documentStyle.getPropertyValue('--primary-color'),
+                data: this.generateYaxisData()
+            },
+            {
+                label: 'Late arrivals',
+                backgroundColor: documentStyle.getPropertyValue('--secondary-color'),
+                borderColor: documentStyle.getPropertyValue('--secondary-color'),
+                data: this.generateYaxisDataLateArrivals()
+            }
+        ]
+    };
+
+    this.options = {
+        maintainAspectRatio: false,
+        aspectRatio: 0.8,
+        plugins: {
+            legend: {
+                labels: {
+                    color: textColor
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: textColorSecondary,
+                    font: {
+                        weight: 500
+                    }
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Attendance %' 
+              },
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            }
+
+        }
     };
   }
 }        
