@@ -15,8 +15,9 @@
         
     >
         <ng-template pTemplate="caption">
-            <div class="flex align-items-center justify-content-between">
-               
+           
+            <div class="flex align-items-center justify-content-evenly">
+                <h2 style=" align-items:  center; ">Trainee Details</h2>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input 
@@ -26,8 +27,32 @@
                         (input)="dt.filterGlobal(globalFilterInput.value, 'contains')" 
                         placeholder="Search..." />
                 </span>
+                <!-- Add Batch Button -->
+<button pButton label="Add Batch" icon="pi pi-plus" class="p-button-success" style="width: 150px;"
+(click)="openBatchDialog()"></button>
+
+<!-- Batch Dialog -->
+<p-dialog header="Add New Batch" [(visible)]="batchDialog" [modal]="true" [closable]="false" [style]="{width: '30vw'}">
+<div class="p-fluid">
+<div class="p-field">
+<label for="batchName">Batch Name</label>
+<input id="batchName" type="text" pInputText [(ngModel)]="newBatch.batchName" />
+</div>
+<div class="p-field">
+<label for="year">Year</label>
+<input id="year" type="number" pInputText [(ngModel)]="newBatch.year" />
+</div>
+</div>
+
+<p-footer>
+<button pButton label="Cancel" icon="pi pi-times" (click)="hideBatchDialog()" class="p-button-text"></button>
+<button pButton label="Save" icon="pi pi-check" (click)="saveBatch()" class="p-button-primary"></button>
+</p-footer>
+</p-dialog>
+
+
                 <div class="p-field">
-                 
+                
                     <p-button 
                     label=""
                     pTooltip="Change trainee status" 
@@ -98,6 +123,7 @@
                         [value]="trainee.isActive ? 'Active ' : 'Inactive'" 
                         [severity]="trainee.isActive ? 'success' : 'danger'"
                         class="equal-length-tag"
+                        (click)="isSetStatusDialogVisible = true"
                         >
                         
                     </p-tag>
@@ -233,4 +259,5 @@
     </div>
 </p-dialog>
 
+  
 </div>
