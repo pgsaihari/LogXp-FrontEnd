@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { WidgetCardComponent } from "../../ui/widget-card/widget-card.component";
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { AttendanceLogsService } from '../../core/services/attendance-logs.service';
+import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 
 @Component({
   selector: 'app-user-widget-cards',
@@ -11,13 +11,13 @@ import { AttendanceLogsService } from '../../core/services/attendance-logs.servi
   styleUrl: './user-widget-cards.component.css'
 })
 export class UserWidgetCardsComponent {
-absent= 0;
-earlyDepartures= 0;
-lateArrivals= 0;
-onTimeNum= 0;
-traineeCode=9015;
+absent!: number;
+earlyDepartures!: number;
+lateArrivals!: number;
+onTimeNum!: number;
+traineeCode=9030;
 
-constructor(private attendanceLogsService: AttendanceLogsService) {}
+constructor(private attendanceLogsService: TraineeAttendancelogService) {}
 
 ngOnInit(): void {
   this.fetchCounts();
@@ -26,8 +26,11 @@ ngOnInit(): void {
     const id = this.traineeCode;
     this.attendanceLogsService.getUserWidgetCount(id).subscribe(count => {
       // this.onTimeNum = count.earlyArrivalCount;
-      this.absent = count.numberOfDaysAbsent;
-      this.lateArrivals = count.numberOfDaysLate;
+      this.absent = count['absentDaysCount'];
+      this.lateArrivals = count['lateArrivalDaysCount'];
+      this.onTimeNum = count['onTimeDaysCount'];
+      this.earlyDepartures = count['earlyDepartureDaysCount'];
+      console.log(count)
       // this.earlyDepartures = count.earlyDepartureCount;
     });
   }
