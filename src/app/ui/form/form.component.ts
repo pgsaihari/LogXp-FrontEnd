@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TraineeServiceService } from '../../core/services/trainee-service.service';
-
 import { MessageService } from 'primeng/api';
 import { Batch } from '../../core/model/batch.model';
 import { BatchService } from '../../core/services/batch.service';
@@ -13,20 +12,32 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule,CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, CommonModule],
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
-  // Define the form group
+  // Define the form group with enhanced validations
   traineeForm = new FormGroup({
-    employeeCode: new FormControl('', Validators.required),
-    name: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    batchId: new FormControl(Validators.required),
-    isActive: new FormControl(true, Validators.required)  // Default value set to true
+    employeeCode: new FormControl('', [
+      Validators.required,
+      Validators.minLength(5), // Minimum length of 5 characters
+      Validators.maxLength(15), // Maximum length of 15 characters
+      Validators.pattern('^[a-zA-Z0-9]*$') // Only alphanumeric characters allowed
+    ]),
+    name: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2), // Minimum length of 2 characters
+      Validators.maxLength(50), // Maximum length of 50 characters
+      Validators.pattern('^[a-zA-Z ]*$') // Only alphabets and spaces allowed
+    ]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email // Ensures the value is a valid email
+    ]),
+    batchId: new FormControl('', Validators.required), // Batch selection is mandatory
+    isActive: new FormControl(true, Validators.required) // Default value set to true
   });
-
 
   batches: Batch[] = []; // Initialize batches as an empty array
 
@@ -55,21 +66,20 @@ export class FormComponent implements OnInit {
       }
     });
   }
-  
 
   // Function to handle single trainee submission
   onSubmit() {
     if (this.traineeForm.valid) {
       const formData = this.traineeForm.value;
       console.log('Form Data:', formData);
-  
+
       this.traineeService.addTrainee(formData).subscribe({
         next: (response) => {
           console.log('Trainee added successfully:', response.message);
           this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message });
           this.traineeForm.reset(); // Reset the form after successful submission
           this.traineeForm.patchValue({ isActive: true });  // Reset isActive to true
-          
+
         },
         error: (error) => {
           console.error('Error adding trainee:', error);
@@ -82,11 +92,7 @@ export class FormComponent implements OnInit {
       });
     } else {
       console.error('Form is invalid');
-      this.messageService.add({ severity: 'warning', summary: 'Validation Error', detail: 'All fields are required' });
+      this.messageService.add({ severity: 'warning', summary: 'Validation Error', detail: 'All fields are required and must be valid' });
     }
   }
-  
-  
-
- 
 }
