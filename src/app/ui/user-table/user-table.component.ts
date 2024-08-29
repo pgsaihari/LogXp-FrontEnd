@@ -17,6 +17,7 @@ import { RippleModule } from 'primeng/ripple';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { BatchService } from '../../core/services/batch.service';  // Import BatchService
 import { TooltipModule } from 'primeng/tooltip';
+import { Batch } from '../../core/model/batch.model';
 
 @Component({
   selector: 'app-user-table',
@@ -52,6 +53,9 @@ export class UserTableComponent implements OnInit {
   selectedBatchId: number | null = null;
   batchOptions: { label: string; value: number }[] = [];
   allTrainees: Trainee[] = [];
+  batchDialog: boolean = false;  // To control the visibility of the batch dialog
+  newBatch: Batch = { batchId: 0, batchName: '', year: 0 };  // To hold the new batch data
+
   
   constructor(
     private traineeService: TraineeServiceService,
@@ -108,7 +112,42 @@ export class UserTableComponent implements OnInit {
     const batch = this.batchOptions.find(option => option.value === batchId);
     return batch ? batch.label : 'Unknown';
   }
-
+    /**
+   * Open the batch dialog for adding a new batch.
+   */
+    openBatchDialog() {
+      this.newBatch = { batchId: 0, batchName: '', year: 0 };  // Reset the batch data
+      this.batchDialog = true;  // Show the dialog
+    }
+  
+    /**
+     * Hide the batch dialog without saving changes.
+     */
+    hideBatchDialog() {
+      this.batchDialog = false;  // Hide the dialog
+    }
+  /**
+   * Save the new batch by sending the data to the backend.
+   */
+  saveBatch() {
+    // Call the service to save the new batch (without batchId)
+    this.batchService.addBatch(this.newBatch).subscribe({
+      next: (savedBatch) => {
+        // Add the newly saved batch to the batchOptions array
+        this.batchOptions.push({ 
+          label: savedBatch.batchName, 
+          value: savedBatch.batchId // Ensure the backend returns the batchId after saving
+        });
+        this.messageService.add({ severity: 'success', summary: 'Batch Saved', detail: 'New batch added successfully.' });
+        this.batchDialog = false;
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save the batch.' });
+      }
+    });
+  }
+  
+  
   /**
    * Open a new trainee dialog for adding a trainee.
    */
