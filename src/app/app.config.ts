@@ -40,6 +40,7 @@ import {
   MsalGuard,
   MsalBroadcastService,
 } from '@azure/msal-angular';
+import { AuthInterceptor } from './core/interceptor/auth-interceptor.service';
 
 // MSAL configuration functions
 export function loggerCallback(logLevel: LogLevel, message: string) {
@@ -121,7 +122,7 @@ export const appConfig: ApplicationConfig = {
       useClass: MsalInterceptor,
       multi: true,
     },
-
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     // MSAL services and configurations
     {
       provide: MSAL_INSTANCE,

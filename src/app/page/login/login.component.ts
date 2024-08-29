@@ -41,11 +41,11 @@ export class LoginComponent implements OnInit {
             next: (userRoleData) => {
               console.log('User Role Data:', userRoleData); // Ensure this contains role info
               this.authService.setCurrentUser(userRoleData); // Set the current user
-
+              
               const user = this.authService.getCurrentUser();
-              if (user?.Role === 'trainee') {
-                this.router.navigate([`/user-profile/${user.UserId}`]);
-              } else if (user?.Role === 'admin') {
+              if (user?.role === 'trainee') {
+                this.router.navigate([`/user-profile/${user.userId}`]);
+              } else if (user?.role === 'admin') {
                 this.router.navigate(['/home']);
               }
             },
@@ -107,16 +107,16 @@ export class LoginComponent implements OnInit {
     // Fetch user role using accessToken
     this.authService.getUserRole(accessToken).subscribe({
       next: (userRoleData) => {
-        console.log('User Role Data:', userRoleData); // Ensure this contains role info
-        this.authService.setCurrentUser(userRoleData); // Set the current user
-
+        console.log('User Role Data:', userRoleData.userData); // Ensure this contains role info
+        this.authService.setCurrentUser(userRoleData.userData); // Set the current user
+        this.authService.setToken(userRoleData.token)
         const user = this.authService.getCurrentUser();
         console.log('Current User:', user); // Log current user for debugging
 
         // Route based on user role
-        if (user?.Role === 'trainee') {
-          this.router.navigate([`/user-profile/${user.UserId}`]);
-        } else if (user?.Role === 'admin') {
+        if (user?.role === 'trainee') {
+          this.router.navigate([`/user-profile/${user.userId}`]);
+        } else if (user?.role === 'admin') {
           this.router.navigate(['/home']);
         }
       },

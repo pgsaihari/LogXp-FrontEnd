@@ -15,8 +15,11 @@ import { Currentuser } from '../../core/interfaces/currentuser';
   styleUrls: ['./top-header.component.css']
 })
 export class TopHeaderComponent implements OnInit {
-  currentUser:Currentuser | null={
-    UserName:"",UserId:"",Email:"",Role:""
+  currentUser:Currentuser |null ={
+    userId:"string",
+    name:"string",
+    email:"string",
+    role:"string"
   }
   userAvatar: string = 'assets/avatar.png'; // Default avatar image
 
