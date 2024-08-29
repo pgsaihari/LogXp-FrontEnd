@@ -7,7 +7,7 @@ import { User } from '../model/user.model';
   providedIn: 'root'
 })
 export class UserService {
-
+  //move to .env
   private apiUrl = 'https://localhost:7074/api/User';  // Replace with your actual API URL
 
   constructor(private http: HttpClient) { }

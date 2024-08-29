@@ -10,7 +10,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { TopHeaderComponent } from '../top-header/top-header.component';
+import { TopHeaderComponent } from '../../shared/top-header/top-header.component';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { DatePipe } from '@angular/common';

@@ -113,6 +113,7 @@ export const appConfig: ApplicationConfig = {
       useClass: SpinnerInterceptorService,
       multi: true,
     },
+   
 
     // MSAL Interceptor for managing authentication and tokens
     {
