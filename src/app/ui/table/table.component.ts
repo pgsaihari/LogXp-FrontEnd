@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  AutoCompleteCompleteEvent,
   AutoCompleteModule,
 } from 'primeng/autocomplete';
 import * as XLSX from 'xlsx';
@@ -298,7 +297,7 @@ export class TableComponent implements OnInit {
 
     if (hours === 0 && minutes === 0) {
       return 'time-on-leave'; // Red for 00:00
-    } else if (hours < 9 || (hours === 9 && minutes === 0)) {
+    } else if (hours < 9 || (hours === 9 && minutes < 6)) {
       return 'time-on-time'; // Green for less than 9:00
     } else {
       return 'time-late'; // Yellow for later than 9:00
