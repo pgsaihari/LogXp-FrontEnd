@@ -4,8 +4,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, NgIf } from '@angular/common';
 import { WidgetAttendance } from '../../core/interfaces/widget-attendance';
-import { AttendanceLogsService } from '../../core/services/attendance-logs.service';
-import { catchError, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 
 @Component({
@@ -25,8 +24,7 @@ export class WidgetTableComponent implements OnChanges {
   manualDateSelection = false; // Tracks if the date was manually selected
   showTableHeader = false; // Controls the visibility of the table header
 
-  constructor(
-    private traineeAttendancelogService : AttendanceLogsService, // Service for attendance-related operations
+  constructor( // Service for attendance-related operations
     private attendanceService: TraineeAttendancelogService // Service for fetching trainee attendance logs
   ) {}
 
@@ -67,14 +65,15 @@ export class WidgetTableComponent implements OnChanges {
     const month = this.tableDate.getMonth() + 1;
     const year = this.tableDate.getFullYear();
 
-    this.traineeAttendancelogService.setUpdatedData(day, month, year )
+    this.attendanceService.setUpdatedData(day, month, year )
 
     // Map table headers to their corresponding API calls
-    const dataFetchMap: Record<string, () => any> = {
-      'On Time': () => this.traineeAttendancelogService.onTimeLogs(day, month, year),
-      'Late Arrivals': () => this.traineeAttendancelogService.lateArrivalLogs(day, month, year),
-      'Absent': () => this.traineeAttendancelogService.absenteeLogs(day, month, year),
-      'Early Departures': () => this.traineeAttendancelogService.earlyDeparturesLogs(day, month, year)
+    // Map table headers to their corresponding API calls
+    const dataFetchMap: Record<string, () => Observable<WidgetAttendance[]>> = {
+      'On Time': () => this.attendanceService.onTimeLogs(day, month, year).pipe(map(response => response.earlyArrivals)),
+      'Late Arrivals': () => this.attendanceService.lateArrivalLogs(day, month, year).pipe(map(response => response.lateArrivals)),
+      'Absent': () => this.attendanceService.absenteeLogs(day, month, year).pipe(map(response => response.absentees)),
+      'Early Departures': () => this.attendanceService.earlyDeparturesLogs(day, month, year).pipe(map(response => response.earlyDepartures))
     };
 
     // Get the appropriate API call based on the table header
@@ -90,32 +89,14 @@ export class WidgetTableComponent implements OnChanges {
             return of([]); // Return an empty array as fallback
           })
         )
-        .subscribe((data: any) => {
-          this.widgetAttendance = data[this.getAttendanceCategory()]; // Populate attendance data
+        .subscribe((data: WidgetAttendance[]) => {
+          this.widgetAttendance = data; // Populate attendance data
         });
     } else {
       console.error('Unknown table header:', this.tableHeader);
     }
   }
 
-  /**
-   * Determines the data key based on the table category.
-   */
-  getAttendanceCategory(): string {
-    // Maps the table header to the corresponding data key
-    switch (this.tableHeader) {
-      case 'On Time':
-        return 'earlyArrivals';
-      case 'Late Arrivals':
-        return 'lateArrivals';
-      case 'Absent':
-        return 'absentees';
-      case 'Early Departures':
-        return 'earlyDepartures';
-      default:
-        return '';
-    }
-  }
 
   /**
    * Handles date changes from the date picker.
@@ -128,7 +109,7 @@ export class WidgetTableComponent implements OnChanges {
   /**
    * Determines which time to display based on the table category.
    */
-  getTime(trainee: any): string {
+  getTime(trainee: WidgetAttendance): string {
     // Simplifies time selection logic based on the category
     switch (this.tableHeader) {
       case 'On Time':
