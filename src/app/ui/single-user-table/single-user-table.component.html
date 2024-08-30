@@ -17,9 +17,11 @@
                         <span id="check-out">check-out:</span><br>{{ traineelog.logoutTime | date: 'hh:mm a' }}<br>
                     </td>
                     <td>
-                        <span [ngClass]="getStatusClass(traineelog.status)" (click)="showDialog(traineelog)" class="trainee-status"><b>
+                        <span [ngClass]="getStatusClass(traineelog.status)" (click)="showDialog(traineelog)" class="trainee-status">
+                            <b>
                             {{ traineelog.status }}
                         </b></span>
+                        <span *ngIf="traineelog.remark" class="remark-asterisk">*</span>
                     </td>
                     </tr>
             </ng-template>

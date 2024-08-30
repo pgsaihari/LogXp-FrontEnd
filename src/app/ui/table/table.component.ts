@@ -324,6 +324,7 @@ export class TableComponent implements OnInit {
   }
 
   showSideProfile(employeeCode: string): void {
+    console.log("Hi");
     this.selectedTraineeCode = employeeCode;
     this.isSideProfileVisible = true; // Show the side profile when an employee is clicked
   }
