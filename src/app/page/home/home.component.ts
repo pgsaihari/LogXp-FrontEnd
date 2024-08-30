@@ -20,19 +20,16 @@ import { SpinnerComponent } from '../../ui/spinner/spinner.component';
 export class HomeComponent {
   tableHeader!: string;
   toggleField: string = 'Check-Out'; // Initialize default value
-  isVisible: boolean = false;
-
-  constructor(public spinnerService: SpinnerService) {} // Inject custom spinner service
-
-  // Handle widget card click event
-  handleWidgetClick(dataReceived: { isClicked: boolean, header: string }) {
+  isVisible:boolean=false;
+  handleWidgetClick(dataReceived: {header: string }) {
+    // Update visibility and tableHeader based on the widget clicked
     this.isVisible = true;
     this.tableHeader = dataReceived.header;
-
-    // Update toggleField based on the selected widget
-    if (dataReceived.header === 'On Time' || dataReceived.header === 'Late Arrivals') {
+  
+    // Conditionally update toggleField based on the clicked widget card's header
+    if (this.tableHeader === 'On Time' || this.tableHeader === 'Late Arrivals') {
       this.toggleField = 'Check-In';
-    } else if (dataReceived.header === 'Early Departures') {
+    } else if (this.tableHeader === 'Early Departures') {
       this.toggleField = 'Check-Out';
     } else {
       this.toggleField = 'Monthly Leave Percentage';

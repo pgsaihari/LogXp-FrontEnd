@@ -14,12 +14,12 @@ export class WidgetCardComponent {
   @Input() card_number!: number;
   @Input() card_header!: string;
   @Input() isActive = false;
-  @Output() onBtnClick = new EventEmitter<{ isClicked: boolean, header: string }>();
+  @Output() onBtnClick = new EventEmitter<{header: string}>();
 
   constructor(private elementRef: ElementRef) {}
 
   onClick() {
-    this.onBtnClick.emit({ isClicked: true, header: this.card_header });
+    this.onBtnClick.emit({header: this.card_header });
   }
 
   @HostListener('document:click', ['$event'])

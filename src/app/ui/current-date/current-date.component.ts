@@ -3,7 +3,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { catchError, of } from 'rxjs';
-import { AttendanceLogsService } from '../../core/services/attendance-logs.service';
 
 @Component({
   selector: 'app-current-date',
@@ -19,7 +18,7 @@ export class CurrentDateComponent implements OnInit{
   timeIcon: string = '';
   timeOfDay: string = '';
   error: any;
-  constructor(private api: AttendanceLogsService) {}
+  constructor(private api: TraineeAttendancelogService) {}
 
   ngOnInit() {
     this.getThelatestDate();

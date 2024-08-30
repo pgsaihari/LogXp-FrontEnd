@@ -3,7 +3,6 @@
   import { TraineeServiceService } from '../../../core/services/trainee-service.service';
   import { FormsModule } from '@angular/forms';
   import { MessageService } from 'primeng/api';
-  import { AttendanceLogsService } from '../../../core/services/attendance-logs.service';
   import { RouterLink, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TraineeAttendancelogService } from '../../../core/services/trainee-attendancelog.service';
@@ -18,7 +17,7 @@ import { TraineeAttendancelogService } from '../../../core/services/trainee-atte
     styleUrl: './widget-cards.component.css'
   })
   export class WidgetCardsComponent implements OnInit {
-    @Output() widgetSelected = new EventEmitter<{ isClicked: boolean, header: string }>();
+    @Output() widgetSelected = new EventEmitter<{header: string }>();
 
     totalTrainees = 0;
     onTimeNum = 0;
@@ -33,18 +32,17 @@ import { TraineeAttendancelogService } from '../../../core/services/trainee-atte
     constructor(
       private traineeService: TraineeServiceService,
       private messageService: MessageService,
-      private attendanceLogsService: AttendanceLogsService,
       private traineeAttendance : TraineeAttendancelogService
     ) {
       // Subscribe to the updated date observable
-      this.dateSubscription = this.attendanceLogsService.getUpdatedData().subscribe(date => {
+      this.dateSubscription = this.traineeAttendance.getUpdatedData().subscribe(date => {
         this.selectedDate = date;
         console.log(this.selectedDate)
         this.fetchCounts(); // Ensure fetchCounts is called with the updated date
       });
     }
 
-    clickWidget(data: { isClicked: boolean, header: string }, index: number) {
+    clickWidget(data: {header: string }, index: number) {
       this.activeCardIndex = index;
       this.widgetSelected.emit(data);
     }
@@ -82,22 +80,22 @@ import { TraineeAttendancelogService } from '../../../core/services/trainee-atte
     const { day, month, year } = this.selectedDate;
 
     // Fetch the data for all the cards
-    this.attendanceLogsService.onTimeLogs(day, month, year).subscribe({
+    this.traineeAttendance.onTimeLogs(day, month, year).subscribe({
       next: (data) => (this.onTimeNum = data.count),
       error: (error) => this.messageService.add({ severity: 'error', summary: error.error.message, detail: 'LogXp' })
     });
 
-    this.attendanceLogsService.lateArrivalLogs(day, month, year).subscribe({
+    this.traineeAttendance.lateArrivalLogs(day, month, year).subscribe({
       next: (data) => (this.lateArrivals = data.count),
       error: (error) => this.messageService.add({ severity: 'error', summary: error.error.message, detail: 'LogXp' })
     });
 
-    this.attendanceLogsService.absenteeLogs(day, month, year).subscribe({
+    this.traineeAttendance.absenteeLogs(day, month, year).subscribe({
       next: (data) => (this.absentees = data.count),
       error: (error) => this.messageService.add({ severity: 'error', summary: error.error.message, detail: 'LogXp' })
     });
 
-    this.attendanceLogsService.earlyDeparturesLogs(day, month, year).subscribe({
+    this.traineeAttendance.earlyDeparturesLogs(day, month, year).subscribe({
       next: (data) => (this.earlyDepartures = data.count),
       error: (error) => this.messageService.add({ severity: 'error', summary: error.error.message, detail: 'LogXp' })
     });
