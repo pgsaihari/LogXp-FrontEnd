@@ -17,6 +17,7 @@ import { RippleModule } from 'primeng/ripple';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CurrentTraineeLog } from '../../core/interfaces/side-profile';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-singleuser-table',
@@ -42,8 +43,7 @@ export class SingleUserTableComponent{
         { label: 'Late Arrival', value: 'Late Arrival' },
         { label: 'Early Departure', value: 'Early Departure' },
         { label: 'Late Arrival and Early Departure', value: 'Late Arrival and Early Departure' },
-        { label: 'On Leave', value: 'On Leave' },
-        { label: 'Early Arrival', value: 'Early Arrival' }
+        { label: 'On Leave', value: 'On Leave' }
   ];
 
   constructor(private traineeAttendancelogService: TraineeAttendancelogService, private messageService: MessageService){}
@@ -81,6 +81,8 @@ export class SingleUserTableComponent{
           const index = this.traineelogs.findIndex(log => log.id === this.traineeId);
           if (index !== -1) {
             this.traineelogs[index] = { ...this.traineelogs[index], ...response.traineeAttendanceLogs };
+            this.traineelogs = [...this.traineelogs];
+            // window.location.reload();
           }
         }),
         catchError((error) => {
