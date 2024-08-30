@@ -109,62 +109,62 @@ export class GraphComponent  {
   /**
    * Initializes the graph with X and Y cordinates as well as other configurations and settings.
    */
-  graphInit(){
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    this.generateYaxisData();
-    this.data = {
-      labels: this.generateXaxisLabel(),
-      datasets: [
-        {
-          label: 'Present',
-          data: this.generateYaxisData(),
-          fill: true,
-          borderColor: "#EA454C",
-          tension: 0.4,
-          backgroundColor: 'rgba(234, 69, 76, 0.1)'
-        },
-      ]
-    };
-    //remove aspect ration to alter height, or change it to alter height
-    this.options = {
-      maintainAspectRatio: false,
-      aspectRatio: 0.9,
-      plugins: {
-        legend: {
-          labels: {
-            color: textColor
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: {
-            color: textColorSecondary
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false
-          }
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'Attendance %' 
-          },
-          ticks: {
-            color: textColorSecondary
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false
-          }
-        }
-      }
-    };
-  }
+  // graphInit(){
+  //   const documentStyle = getComputedStyle(document.documentElement);
+  //   const textColor = documentStyle.getPropertyValue('--text-color');
+  //   const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+  //   const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+  //   this.generateYaxisData();
+  //   this.data = {
+  //     labels: this.generateXaxisLabel(),
+  //     datasets: [
+  //       {
+  //         label: 'Present',
+  //         data: this.generateYaxisData(),
+  //         fill: true,
+  //         borderColor: "#EA454C",
+  //         tension: 0.4,
+  //         backgroundColor: 'rgba(234, 69, 76, 0.1)'
+  //       },
+  //     ]
+  //   };
+  //   //remove aspect ration to alter height, or change it to alter height
+  //   this.options = {
+  //     maintainAspectRatio: false,
+  //     aspectRatio: 0.9,
+  //     plugins: {
+  //       legend: {
+  //         labels: {
+  //           color: textColor
+  //         }
+  //       }
+  //     },
+  //     scales: {
+  //       x: {
+  //         ticks: {
+  //           color: textColorSecondary
+  //         },
+  //         grid: {
+  //           color: surfaceBorder,
+  //           drawBorder: false
+  //         }
+  //       },
+  //       y: {
+  //         title: {
+  //           display: true,
+  //           text: 'Attendance %' 
+  //         },
+  //         ticks: {
+  //           color: textColorSecondary
+  //         },
+  //         grid: {
+  //           color: surfaceBorder,
+  //           drawBorder: false
+  //         }
+  //       }
+  //     }
+  //   };
+  // }
 
   bargraphInit(){
     const documentStyle = getComputedStyle(document.documentElement);
@@ -177,14 +177,14 @@ export class GraphComponent  {
         datasets: [
             {
                 label: 'Present',
-                backgroundColor: documentStyle.getPropertyValue('--primary-color'),
-                borderColor: documentStyle.getPropertyValue('--primary-color'),
+                backgroundColor: documentStyle.getPropertyValue('--secondary-color'),
+                borderColor: documentStyle.getPropertyValue('--secondary-color'),
                 data: this.generateYaxisData()
             },
             {
                 label: 'Late arrivals',
-                backgroundColor: documentStyle.getPropertyValue('--secondary-color'),
-                borderColor: documentStyle.getPropertyValue('--secondary-color'),
+                backgroundColor: documentStyle.getPropertyValue('--primary-color'),
+                borderColor: documentStyle.getPropertyValue('--primary-color'),
                 data: this.generateYaxisDataLateArrivals()
             }
         ]
