@@ -58,7 +58,8 @@ export class GraphComponent  {
         this.noDataDate = this.graphDataMonth;       
       }
       else{this.isAttendanceLogEmpty = false;}
-      this.graphInit();
+      // this.graphInit();
+      this.bargraphInit();
     });   
   }
   /**
@@ -83,7 +84,17 @@ export class GraphComponent  {
       let total:any = item.totalEmployees;
       let absent:any = item.absentees;
       let percentage:number = ((total - absent)/total) * 100;
-      result.push(percentage);
+      result.push(Math.round(percentage * Math.pow(10, 2)) / Math.pow(10, 2));
+    });
+    return result
+  }
+  generateYaxisDataLateArrivals():number[]{
+    let result: number[] = []; 
+    this.dailyAttendanceData?.forEach(item => {
+      let total:any = item.totalEmployees;
+      let lateArrivals:any = item.lateArrivals;
+      let percentage:number = ((lateArrivals)/total) * 100;
+      result.push(Math.round(percentage * Math.pow(10, 2)) / Math.pow(10, 2));
     });
     return result
   }
@@ -98,60 +109,125 @@ export class GraphComponent  {
   /**
    * Initializes the graph with X and Y cordinates as well as other configurations and settings.
    */
-  graphInit(){
+  // graphInit(){
+  //   const documentStyle = getComputedStyle(document.documentElement);
+  //   const textColor = documentStyle.getPropertyValue('--text-color');
+  //   const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+  //   const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+  //   this.generateYaxisData();
+  //   this.data = {
+  //     labels: this.generateXaxisLabel(),
+  //     datasets: [
+  //       {
+  //         label: 'Present',
+  //         data: this.generateYaxisData(),
+  //         fill: true,
+  //         borderColor: "#EA454C",
+  //         tension: 0.4,
+  //         backgroundColor: 'rgba(234, 69, 76, 0.1)'
+  //       },
+  //     ]
+  //   };
+  //   //remove aspect ration to alter height, or change it to alter height
+  //   this.options = {
+  //     maintainAspectRatio: false,
+  //     aspectRatio: 0.9,
+  //     plugins: {
+  //       legend: {
+  //         labels: {
+  //           color: textColor
+  //         }
+  //       }
+  //     },
+  //     scales: {
+  //       x: {
+  //         ticks: {
+  //           color: textColorSecondary
+  //         },
+  //         grid: {
+  //           color: surfaceBorder,
+  //           drawBorder: false
+  //         }
+  //       },
+  //       y: {
+  //         title: {
+  //           display: true,
+  //           text: 'Attendance %' 
+  //         },
+  //         ticks: {
+  //           color: textColorSecondary
+  //         },
+  //         grid: {
+  //           color: surfaceBorder,
+  //           drawBorder: false
+  //         }
+  //       }
+  //     }
+  //   };
+  // }
+
+  bargraphInit(){
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    this.generateYaxisData();
+    
     this.data = {
-      labels: this.generateXaxisLabel(),
-      datasets: [
-        {
-          label: 'Present',
-          data: this.generateYaxisData(),
-          fill: true,
-          borderColor: "#EA454C",
-          tension: 0.4,
-          backgroundColor: 'rgba(234, 69, 76, 0.1)'
-        },
-      ]
+        labels: this.generateXaxisLabel(),
+        datasets: [
+            {
+                label: 'Present',
+                backgroundColor: documentStyle.getPropertyValue('--secondary-color'),
+                borderColor: documentStyle.getPropertyValue('--secondary-color'),
+                data: this.generateYaxisData()
+            },
+            {
+                label: 'Late arrivals',
+                backgroundColor: documentStyle.getPropertyValue('--primary-color'),
+                borderColor: documentStyle.getPropertyValue('--primary-color'),
+                data: this.generateYaxisDataLateArrivals()
+            }
+        ]
     };
-    //remove aspect ration to alter height, or change it to alter height
+
     this.options = {
-      maintainAspectRatio: false,
-      aspectRatio: 0.9,
-      plugins: {
-        legend: {
-          labels: {
-            color: textColor
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: {
-            color: textColorSecondary
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false
-          }
+        maintainAspectRatio: false,
+        aspectRatio: 0.8,
+        plugins: {
+            legend: {
+                labels: {
+                    color: textColor
+                }
+            }
         },
-        y: {
-          title: {
-            display: true,
-            text: 'Attendance %' 
-          },
-          ticks: {
-            color: textColorSecondary
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false
-          }
+        scales: {
+            x: {
+                ticks: {
+                    color: textColorSecondary,
+                    font: {
+                        weight: 500
+                    }
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Attendance %' 
+              },
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            }
+
         }
-      }
     };
   }
 }        
