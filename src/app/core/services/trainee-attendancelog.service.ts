@@ -33,6 +33,12 @@ export class TraineeAttendancelogService {
     return this.http.get<TraineeAttendanceLogs[]>(this.apiUrl);
   }
 
+  getTraineeAttendanceLogsByDateRange(startDate: string, endDate: string) {
+    return this.http.get<TraineeAttendanceLogs[]>(
+      `/api/traineeAttendanceLogs/bydaterange?startDate=${startDate}&endDate=${endDate}`
+    );
+  }
+
   /**
    * Retrieves the daily attendance logs for a specific month and year.
    * @param {number} month - The month for which attendance logs are being retrieved.
@@ -61,15 +67,39 @@ export class TraineeAttendancelogService {
    * @param batches An array of batch filters.
    * @returns An observable containing logs, count, and a message.
    */
-  getFilteredTraineeAttendanceLogs(status: string, date: string, batches: string[]): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
-    let params = new HttpParams();
-    if (status) params = params.set('status', status);
-    if (date) params = params.set('date', date);
-    if (batches.length > 0) params = params.set('batch', batches.join(','));
+   getFilteredTraineeAttendanceLogs(
+    statuses: string[],
+    date: string,
+    batches: string[]
+): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
+    let url = `https://localhost:7074/api/LogXP/traineeAttendanceLogs/filterLogs?`;
 
-    const url = `${this.apiUrl}/filterLogs`;
-    return this.http.get<{ logs: TraineeAttendanceLogs[], count: number, message: string }>(url, { params });
-  }
+    // Handle multiple statuses
+    if (statuses.length > 0) {
+        statuses.forEach(status => {
+            url += `status=${encodeURIComponent(status)}&`;
+        });
+    }
+
+    // Handle date
+    if (date) {
+        url += `date=${encodeURIComponent(date)}&`;
+    }
+
+    // Handle multiple batches
+    if (batches.length > 0) {
+        batches.forEach(batch => {
+            url += `batch=${encodeURIComponent(batch)}&`;
+        });
+    }
+
+    // Remove the trailing '&' or '?' from the URL
+    url = url.slice(-1) === '&' || url.slice(-1) === '?' ? url.slice(0, -1) : url;
+
+    return this.http.get<{ logs: TraineeAttendanceLogs[], count: number, message: string }>(url);
+}
+
+
 
    /**
    * Retrieves the latest attendance date.
