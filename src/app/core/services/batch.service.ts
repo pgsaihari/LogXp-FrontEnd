@@ -21,11 +21,8 @@ export class BatchService {
   }
 
   // Add a new batch
-  addBatch(batch: Batch): Observable<boolean> {
-    return this.http.post<boolean>(`${this.apiUrl}/add`, batch)
-      .pipe(
-        catchError(this.handleError<boolean>('addBatch', false))
-      );
+  addBatch(batch: { batchName: string; year: number }): Observable<Batch> {
+    return this.http.post<Batch>(this.apiUrl, batch);
   }
 
   // Delete a batch

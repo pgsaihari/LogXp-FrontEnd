@@ -3,6 +3,7 @@ export interface WidgetAttendance {
     name: string,
     batch: string,
     loginTime: string,
+    logoutTime: string,
     status: string,
     date:string
 }
@@ -16,8 +17,10 @@ export interface WidgetSummary{
 }
 
 export interface UserWidgetSummary{
-    numberOfDaysAbsent : number,
-    numberOfDaysLate: number
+    absentDaysCount: number,
+    lateArrivalDaysCount: number,
+    onTimeDaysCount: number,
+    earlyDepartureDaysCount: number
 }
 
 export interface EarlyArrivalLogs{
