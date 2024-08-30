@@ -242,14 +242,14 @@ export class GraphComponent  {
         datasets: [
             {
                 label: 'Present',
-                backgroundColor: documentStyle.getPropertyValue('--primary-color'),
-                borderColor: documentStyle.getPropertyValue('--primary-color'),
+                backgroundColor: documentStyle.getPropertyValue('--secondary-color'),
+                borderColor: documentStyle.getPropertyValue('--secondary-color'),
                 data: this.generateYaxisData()
             },
             {
                 label: 'Late arrivals',
-                backgroundColor: documentStyle.getPropertyValue('--secondary-color'),
-                borderColor: documentStyle.getPropertyValue('--secondary-color'),
+                backgroundColor: documentStyle.getPropertyValue('--primary-color'),
+                borderColor: documentStyle.getPropertyValue('--primary-color'),
                 data: this.generateYaxisDataLateArrivals()
             }
         ]
