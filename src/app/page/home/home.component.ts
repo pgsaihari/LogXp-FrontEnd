@@ -21,6 +21,9 @@ export class HomeComponent {
   tableHeader!: string;
   toggleField: string = 'Check-Out'; // Initialize default value
   isVisible:boolean=false;
+  
+  constructor(public spinnerService:SpinnerService){}
+
   handleWidgetClick(dataReceived: {header: string }) {
     // Update visibility and tableHeader based on the widget clicked
     this.isVisible = true;
