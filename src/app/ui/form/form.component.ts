@@ -8,6 +8,17 @@ import { MessageService } from 'primeng/api';
 import { Batch } from '../../core/model/batch.model';
 import { BatchService } from '../../core/services/batch.service';
 import { CommonModule } from '@angular/common';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
+function domainValidator(domain: string): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const email = control.value;
+    if (!email) {
+      return null; // Do not validate if the control is empty
+    }
+    const isValid = email.endsWith(domain);
+    return isValid ? null : { domain: { value: control.value } };
+  };
+}
 
 @Component({
   selector: 'app-form',
@@ -34,6 +45,7 @@ export class FormComponent implements OnInit {
     email: new FormControl('', [
       Validators.required,
       Validators.email // Ensures the value is a valid email
+      ,domainValidator('@experionglobal.com')
     ]),
     batchId: new FormControl('', Validators.required), // Batch selection is mandatory
     isActive: new FormControl(true, Validators.required) // Default value set to true
