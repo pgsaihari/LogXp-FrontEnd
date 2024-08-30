@@ -1,66 +1,105 @@
 <div class="card">
     <div class="p-d-flex p-ai-center p-jc-between">
-        <p-table [value]="traineelogs" [scrollable]="true" scrollHeight="350px" [responsiveLayout]="'scroll'" class="name-log-status">
-            <ng-template pTemplate="header">
-                <tr class="table-heading-fields">
-                    <th>DATE</th>
-                    <th>LOG DETAILS</th>
-                    <th>STATUS</th>
-                </tr>
-            </ng-template>
+      <p-table
+        [value]="traineelogs"
+        [scrollable]="true"
+        scrollHeight="350px"
+        [responsiveLayout]="'scroll'"
+        class="name-log-status"
+      >
+        <ng-template pTemplate="header">
+          <tr class="table-heading-fields">
+            <th>DATE</th>
+            <th>LOG DETAILS</th>
+            <th>STATUS</th>
+          </tr>
+        </ng-template>
   
-            <ng-template pTemplate="body" let-traineelog>
-                <tr class="check-and-status">
-                    <td>{{ traineelog.date | date: 'dd-MM-yyyy'}}</td>
-                    <td>
-                        <span id="check-in">check-in:</span><br>{{ traineelog.loginTime | date: 'hh:mm a' }} <br>
-                        <span id="check-out">check-out:</span><br>{{ traineelog.logoutTime | date: 'hh:mm a' }}<br>
-                    </td>
-                    <td>
-                        <span [ngClass]="getStatusClass(traineelog.status)" (click)="showDialog(traineelog)" class="trainee-status"><b>
-                            {{ traineelog.status }}
-                        </b></span>
-                    </td>
-                    </tr>
-            </ng-template>
-        </p-table>
+        <ng-template pTemplate="body" let-traineelog>
+          <tr class="check-and-status">
+            <td>{{ traineelog.date | date: 'dd-MM-yyyy' }}</td>
+            <td>
+              <span id="check-in">check-in:</span><br />{{ traineelog.loginTime
+              | date: 'hh:mm a' }} <br />
+              <span id="check-out">check-out:</span><br />{{ traineelog.logoutTime
+              | date: 'hh:mm a' }}<br />
+            </td>
+            <td>
+              <span
+                [ngClass]="getStatusClass(traineelog.status)"
+                (click)="showDialog(traineelog)"
+                class="trainee-status"
+              >
+                <b>{{ traineelog.status }}</b>
+                <!-- Add * if remarks exist -->
+                <span
+                *ngIf="traineelog.remark"
+                class="remark-asterisk"
+               
+              ><i class="fa-solid fa-circle-info"  pTooltip="{{ traineelog.remark }}"
+              tooltipPosition="top"></i></span>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
   </div>
   
+  <p-dialog
+    [(visible)]="visible"
+    [style]="{ width: '450px', height: '70vh' }"
+    header="Edit Profile"
+    [modal]="true"
+    styleClass="p-fluid trainee-dialog"
+    [contentStyle]="{
+      'max-height': 'calc(100% - 50px)',
+      'overflow': 'auto'
+    }"
+  >
+    <!-- Adjust max-height to allow proper scroll -->
   
-  <p-dialog 
-      [(visible)]="visible" 
-      [style]="{ width: '450px', height: '70vh' }" 
-      header="Edit Profile" 
-      [modal]="true" 
-      styleClass="p-fluid trainee-dialog"
-      [contentStyle]="{ 'max-height': 'calc(100% - 50px)', 'overflow': 'auto' }"> <!-- Adjust max-height to allow proper scroll -->
+    <ng-template pTemplate="header">
+      <div class="header-container">
+        <span>Update your status and remarks</span>
+      </div>
+    </ng-template>
   
-      <ng-template pTemplate="header">
-          <div class="header-container">
-              <span>Update your status and remarks</span> 
-          </div>
-      </ng-template>
+    <ng-template pTemplate="content">
+      <div class="field">
+        <label for="status" class="font-semibold w-6rem">Status:</label>
+        <p-dropdown
+          id="status"
+          [options]="statusOptions"
+          class="flex-auto"
+          [(ngModel)]="currentTraineeLog.status"
+          autocomplete="off"
+          required
+        ></p-dropdown>
+      </div>
+      <div class="field">
+        <label for="remarks" class="font-semibold w-6rem">Remarks:</label>
+        <input
+          id="remarks"
+          type="text"
+          class="flex-auto"
+          [(ngModel)]="currentTraineeLog.remark"
+          autocomplete="off"
+          pInputText
+        />
+      </div>
+    </ng-template>
   
-      <ng-template pTemplate="content">
-          <div class="field">
-              <label for="status" class="font-semibold w-6rem">Status:</label>
-              <p-dropdown id="status" [options]="statusOptions" class="flex-auto" [(ngModel)]="currentTraineeLog.status" autocomplete="off" required></p-dropdown>
-              <!-- <small class="p-error" *ngIf="submitted && this.status">
-                  Status is required.
-              </small> -->
-          </div>
-          <div class="field">
-              <label for="remarks" class="font-semibold w-6rem">Remarks:</label>
-              <input id="remarks" type="text" class="flex-auto" [(ngModel)]="currentTraineeLog.remark" autocomplete="off" pInputText >
-          </div>
-      </ng-template>
-  
-      <ng-template pTemplate="footer">
-         
-      
-      <p-button 
-          label="Save" (onClick)="onSubmit()" type="button"
-          severity="success" [text]="true" (onClick)="visible = false" [disabled]="!isFormValid" styleClass="p-button-success"/>
-      </ng-template>
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Save"
+        (onClick)="onSubmit()"
+        type="button"
+        severity="success"
+        [text]="true"
+        [disabled]="!isFormValid"
+        styleClass="p-button-success"
+      />
+    </ng-template>
   </p-dialog>
+  

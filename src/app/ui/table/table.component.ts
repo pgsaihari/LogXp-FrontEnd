@@ -17,6 +17,8 @@ import { DatePipe } from '@angular/common';
 import { SideUserProfileComponent } from '../../Features/side-user-profile/side-user-profile.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
+import { SpinnerComponent } from "../spinner/spinner.component";
+import { SpinnerService } from '../../core/services/spinner-control.service';
 
 @Component({
   selector: 'app-table',
@@ -34,9 +36,9 @@ import { MatListModule, MatSelectionListChange } from '@angular/material/list';
     NgFor,
     SideUserProfileComponent,
     OverlayPanelModule,
-    DatePipe
-
-  ],
+    DatePipe,
+    SpinnerComponent
+],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
 })
@@ -48,7 +50,8 @@ export class TableComponent implements OnInit {
   searchQuery: string = '';
 
   constructor(
-    private traineeAttendancelogService: TraineeAttendancelogService
+    private traineeAttendancelogService: TraineeAttendancelogService,
+    public spinnerService:SpinnerService
   ) {}
 
   selectedItem: any;
