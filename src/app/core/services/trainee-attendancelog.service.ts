@@ -86,8 +86,8 @@ export class TraineeAttendancelogService {
   }
 
   // Function to get absences and leave count of a trainee
-  getAbsenceOfTrainee(traineeCode: string): Observable<AbsenceAndLate> {
-    return this.http.get<AbsenceAndLate>(`${this.apiUrl}/GetAbsenceOfTrainee?traineeCode=${traineeCode}`);
+  GetAttendanceCountOfTrainee(traineeCode: string): Observable<AbsenceAndLate> {
+    return this.http.get<AbsenceAndLate>(`${this.apiUrl}/GetAttendanceCountOfTrainee?traineeCode=${traineeCode}`);
   }
 
    /**

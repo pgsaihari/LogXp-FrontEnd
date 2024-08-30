@@ -18,6 +18,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CurrentTraineeLog } from '../../core/interfaces/side-profile';
 import { ChangeDetectorRef } from '@angular/core';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-singleuser-table',
@@ -35,6 +36,7 @@ import { ChangeDetectorRef } from '@angular/core';
     DialogModule,
     ToastModule,
     RippleModule,
+    TooltipModule
   ],
   templateUrl: './single-user-table.component.html',
   styleUrls: ['./single-user-table.component.css'],
