@@ -30,9 +30,7 @@ export class EditCallenderPageComponent implements OnInit {
   ngOnInit() {
       this.items = [
           { label: 'Trainee Control', icon: 'pi pi-user-edit', command: () => this.onTraineeClick() },
-          { label: 'Calendar', icon: 'pi pi-calendar-plus', command: () => this.onCalendarClick() },
-          { label: 'Batch Control', icon: 'pi pi-users', command: () => this.onBatchClick() }
-          
+          { label: 'Calendar', icon: 'pi pi-calendar-plus', command: () => this.onCalendarClick() }          
       ];
       this.activeItem = this.items[0];
   }
@@ -41,21 +39,12 @@ export class EditCallenderPageComponent implements OnInit {
     console.log('Trainee tab clicked');
     this.holidayDiv = false;
     this.traineeDiv = true;
-    this.batchDiv = false;
   }
 
   onCalendarClick() {
     console.log('Calendar tab clicked');
     this.holidayDiv = true;
     this.traineeDiv = false;
-    this.batchDiv = false;
-  }
-
-  onBatchClick() {
-    console.log('Batch tab clicked');
-    this.holidayDiv = false;
-    this.traineeDiv = false;
-    this.batchDiv = true;
   }
 
   constructor(private messageService: MessageService) { }
