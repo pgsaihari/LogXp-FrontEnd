@@ -32,6 +32,7 @@
       <div *ngIf="traineeForm.controls['email'].invalid && traineeForm.controls['email'].touched">
         <small class="error" *ngIf="traineeForm.controls['email'].errors?.['required']">Email is required.</small>
         <small class="error" *ngIf="traineeForm.controls['email'].errors?.['email']">Please enter a valid email address.</small>
+        <small class="error" *ngIf="traineeForm.controls['email'].errors?.['domain']">Email must be from the domain  &#64;experionglobal.com.</small>
       </div>
     </div>
 

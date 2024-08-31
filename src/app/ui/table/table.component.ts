@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  AutoCompleteCompleteEvent,
+
   AutoCompleteModule,
 } from 'primeng/autocomplete';
 import * as XLSX from 'xlsx';
@@ -163,7 +163,7 @@ export class TableComponent implements OnInit {
         this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
 
       this.traineeAttendancelogService
-        .getFilteredTraineeAttendanceLogs('', selectedDateString, [])
+        .getFilteredTraineeAttendanceLogs([], selectedDateString, [])
         .subscribe({
           next: (response: {
             logs: TraineeAttendanceLogs[];
@@ -205,38 +205,32 @@ export class TableComponent implements OnInit {
   }
 
   applyFilters() {
-    const dateFilter = this.selectedDate
-      ? this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')
-      : '';
+    const dateFilter: string = this.selectedDate
+        ? this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') ?? ''
+        : '';
 
-    // Apply status and batch filters
-    const filteredByStatusAndBatches = this.originalTraineeLogs.filter(
-      (trainee) => {
-        const statusMatch =
-          this.selectedStatuses.length > 0
-            ? this.selectedStatuses.includes(trainee.status)
-            : true;
-        const batchMatch =
-          this.selectedBatches.length > 0
-            ? this.selectedBatches.includes(trainee.batch)
-            : true;
-        return statusMatch && batchMatch;
-      }
-    );
+    // Call the service with multiple filters
+    this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs(
+        this.selectedStatuses,
+        dateFilter,
+        this.selectedBatches
+    ).subscribe({
+        next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
+            if (response && Array.isArray(response.logs)) {
+                this.filteredTrainees = response.logs;
+            } else {
+                console.error('API did not return an array:', response);
+                this.filteredTrainees = [];
+            }
+        },
+        error: (error) => {
+            console.error('Error fetching filtered trainee logs:', error);
+            this.filteredTrainees = [];
+        }
+    });
+}
 
-    // Apply date filter to the already filtered data
-    if (dateFilter) {
-      this.filteredTrainees = filteredByStatusAndBatches.filter((trainee) => {
-        const traineeDate = this.datePipe.transform(
-          new Date(trainee.date),
-          'yyyy-MM-dd'
-        );
-        return traineeDate === dateFilter;
-      });
-    } else {
-      this.filteredTrainees = filteredByStatusAndBatches;
-    }
-  }
+
 
   downloadData() {
     // Convert the filteredTrainees data into a worksheet
@@ -298,7 +292,7 @@ export class TableComponent implements OnInit {
 
     if (hours === 0 && minutes === 0) {
       return 'time-on-leave'; // Red for 00:00
-    } else if (hours < 9 || (hours === 9 && minutes === 0)) {
+    } else if (hours < 9 || (hours === 9 && minutes < 6)) {
       return 'time-on-time'; // Green for less than 9:00
     } else {
       return 'time-late'; // Yellow for later than 9:00
