@@ -248,3 +248,10 @@
 .table-heading-fields{
     font-size: 12px;
 }
+
+.remark-asterisk {
+    color: red; /* or any color you prefer */
+    font-size: 0.75rem; /* Adjust the size as needed */
+    margin-left: 2px;
+  }
+  

@@ -1,7 +1,7 @@
 import { Component, Renderer2, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { NavbarComponent } from '../ui/navbar/navbar.component';
-import { TopHeaderComponent } from '../ui/top-header/top-header.component';
+import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { TopHeaderComponent } from '../shared/top-header/top-header.component';
 import { LoginComponent } from '../page/login/login.component';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -90,43 +90,43 @@ export class LayoutComponent implements OnInit, OnDestroy {
         )
         .subscribe();
 
-      /**
-       * Handle the redirect response to check for access tokens after login.
-       * If a valid access token is received, it is stored in local storage and used to call the backend service.
-       */
-      this.msalService.handleRedirectObservable().subscribe({
-        next: (response: AuthenticationResult) => {
-          if (response && response.accessToken) {
-            console.log('Login successful, Access Token:', response.accessToken);
+      // /**
+      //  * Handle the redirect response to check for access tokens after login.
+      //  * If a valid access token is received, it is stored in local storage and used to call the backend service.
+      //  */
+      // this.msalService.handleRedirectObservable().subscribe({
+      //   next: (response: AuthenticationResult) => {
+      //     if (response && response.accessToken) {
+      //       console.log('Login successful, Access Token:', response.accessToken);
       
-            // Store the access token in local storage
-            localStorage.setItem('msalKey', response.accessToken);
+      //       // Store the access token in local storage
+      //       localStorage.setItem('msalKey', response.accessToken);
       
-            // Call the AuthService to perform further actions (e.g., calling backend)
-            this.authService.getUserRole(response.accessToken).subscribe({
-              next: (userRoleData) => {
-                console.log('User Role Data:', userRoleData); // Ensure this contains role info
-                this.authService.setCurrentUser(userRoleData); // Set the current user
+      //       // Call the AuthService to perform further actions (e.g., calling backend)
+      //       this.authService.getUserRole(response.accessToken).subscribe({
+      //         next: (userRoleData) => {
+      //           console.log('User Role Data:', userRoleData); // Ensure this contains role info
+      //           this.authService.setCurrentUser(userRoleData); // Set the current user
                 
-                const user = this.authService.getCurrentUser();
-                if (user?.Role === 'trainee') {
-                  this.router.navigate([`/user-profile/${user.UserId}`]);
-                } else if (user?.Role === 'admin') {
-                  this.router.navigate(['/home']);
-                }
-              },
-              error: (error) => {
-                console.error('Error fetching user role:', error);
-              }
-            });
-          } else {
-            console.log('No access token found in the response');
-          }
-        },
-        error: (error) => {
-          console.error('Error during token processing:', error);
-        }
-      });
+      //           const user = this.authService.getCurrentUser();
+      //           if (user?.Role === 'trainee') {
+      //             this.router.navigate([`/user-profile/${user.UserId}`]);
+      //           } else if (user?.Role === 'admin') {
+      //             this.router.navigate(['/home']);
+      //           }
+      //         },
+      //         error: (error) => {
+      //           console.error('Error fetching user role:', error);
+      //         }
+      //       });
+      //     } else {
+      //       console.log('No access token found in the response');
+      //     }
+      //   },
+      //   error: (error) => {
+      //     console.error('Error during token processing:', error);
+      //   }
+      // });
 
       // Enable account storage events to listen for account changes
       this.msalService.instance.enableAccountStorageEvents();

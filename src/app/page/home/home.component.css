@@ -13,6 +13,19 @@ app-graph{
   width: 100%;
 }
   
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.8); /* Overlay background */
+  z-index: 9999; /* Ensures it's on top of other content */
+}
+
   /* .graph-container {
     display: flex;
     justify-content: center;

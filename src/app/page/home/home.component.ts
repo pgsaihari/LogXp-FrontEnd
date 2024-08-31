@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TopHeaderComponent } from '../../ui/top-header/top-header.component';
+import { TopHeaderComponent } from '../../shared/top-header/top-header.component';
 import { CurrentDateComponent } from '../../ui/current-date/current-date.component';
 import { GraphComponent } from "../../ui/graph/graph.component";
 import { WidgetCardsComponent } from '../../Features/widget-cards/widgetcards/widget-cards.component';
@@ -7,19 +7,23 @@ import { TableComponent } from "../../ui/table/table.component";
 import { CommonModule } from '@angular/common';
 import { WidgetTableComponent } from "../../ui/widget-table/widget-table.component";
 import { NgxSpinnerComponent } from 'ngx-spinner';
+import { SpinnerService } from '../../core/services/spinner-control.service';
+import { SpinnerComponent } from '../../ui/spinner/spinner.component';
 //import for the spinner , which runs by the interceptor
-
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgxSpinnerComponent,TopHeaderComponent, CurrentDateComponent, GraphComponent, WidgetCardsComponent, TableComponent, CommonModule, WidgetTableComponent],
+  imports: [TopHeaderComponent, CurrentDateComponent, GraphComponent, WidgetCardsComponent, TableComponent, CommonModule, WidgetTableComponent,SpinnerComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  tableHeader!: string
+  tableHeader!: string;
   toggleField: string = 'Check-Out'; // Initialize default value
   isVisible:boolean=false;
+  
+  constructor(public spinnerService:SpinnerService){}
+
   handleWidgetClick(dataReceived: {header: string }) {
     // Update visibility and tableHeader based on the widget clicked
     this.isVisible = true;
@@ -34,4 +38,4 @@ export class HomeComponent {
       this.toggleField = 'Monthly Leave Percentage';
     }
   }
-}  
+}
