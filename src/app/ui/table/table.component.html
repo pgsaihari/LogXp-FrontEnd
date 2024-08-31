@@ -173,3 +173,7 @@
   (closeProfile)="closeSideProfile()"
 ></app-side-user-profile>
 }
+
+<div *ngIf="spinnerService.isSpinnerVisible()" class="spinner-container">
+  <app-spinner></app-spinner>
+</div>

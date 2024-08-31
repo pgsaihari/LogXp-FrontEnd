@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TopHeaderComponent } from "../../ui/top-header/top-header.component";
+import { TopHeaderComponent } from "../../shared/top-header/top-header.component";
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { WidgetCardComponent } from "../../ui/widget-card/widget-card.component";
