@@ -16,7 +16,7 @@ import { CurrentDateComponent } from "../current-date/current-date.component";
   styleUrls: ['./widget-table.component.css']
 })
 export class WidgetTableComponent implements OnChanges {
-  @Input() tableHeader!: string; // Title of the table, determines the category like 'On Time', 'Late Arrivals', etc.
+  @Input() tableHeader: string = 'On Time'; // Title of the table, determines the category like 'On Time', 'Late Arrivals', etc.
   @Input() toggleField: string = 'Check-In'; // Column header that toggles based on the table category
 
   tableDate: Date = new Date(); // Date used for fetching logs
@@ -49,8 +49,8 @@ export class WidgetTableComponent implements OnChanges {
   
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['tableHeader']?.currentValue !== changes['tableHeader']?.previousValue) {
-      this.fetchAttendanceLogs(); // Fetch the logs directly if the header changes
+    if (changes['tableHeader']?.currentValue) {
+      this.fetchAttendanceLogs(); // Only fetch logs if the header is defined
     }
   }
 
@@ -58,6 +58,10 @@ export class WidgetTableComponent implements OnChanges {
    * Fetches attendance logs based on the selected date and table category.
    */
   fetchAttendanceLogs() {
+    if (!this.tableHeader) {
+      console.error('Unknown table header:', this.tableHeader);
+    }
+    
     this.widgetAttendance = []; // Clear previous data before fetching new logs
 
     // Extract date parts to pass to the attendanceService
