@@ -3,14 +3,17 @@
   color:var(--primary-color);
   }
   
-  .half-holiday {
-    
-    color: #ffc107;
-   
-  }
+.half-holiday {
+  
+  color: #ffc107;
+  
+}
   
   .sunday-holiday {
     color: var(--primary-color); /* Red color for Sundays */
+  }
+  .company-holiday{
+    color: var(--primary-color);
   }
   
   .holiday-dialog {

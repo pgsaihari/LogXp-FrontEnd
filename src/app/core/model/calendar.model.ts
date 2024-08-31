@@ -1,6 +1,6 @@
 export interface CalendarModel {
     
-    holidayDate:Date;
+    holidayDate:string;
     holidayName:string;
     holidayType:string;
     region:string;

@@ -15,4 +15,13 @@ export class CalendarServiceService {
     const url = `${this.apiUrl}/${year}`
     return this.http.get<CalendarModel[]>(url);
   }
+
+  addHoliday(holiday:CalendarModel):Observable<any>{
+    return this.http.post<any>(this.apiUrl, holiday);
+  }
+
+  removeHoliday(date : string):Observable<any>{
+    const url = `${this.apiUrl}/${date}`
+    return this.http.delete<any>(url);
+  }
 }
