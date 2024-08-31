@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
+import { CalendarServiceService } from '../../core/services/calendar-service.service';
+import { CalendarModel } from '../../core/model/calendar.model';
 
 @Component({
   selector: 'app-callender',
@@ -22,7 +24,17 @@ export class CallenderComponent {
   selectedDate: Date | null = null;
   holidays: { [key: string]: string } = {};
   isHoliday: boolean = false;
+  companyHolidays:CalendarModel[] = [];
+  holidayDates:Date[] = [];
 
+  /**
+   *
+   */
+  constructor(private api:CalendarServiceService) {}
+
+  ngOnInit(){
+    this.loadCompanyHoliday();
+  }
   /**
    * Handles the selection of a date on the calendar.
    * @param {any} event - The event triggered by date selection.
@@ -90,4 +102,22 @@ export class CallenderComponent {
     const dayOfWeek = new Date(date.year, date.month, date.day).getDay();
     return dayOfWeek === 0; // 0 represents Sunday
   }
+
+  loadCompanyHoliday(){
+    this.api.getHolidaysOfAYear(new Date().getFullYear())
+    .subscribe(data => {
+      this.companyHolidays = data;
+      this.companyHolidays.forEach((item) =>{
+        this.holidayDates.push(new Date(item.holidayDate));
+      });
+    }); 
+  }
+
+  isCompanyHoliday(date:any): boolean{
+    return this.holidayDates.some(holidayDate =>
+      holidayDate.getFullYear() === date.year &&
+      holidayDate.getMonth() === date.month &&
+      holidayDate.getDate() === date.day
+  )}
+
 }
