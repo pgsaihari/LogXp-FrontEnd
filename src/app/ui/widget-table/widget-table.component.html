@@ -2,7 +2,7 @@
     <div class="search-filter">
         <h2>{{tableHeader}}</h2>
         <p-calendar id="datepick" [(ngModel)]="tableDate" [maxDate]="maxDate" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
-            placeholder="{{tableDate}}" (onSelect)="dateChange()" />
+            placeholder="{{tableDate}}"/>
     </div>
     <div class="card table-container">
 
@@ -12,7 +12,7 @@
                     <th>ID</th>
                     <th>Trainee</th>
                     <th>ILP</th>
-                    <th [id]="toggleField">{{ toggleField }}</th>
+                    <th [id]="toggleField" pSortableColumn="true">{{ toggleField }}<p-sortIcon></p-sortIcon></th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-trainee>

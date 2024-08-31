@@ -6,11 +6,12 @@ import { DatePipe, NgIf } from '@angular/common';
 import { WidgetAttendance } from '../../core/interfaces/widget-attendance';
 import { catchError, map, Observable, of } from 'rxjs';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
+import { CurrentDateComponent } from "../current-date/current-date.component";
 
 @Component({
   selector: 'app-widget-table',
   standalone: true,
-  imports: [TableModule, CalendarModule, FormsModule, DatePipe, NgIf],
+  imports: [TableModule, CalendarModule, FormsModule, DatePipe, NgIf, CurrentDateComponent],
   templateUrl: './widget-table.component.html',
   styleUrls: ['./widget-table.component.css']
 })
@@ -20,37 +21,36 @@ export class WidgetTableComponent implements OnChanges {
 
   tableDate: Date = new Date(); // Date used for fetching logs
   maxDate: Date = new Date(); // Maximum selectable date, set from the latest log date
-  widgetAttendance: WidgetAttendance[] = []; // Holds attendance data fetched from the API
-  manualDateSelection = false; // Tracks if the date was manually selected
+  widgetAttendance: WidgetAttendance[] = []; // Holds attendance data fetched from the attendanceService
   showTableHeader = false; // Controls the visibility of the table header
 
   constructor( // Service for attendance-related operations
     private attendanceService: TraineeAttendancelogService // Service for fetching trainee attendance logs
-  ) {}
-
-  ngOnInit() {
-    // Fetch the latest available date on component initialization
-    this.attendanceService.getLatestDate().subscribe((response: { latestDate: string }) => {
-      if (response?.latestDate) {
-        this.maxDate = new Date(response.latestDate);
+  ) {
+    this.attendanceService.selectedDate$.subscribe(date => {
+      if (date) {
+        this.tableDate = date;
+        this.fetchAttendanceLogs(); // Fetch logs whenever the date changes
       }
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // React to changes in the table header (e.g., when switching between categories)
-    if (changes['tableHeader']?.currentValue !== changes['tableHeader']?.previousValue) {
-      if (!this.manualDateSelection) {
-        // If the date wasn't manually selected, use the latest date available
-        this.attendanceService.getLatestDate().subscribe((response: { latestDate: string }) => {
-          if (response?.latestDate) {
-            this.tableDate = new Date(response.latestDate);
-          }
-          this.fetchAttendanceLogs(); // Fetch the logs after setting the date
-        });
+  ngOnInit() {
+    // Subscribe to the selected date from the service
+    this.attendanceService.selectedDate$.subscribe((date) => {
+      if (date) {
+        this.tableDate = date;
       } else {
-        this.fetchAttendanceLogs(); // Fetch the logs directly if a manual date was selected
+        // If no date is selected, use the latestLogDate as the default
+        this.tableDate = this.attendanceService.getSelectedDate();
       }
+    });
+  }
+  
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['tableHeader']?.currentValue !== changes['tableHeader']?.previousValue) {
+      this.fetchAttendanceLogs(); // Fetch the logs directly if the header changes
     }
   }
 
@@ -60,15 +60,15 @@ export class WidgetTableComponent implements OnChanges {
   fetchAttendanceLogs() {
     this.widgetAttendance = []; // Clear previous data before fetching new logs
 
-    // Extract date parts to pass to the API
+    // Extract date parts to pass to the attendanceService
     const day = this.tableDate.getDate();
     const month = this.tableDate.getMonth() + 1;
     const year = this.tableDate.getFullYear();
 
-    this.attendanceService.setUpdatedData(day, month, year )
+    this.attendanceService.updateSelectedDate({ day: day, month: month, year: year })
 
-    // Map table headers to their corresponding API calls
-    // Map table headers to their corresponding API calls
+    // Map table headers to their corresponding attendanceService calls
+    // Map table headers to their corresponding attendanceService calls
     const dataFetchMap: Record<string, () => Observable<WidgetAttendance[]>> = {
       'On Time': () => this.attendanceService.onTimeLogs(day, month, year).pipe(map(response => response.earlyArrivals)),
       'Late Arrivals': () => this.attendanceService.lateArrivalLogs(day, month, year).pipe(map(response => response.lateArrivals)),
@@ -76,11 +76,11 @@ export class WidgetTableComponent implements OnChanges {
       'Early Departures': () => this.attendanceService.earlyDeparturesLogs(day, month, year).pipe(map(response => response.earlyDepartures))
     };
 
-    // Get the appropriate API call based on the table header
+    // Get the appropriate attendanceService call based on the table header
     const dataFetchFn = dataFetchMap[this.tableHeader];
 
     if (dataFetchFn) {
-      // Execute the API call and handle the response
+      // Execute the attendanceService call and handle the response
       dataFetchFn()
         .pipe(
           catchError(error => {
@@ -98,13 +98,7 @@ export class WidgetTableComponent implements OnChanges {
   }
 
 
-  /**
-   * Handles date changes from the date picker.
-   */
-  dateChange() {
-    this.manualDateSelection = true; // Mark date selection as manual
-    this.fetchAttendanceLogs(); // Fetch logs for the selected date
-  }
+
 
   /**
    * Determines which time to display based on the table category.

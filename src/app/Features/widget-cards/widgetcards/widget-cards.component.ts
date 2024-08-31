@@ -35,10 +35,16 @@ import { TraineeAttendancelogService } from '../../../core/services/trainee-atte
       private traineeAttendance : TraineeAttendancelogService
     ) {
       // Subscribe to the updated date observable
-      this.dateSubscription = this.traineeAttendance.getUpdatedData().subscribe(date => {
-        this.selectedDate = date;
-        console.log(this.selectedDate)
-        this.fetchCounts(); // Ensure fetchCounts is called with the updated date
+      this.dateSubscription = this.traineeAttendance.selectedDate$.subscribe(date => {
+        if (date) {
+          this.selectedDate = {
+            day: date.getDate(),
+            month: date.getMonth() + 1,
+            year: date.getFullYear(),
+          };
+          console.log(this.selectedDate);
+          this.fetchCounts(); // Ensure fetchCounts is called with the updated date
+        }
       });
     }
 
