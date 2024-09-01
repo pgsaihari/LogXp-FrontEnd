@@ -9,16 +9,15 @@
   
   <ng-container *ngIf="holidayDiv">
     <div  class="holidayContainer">
-      
       <div class="calendar-container">
         <div class="calendar-left">
           <p class="section-heading">Edit Holiday Calendar</p>
-          <app-callender></app-callender>
+          <app-callender [companyHolidays] = "holidays"></app-callender>
         </div>
         <div class="futureHolidays">
           <p class="section-heading">Holidays</p>
           <div class="scrollable-container">
-            <p-table [value]="holidays" scrollable="true" [scrollHeight]="'400px'">
+            <p-table [value]="holidays" scrollable="true" [scrollHeight]="'400px'" id="holidayTable">
               <ng-template pTemplate="header">
                 <tr>
                   <th>Date</th>
@@ -43,18 +42,6 @@
             </p-table>
           </div>
         </div>
-        <!-- <div class="buttons-section">
-          <div class="card flex justify-content-center">
-            <p-card header="Holiday Summary" class="holiday-summary-card">
-              <p class="m-0 holiday-summary">
-                Total full holidays:  {{ totalFullHolidays }}
-              </p>
-              <p class="m-0 holiday-summary">
-                Total half holidays:  {{ totalHalfHolidays }}
-              </p>
-            </p-card>
-          </div>
-        </div>       -->
       </div>
     </div>
     

@@ -1,5 +1,5 @@
 import { CommonModule, NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -18,12 +18,12 @@ import { CalendarModel } from '../../core/model/calendar.model';
  * Component responsible for managing a calendar with holiday settings.
  */
 export class CallenderComponent {
-
+  @Input() companyHolidays:CalendarModel[] = [];
   date: Date[] | undefined;
   displayHolidayDialog: boolean = false;
   selectedDate!: Date;
   isHoliday: boolean = false;
-  companyHolidays:CalendarModel[] = [];
+  // companyHolidays:CalendarModel[] = [];
   halfHolidayDates:Date[] = [];
   fullHolidayDates:Date[] = [];
   today: Date = new Date();
@@ -33,7 +33,15 @@ export class CallenderComponent {
   constructor(private api:CalendarServiceService) {}
 
   ngOnInit(){
-    this.loadCompanyHoliday();
+    this.companyHolidays.forEach((item) =>{
+      if(item.holidayType == "full_day"){
+        this.fullHolidayDates.push(new Date(item.holidayDate));
+      }
+      else{
+        this.halfHolidayDates.push(new Date(item.holidayDate));
+      }
+    })
+    // this.loadCompanyHoliday();
   }
   /**
    * Handles the selection of a date on the calendar.
@@ -114,20 +122,20 @@ export class CallenderComponent {
     return dayOfWeek === 0; // 0 represents Sunday
   }
 
-  loadCompanyHoliday(){
-    this.api.getHolidaysOfAYear(new Date().getFullYear())
-    .subscribe(data => {
-      this.companyHolidays = data;
-      this.companyHolidays.forEach((item) =>{
-        if(item.holidayType == "full_day"){
-          this.fullHolidayDates.push(new Date(item.holidayDate));
-        }
-        else{
-          this.halfHolidayDates.push(new Date(item.holidayDate));
-        }
-      });
-    }); 
-  }
+  // loadCompanyHoliday(){
+  //   this.api.getHolidaysOfAYear(new Date().getFullYear())
+  //   .subscribe(data => {
+  //     this.companyHolidays = data;
+  //     this.companyHolidays.forEach((item) =>{
+  //       if(item.holidayType == "full_day"){
+  //         this.fullHolidayDates.push(new Date(item.holidayDate));
+  //       }
+  //       else{
+  //         this.halfHolidayDates.push(new Date(item.holidayDate));
+  //       }
+  //     });
+  //   }); 
+  // }
 
   areDatesEqual(d1: Date, d2: Date): boolean {
     return (
