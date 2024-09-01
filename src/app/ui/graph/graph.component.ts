@@ -84,7 +84,8 @@ export class GraphComponent  {
       let total:any = item.totalEmployees;
       let absent:any = item.absentees;
       let percentage:number = ((total - absent)/total) * 100;
-      result.push(Math.round(percentage * Math.pow(10, 2)) / Math.pow(10, 2));
+      // result.push(Math.round(percentage * Math.pow(10, 2)) / Math.pow(10, 2));
+      result.push(total-absent)
     });
     return result
   }
@@ -98,7 +99,8 @@ export class GraphComponent  {
       let total:any = item.totalEmployees;
       let lateArrivals:any = item.lateArrivals;
       let percentage:number = ((lateArrivals)/total) * 100;
-      result.push(Math.round(percentage * Math.pow(10, 2)) / Math.pow(10, 2));
+      // result.push(Math.round(percentage * Math.pow(10, 2)) / Math.pow(10, 2));
+      result.push(lateArrivals)
     });
     return result
   }
