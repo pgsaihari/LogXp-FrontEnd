@@ -69,7 +69,8 @@ export class TraineeAttendancelogService {
    */
    getFilteredTraineeAttendanceLogs(
     statuses: string[],
-    date: string,
+    startDate: string | null,
+    endDate: string | null,
     batches: string[]
 ): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
     let url = `https://localhost:7074/api/LogXP/traineeAttendanceLogs/filterLogs?`;
@@ -81,9 +82,11 @@ export class TraineeAttendancelogService {
         });
     }
 
-    // Handle date
-    if (date) {
-        url += `date=${encodeURIComponent(date)}&`;
+    // Handle start date and end date
+    if (startDate && endDate) {
+        url += `startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&`;
+    } else if (startDate) {
+        url += `date=${encodeURIComponent(startDate)}&`; // Fallback for single date
     }
 
     // Handle multiple batches
