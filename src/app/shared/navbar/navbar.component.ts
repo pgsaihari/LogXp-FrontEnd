@@ -13,30 +13,18 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class NavbarComponent implements OnInit {
   activeIndex = 0; // Set the default active index
-  role: string = ''; // Role variable
+  role: string | null = ''; // Role variable
   currentUrl:string = '';
   
   constructor(
     // @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
-    private authService: MsalService,
-    private msalBroadcastService: MsalBroadcastService,
-    private router: Router,
-    public userService:AuthService
+    
+    public authService:AuthService
   ) {}
 
   ngOnInit() {
     
-    const user = "admin"; // Just for testing
-    if (user) {
-      this.role = user;
-      console.log(user);
-    }
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.updateNavbar(event.urlAfterRedirects);
-      } 
-    });
-    this.updateNavbar(this.router.url);
+   this.role=this.authService.getCurrentUserRole()
   }
 
   setActive(index: number) {

@@ -6,7 +6,7 @@
 
   <ul>
     <li
-      *ngIf="role === 'admin'"
+      *ngIf="role === 'admin' "
       [routerLink]="['/home']"
       [class.active]="activeIndex === 0"
       (click)="setActive(0)"
@@ -22,16 +22,6 @@
       pTooltip="Trainee Report"
     >
     <i class="fa-solid fa-clipboard"></i>
-    </li>
-    <li
-      *ngIf="role === 'trainee'"
-      [routerLink]="['/user-profile/1']"
-      [class.active]="activeIndex === 1"
-      (click)="setActive(1)"
-
-    >
-      <i class="fa-solid fa-user"></i>
-    </li>
     <li
       *ngIf="role === 'admin'"
       [routerLink]="['/add-trainee']"
