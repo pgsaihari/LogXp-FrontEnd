@@ -12,7 +12,7 @@
       <div class="calendar-container">
         <div class="calendar-left">
           <p class="section-heading">Edit Holiday Calendar</p>
-          <app-callender [companyHolidays] = "holidays"></app-callender>
+          <app-callender [companyHolidays] = "holidays" (holidayToEmit)="receivedHoliday($event)" (DeleteHolidaysToEmit)="deleteReceivedHoliday($event)"></app-callender>
         </div>
         <div class="futureHolidays">
           <p class="section-heading">Holidays</p>
@@ -26,7 +26,10 @@
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-item>
-                <tr>
+                <tr [ngClass]="{
+                  'highlight-row': item.holidayName === 'Added Holiday' && item.holidayType === 'full_day',
+                  'highlight-row-half': item.holidayName === 'Added Holiday' && item.holidayType === 'half_day'
+                }">
                   <td>{{ item.holidayDate | date: 'mediumDate' }}</td>
                   <td>{{ item.holidayName }}</td>
                   <td>

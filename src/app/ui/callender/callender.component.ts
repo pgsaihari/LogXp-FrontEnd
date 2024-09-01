@@ -1,5 +1,5 @@
 import { CommonModule, NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -19,6 +19,9 @@ import { CalendarModel } from '../../core/model/calendar.model';
  */
 export class CallenderComponent {
   @Input() companyHolidays:CalendarModel[] = [];
+  @Output() holidayToEmit = new EventEmitter<CalendarModel>();
+  @Output() DeleteHolidaysToEmit = new EventEmitter<Date>();
+
   date: Date[] | undefined;
   displayHolidayDialog: boolean = false;
   selectedDate!: Date;
@@ -27,9 +30,7 @@ export class CallenderComponent {
   halfHolidayDates:Date[] = [];
   fullHolidayDates:Date[] = [];
   today: Date = new Date();
-  /**
-   *
-   */
+
   constructor(private api:CalendarServiceService) {}
 
   ngOnInit(){
@@ -88,6 +89,7 @@ export class CallenderComponent {
       region : "COC/TVM",
       remarks : "Added holiday"
     };
+    this.holidayToEmit.emit(newHoliday);
     this.api.addHoliday(newHoliday)
     .subscribe(data => {
       console.log(data);
@@ -107,6 +109,7 @@ export class CallenderComponent {
       this.fullHolidayDates = this.fullHolidayDates.filter(date => !this.areDatesEqual(date, this.selectedDate));
       this.halfHolidayDates = this.halfHolidayDates.filter(date => !this.areDatesEqual(date, this.selectedDate));
     }
+    this.DeleteHolidaysToEmit.emit(this.selectedDate);
     this.displayHolidayDialog = false;
   }
 

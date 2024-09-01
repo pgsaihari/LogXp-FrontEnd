@@ -28,6 +28,7 @@ export class EditCallenderPageComponent implements OnInit {
   holidayDiv = false;
   batchDiv = false;
   holidays: CalendarModel[] = [];
+  receivedHolidayToAdd!: CalendarModel;
 
   totalFullHolidays: number = 0;
   totalHalfHolidays: number = 0;
@@ -88,10 +89,26 @@ export class EditCallenderPageComponent implements OnInit {
     this.api.getHolidaysOfAYear(new Date().getFullYear())
     .subscribe(data => {
       this.holidays = data;
-      // this.holidays.forEach((item) =>{
-
-      // });
     }); 
+  }
+
+  receivedHoliday(received: CalendarModel) {
+    this.holidays.push(received)
+    this.holidays.sort((a, b) => {
+      return new Date(a.holidayDate).getTime() - new Date(b.holidayDate).getTime();
+    });
+  }
+
+  deleteReceivedHoliday(received:Date){
+    this.holidays = this.holidays.filter(date => !this.areDatesEqual(new Date(date.holidayDate), received));
+  }
+
+  areDatesEqual(d1: Date, d2: Date): boolean {
+    return (
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+    );
   }
   
 }
