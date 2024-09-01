@@ -8,11 +8,15 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { MenuItem } from 'primeng/api';
 import { RippleModule } from 'primeng/ripple';
 import { MessageService } from 'primeng/api';
+import { CalendarModel } from '../../core/model/calendar.model';
+import { CalendarServiceService } from '../../core/services/calendar-service.service';
+import { TableModule } from 'primeng/table'; 
+
 
 @Component({
   selector: 'app-edit-callender-page',
   standalone: true,
-  imports: [CommonModule, CallenderComponent, ButtonModule, CardModule, UserTableComponent, TabMenuModule, RippleModule],
+  imports: [TableModule,CommonModule, CallenderComponent, ButtonModule, CardModule, UserTableComponent, TabMenuModule, RippleModule],
   providers: [MessageService],
   templateUrl: './edit-callender-page.component.html',
   styleUrl: './edit-callender-page.component.css'
@@ -23,10 +27,13 @@ export class EditCallenderPageComponent implements OnInit {
   traineeDiv = true;
   holidayDiv = false;
   batchDiv = false;
+  holidays: CalendarModel[] = [];
 
   totalFullHolidays: number = 0;
   totalHalfHolidays: number = 0;
 
+  constructor(private messageService: MessageService, private api:CalendarServiceService) { }
+  
   ngOnInit() {
       this.items = [
           { label: 'Trainee Control', icon: 'pi pi-user-edit', command: () => this.onTraineeClick() },
@@ -35,6 +42,7 @@ export class EditCallenderPageComponent implements OnInit {
           
       ];
       this.activeItem = this.items[0];
+      this.loadCompanyHoliday();
   }
 
   onTraineeClick() {
@@ -58,7 +66,7 @@ export class EditCallenderPageComponent implements OnInit {
     this.batchDiv = true;
   }
 
-  constructor(private messageService: MessageService) { }
+
 
   downloadAttendanceReport() {
 
@@ -74,6 +82,16 @@ export class EditCallenderPageComponent implements OnInit {
       a.click();  // Trigger the download
       window.URL.revokeObjectURL(url);  // Clean up
       this.messageService.add({ severity: 'success', summary: 'Report Downloaded', detail: 'Attendance report has been downloaded successfully.' });  // Show a success message using MessageService
+  }
+
+  loadCompanyHoliday(){
+    this.api.getHolidaysOfAYear(new Date().getFullYear())
+    .subscribe(data => {
+      this.holidays = data;
+      // this.holidays.forEach((item) =>{
+
+      // });
+    }); 
   }
   
 }
