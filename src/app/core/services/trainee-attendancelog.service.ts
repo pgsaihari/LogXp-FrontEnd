@@ -23,6 +23,9 @@ export class TraineeAttendancelogService {
     year: new Date().getFullYear()
   });
 
+  private selectedDateSource = new BehaviorSubject<Date | null>(null);
+  selectedDate$ = this.selectedDateSource.asObservable();
+
   constructor(private http: HttpClient) { }
 
   /**
@@ -69,7 +72,8 @@ export class TraineeAttendancelogService {
    */
    getFilteredTraineeAttendanceLogs(
     statuses: string[],
-    date: string,
+    startDate: string | null,
+    endDate: string | null,
     batches: string[]
 ): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
     let url = `https://localhost:7074/api/LogXP/traineeAttendanceLogs/filterLogs?`;
@@ -81,9 +85,11 @@ export class TraineeAttendancelogService {
         });
     }
 
-    // Handle date
-    if (date) {
-        url += `date=${encodeURIComponent(date)}&`;
+    // Handle start date and end date
+    if (startDate && endDate) {
+        url += `startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&`;
+    } else if (startDate) {
+        url += `date=${encodeURIComponent(startDate)}&`; // Fallback for single date
     }
 
     // Handle multiple batches
@@ -178,13 +184,16 @@ export class TraineeAttendancelogService {
     return this.http.get<UserWidgetSummary>(url)
   }
 
-  // Method to set updated date
-  setUpdatedData(day: number, month: number, year: number) {
-    this.selectedDateSubject.next({ day, month, year });
+  // Function to retrieve the latest selected date
+  getSelectedDate(): Date {
+    return this.selectedDateSource.value || new Date();
+}
+
+  updateSelectedDate(date: { day: number, month: number, year: number }) {
+    this.selectedDateSubject.next(date);
   }
 
-  // Observable to subscribe to the selected date changes
-  getUpdatedData(): Observable<{ day: number, month: number, year: number }> {
-    return this.selectedDateSubject.asObservable();
+  setSelectedDate(date: Date) {
+    this.selectedDateSource.next(date);
   }
 }  

@@ -250,7 +250,7 @@
 }
 
 .remark-asterisk {
-    color: red; /* or any color you prefer */
+    color: rgb(113, 74, 74); /* or any color you prefer */
     font-size: 0.75rem; /* Adjust the size as needed */
     margin-left: 2px;
   }

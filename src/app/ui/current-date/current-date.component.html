@@ -2,27 +2,26 @@
     <div class="card flex justify-content-center">
         <p-card styleClass="p-card">
             <div class="card-content">
-              <div class="time">
-                <div class="logo-time">
-                  <i [ngClass]="timeIcon" style="color: red;"></i>
-                  <span>{{ currentTime | date:'h:mm:ss a' }}</span>
-                </div>
+              <div class="date-container">
                 <div class="realtime-insight">
-                  Latest data pulled on:
+                  Last Sync Date :
+                </div>
+                <div class="greeting today">
+                  <span>{{ latestLogDate | date:'d MMM yyyy' }}</span>
                 </div>
               </div>
-              <div class="date">
-                <div class="today">
-                  <span>{{ latestLogDate | date:'d MMMM yyyy' }}</span>
-                </div>
-                <div class="greeting poppins-black" >
-                  Good {{timeOfDay}}, Admin!
-                </div>
+              <div class = "filter-group">
+                <button pButton label="Batch" icon="pi pi-filter" iconPos="right" class="custom-button"></button>
+                <button pButton label="Date" icon="pi pi-calendar" iconPos="right" class="custom-button" (click)="toggleCalendar()"></button>
               </div>
-              
+            <!-- <p-calendar *ngIf="showCalendar" [(ngModel)]="selectedDate" (onSelect)="onDateSelect($event)" [showButtonBar]="true" [inline]="true"></p-calendar> -->
             </div>
         </p-card>
     </div>
+        <!-- Calendar Popup -->
+        <div *ngIf="showCalendar" class="calendar-popup">
+          <p-calendar [(ngModel)]="selectedDate" [maxDate]="maxDate" (onSelect)="onDateSelect($event)" [showButtonBar]="false" [inline]="true"></p-calendar>
+      </div>
 </div>
 
 
