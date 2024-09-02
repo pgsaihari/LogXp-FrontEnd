@@ -7,6 +7,7 @@ import { CalendarModule, } from 'primeng/calendar';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { DailyAttendanceOfMonth } from '../../core/interfaces/daily-attendance-of-month';
 import { catchError, of } from 'rxjs';
+import { WidgetSummary } from '../../core/interfaces/widget-attendance';
 
  
 @Component({
@@ -32,11 +33,10 @@ export class GraphComponent  {
   dailyAttendanceData?:DailyAttendanceOfMonth[] | never[];
   isAttendanceLogEmpty?: boolean;
   noDataDate?:Date;
+  latestSummary!:WidgetSummary | never[];
 
   ngOnInit() {
-    this.graphDataMonth = new Date();
-    this.maxDate = this.graphDataMonth;
-    this.getAttendanceData(this.graphDataMonth.getMonth()+1, this.graphDataMonth.getFullYear());
+    this.getLatestDate();// function to get the lates date on which attendance logs are stored    
   }
   /**
    * function to get the data containing number of absenties and the total number of traineers of a month.
@@ -62,6 +62,25 @@ export class GraphComponent  {
       this.bargraphInit();
     });   
   }
+
+  getLatestDate(){
+      this.api.selectedDate$
+      .pipe(
+        catchError(error => {
+          this.error = error.message;
+          this.graphDataMonth = new Date();
+          this.maxDate = this.graphDataMonth;
+          this.getAttendanceData(this.graphDataMonth.getMonth()+1, this.graphDataMonth.getFullYear());
+          return of([]);
+        })
+      )
+      .subscribe(value => {
+        this.graphDataMonth = value as Date;
+        this.maxDate = this.graphDataMonth;
+        this.getAttendanceData(this.graphDataMonth.getMonth()+1, this.graphDataMonth.getFullYear());
+      });
+  }
+
   /**
    * uses the response from the api call to get the days in which attendance logs are preset to be used as the X-axis of the graph
    * @returns an array of string containing the X-axis of the graph 
