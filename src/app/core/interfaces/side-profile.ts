@@ -14,6 +14,8 @@ export interface CurrentTraineeLog {
 }
 
 export interface AbsenceAndLate{
-    numberOfDaysAbsent: number;
-    numberOfDaysLate: number;
+    absentDaysCount: number;
+    earlyDepartureDaysCount: number;
+    lateArrivalDaysCount: number;
+    onTimeDaysCount: number;
 }

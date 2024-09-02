@@ -18,11 +18,15 @@
         <ng-template pTemplate="body" let-traineelog>
           <tr class="check-and-status">
             <td>{{ traineelog.date | date: 'dd-MM-yyyy' }}</td>
-            <td>
-              <span id="check-in">check-in:</span><br />{{ traineelog.loginTime
-              | date: 'hh:mm a' }} <br />
-              <span id="check-out">check-out:</span><br />{{ traineelog.logoutTime
-              | date: 'hh:mm a' }}<br />
+            <td class="check-in-out">
+              <span id="check-in">check-in:</span>
+              <span>{{
+                traineelog.loginTime | date : "hh:mm a"
+              }}</span>
+              <span id="check-out">check-out:</span>
+              <span>{{
+                traineelog.logoutTime | date : "hh:mm a"
+              }}<br /></span>
             </td>
             <td>
               <span
@@ -48,7 +52,7 @@
   
   <p-dialog
     [(visible)]="visible"
-    [style]="{ width: '450px', height: '70vh' }"
+    [style]="{ width: '450px', height: '60vh' }"
     header="Edit Profile"
     [modal]="true"
     styleClass="p-fluid trainee-dialog"
@@ -99,6 +103,7 @@
         [text]="true"
         [disabled]="!isFormValid"
         styleClass="p-button-success"
+        class="save-button"
       />
     </ng-template>
   </p-dialog>

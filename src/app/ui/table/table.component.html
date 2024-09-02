@@ -1,4 +1,4 @@
-<div class="contents">
+<div class="contents" (click)="handleTableClick($event)">
   <div class="container">
     <div class="filter-row">
       <h3 id="Heading">Attendance Overview</h3>
@@ -110,9 +110,9 @@
             <td>
               <strong>{{ trainee.employeeCode }}</strong>
             </td>
-            <td (click)="showSideProfile(trainee.employeeCode)">
+            <td>
               <strong
-                ><span class="trainee-name"
+                ><span class="trainee-name" (click)="showSideProfile(trainee.employeeCode, $event)"
                   ><u>{{ trainee.name }}</u></span
                 ></strong
               >
