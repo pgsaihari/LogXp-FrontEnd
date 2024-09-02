@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import {
 
   AutoCompleteModule,
@@ -53,7 +53,8 @@ export class TableComponent implements OnInit {
 
   constructor(
     private traineeAttendancelogService: TraineeAttendancelogService,
-    public spinnerService:SpinnerService
+    public spinnerService:SpinnerService,
+    private elementRef: ElementRef, private renderer: Renderer2
   ) {}
 
   selectedItem: any;
@@ -102,6 +103,16 @@ export class TableComponent implements OnInit {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getTraineeAttendanceLogs(); // Fetch data from the API
     this.getLatestDate();
+
+    this.renderer.listen('document', 'click', (event: Event) => {
+      // Check if the click is outside both the table component and the side profile
+      const isInsideTable = this.elementRef.nativeElement.contains(event.target);
+      const isInsideSideProfile = event.target instanceof HTMLElement && event.target.closest('app-side-user-profile');      
+
+      if (this.isSideProfileVisible && !isInsideTable && !isInsideSideProfile) {
+        this.closeSideProfile();
+      }
+    });
   }
 
   getTraineeAttendanceLogs() {
@@ -335,12 +346,28 @@ export class TableComponent implements OnInit {
     return `${hours}:${minutes}`;
   }
 
-  showSideProfile(employeeCode: string): void {
+  showSideProfile(employeeCode: string, event: MouseEvent): void {
+
+    event.stopPropagation();
+
     this.selectedTraineeCode = employeeCode;
-    this.isSideProfileVisible = true; // Show the side profile when an employee is clicked
+    if (this.isSideProfileVisible == false){
+      this.isSideProfileVisible = true; // Show the side profile when an employee is clicked
+    }
+    else if(this.isSideProfileVisible == true){
+      this.isSideProfileVisible = false;
+      setTimeout(() => {
+        this.isSideProfileVisible = true; // Reopen the side profile for the new trainee
+      }, 10);
+    } 
   }
   closeSideProfile(): void {
     this.isSideProfileVisible = false; // Set to false when hiding the side profile
+  }
+
+  handleTableClick(event: MouseEvent): void {
+    event.stopPropagation();  // Prevent click event from closing the side profile immediately
+    this.closeSideProfile();
   }
 
   getDisplayTime(time: string, status: string): string {
