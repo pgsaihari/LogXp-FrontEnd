@@ -10,13 +10,15 @@ import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { TopHeaderComponent } from '../top-header/top-header.component';
+import { TopHeaderComponent } from '../../shared/top-header/top-header.component';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { DatePipe } from '@angular/common';
 import { SideUserProfileComponent } from '../../Features/side-user-profile/side-user-profile.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
+import { SpinnerComponent } from "../spinner/spinner.component";
+import { SpinnerService } from '../../core/services/spinner-control.service';
 
 @Component({
   selector: 'app-table',
@@ -34,9 +36,9 @@ import { MatListModule, MatSelectionListChange } from '@angular/material/list';
     NgFor,
     SideUserProfileComponent,
     OverlayPanelModule,
-    DatePipe
-
-  ],
+    DatePipe,
+    SpinnerComponent
+],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
 })
@@ -46,9 +48,12 @@ export class TableComponent implements OnInit {
   isSideProfileVisible?: boolean | undefined = false;
   selectedDate: Date | undefined;
   searchQuery: string = '';
+  selectedStartDate: any;
+  selectedEndDate: any;
 
   constructor(
-    private traineeAttendancelogService: TraineeAttendancelogService
+    private traineeAttendancelogService: TraineeAttendancelogService,
+    public spinnerService:SpinnerService
   ) {}
 
   selectedItem: any;
@@ -56,6 +61,7 @@ export class TableComponent implements OnInit {
   todayDate: string | undefined;
   selectedOptions: any[] = [];
   yesterday: Date = new Date();
+  selectedDateRange: Date[] = [];
 
   selectedStatuses: string[] = [];
 
@@ -158,18 +164,14 @@ export class TableComponent implements OnInit {
   }
 
   filterByDate(): void {
-    if (this.selectedDate) {
-      const selectedDateString =
-        this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
-
+    if (this.selectedDateRange && this.selectedDateRange.length === 2) {
+      const startDateString = this.datePipe.transform(this.selectedDateRange[0], 'yyyy-MM-dd') || '';
+      const endDateString = this.datePipe.transform(this.selectedDateRange[1], 'yyyy-MM-dd') || '';
+  
       this.traineeAttendancelogService
-        .getFilteredTraineeAttendanceLogs([], selectedDateString, [])
+        .getFilteredTraineeAttendanceLogs([], startDateString, endDateString,[])
         .subscribe({
-          next: (response: {
-            logs: TraineeAttendanceLogs[];
-            count: number;
-            message: string;
-          }) => {
+          next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
             if (response && Array.isArray(response.logs)) {
               this.filteredTrainees = response.logs;
             } else {
@@ -186,6 +188,7 @@ export class TableComponent implements OnInit {
       this.filteredTrainees = [...this.originalTraineeLogs]; // Reset to original data if no date is selected
     }
   }
+  
 
   applyStatusFilter(event: MatSelectionListChange) {
     // Update selected statuses based on the selected options
@@ -205,14 +208,19 @@ export class TableComponent implements OnInit {
   }
 
   applyFilters() {
-    const dateFilter: string = this.selectedDate
-        ? this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') ?? ''
+    const startDateFilter: string = this.selectedStartDate
+        ? this.datePipe.transform(this.selectedStartDate, 'yyyy-MM-dd') ?? ''
         : '';
 
-    // Call the service with multiple filters
+    const endDateFilter: string = this.selectedEndDate
+        ? this.datePipe.transform(this.selectedEndDate, 'yyyy-MM-dd') ?? ''
+        : '';
+
+    // Call the service with the date range and other filters
     this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs(
         this.selectedStatuses,
-        dateFilter,
+        startDateFilter,
+        endDateFilter,
         this.selectedBatches
     ).subscribe({
         next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {

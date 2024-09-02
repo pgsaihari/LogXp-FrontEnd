@@ -1,7 +1,7 @@
 import { Component, Renderer2, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { NavbarComponent } from './ui/navbar/navbar.component';
+import { NavbarComponent } from './shared/navbar/navbar.component';
 import { NgStyle } from '@angular/common';
 import { CurrentDateComponent } from "./ui/current-date/current-date.component";
 

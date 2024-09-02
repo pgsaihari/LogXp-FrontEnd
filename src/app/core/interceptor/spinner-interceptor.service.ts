@@ -1,24 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map, finalize } from 'rxjs/operators';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { SpinnerService } from '../services/spinner-control.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class SpinnerInterceptorService implements HttpInterceptor  {
+export class SpinnerInterceptorService implements HttpInterceptor {
 
-  constructor(private spinner: NgxSpinnerService) { }
+  constructor(private spinnerService: SpinnerService) { }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.spinner.show();
+    this.spinnerService.show();  // Show the spinner
 
     return next.handle(req).pipe(
       finalize(() => {
         setTimeout(() => {
-          this.spinner.hide();
-        }, 500);
+          this.spinnerService.hide();  // Hide the spinner after completion
+        }, 500);  // Delay for smooth spinner transition
       })
-    );  
+    );
   }
 }

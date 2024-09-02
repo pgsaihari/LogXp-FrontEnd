@@ -14,17 +14,19 @@
       </div>
       <div class="right-filters">
         <p-calendar
-          id="datepick"
-          [(ngModel)]="selectedDate"
-          [iconDisplay]="'input'"
-          [showIcon]="true"
-          [maxDate]="yesterday"
-          inputId="icondisplay"
-          placeholder="Select Date"
-          [dateFormat]="'dd-MM-yy'"
-          (onSelect)="filterByDate()"
-        >
-        </p-calendar>
+  id="datepick"
+  [(ngModel)]="selectedDateRange"
+  [iconDisplay]="'input'"
+  [showIcon]="true"
+  [maxDate]="yesterday"
+  inputId="icondisplay"
+  placeholder="Select Date Range"
+  selectionMode="range"
+  [dateFormat]="'dd-MM-yy'"
+  (onSelect)="filterByDate()"
+>
+</p-calendar>
+
 
         <button
           pButton
@@ -173,3 +175,7 @@
   (closeProfile)="closeSideProfile()"
 ></app-side-user-profile>
 }
+
+<div *ngIf="spinnerService.isSpinnerVisible()" class="spinner-container">
+  <app-spinner></app-spinner>
+</div>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TopHeaderComponent } from "../../ui/top-header/top-header.component";
+import { TopHeaderComponent } from "../../shared/top-header/top-header.component";
 import { FormComponent } from '../../ui/form/form.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';

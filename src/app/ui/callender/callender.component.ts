@@ -1,9 +1,11 @@
 import { CommonModule, NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
+import { CalendarServiceService } from '../../core/services/calendar-service.service';
+import { CalendarModel } from '../../core/model/calendar.model';
 
 @Component({
   selector: 'app-callender',
@@ -16,31 +18,53 @@ import { DialogModule } from 'primeng/dialog';
  * Component responsible for managing a calendar with holiday settings.
  */
 export class CallenderComponent {
+  @Input() companyHolidays:CalendarModel[] = [];
+  @Output() holidayToEmit = new EventEmitter<CalendarModel>();
+  @Output() DeleteHolidaysToEmit = new EventEmitter<Date>();
 
   date: Date[] | undefined;
   displayHolidayDialog: boolean = false;
-  selectedDate: Date | null = null;
-  holidays: { [key: string]: string } = {};
+  selectedDate!: Date;
   isHoliday: boolean = false;
+  // companyHolidays:CalendarModel[] = [];
+  halfHolidayDates:Date[] = [];
+  fullHolidayDates:Date[] = [];
+  today: Date = new Date();
 
+  constructor(private api:CalendarServiceService) {}
+
+  ngOnInit(){
+    this.companyHolidays.forEach((item) =>{
+      if(item.holidayType == "full_day"){
+        this.fullHolidayDates.push(new Date(item.holidayDate));
+      }
+      else{
+        this.halfHolidayDates.push(new Date(item.holidayDate));
+      }
+    })
+    // this.loadCompanyHoliday();
+  }
   /**
    * Handles the selection of a date on the calendar.
    * @param {any} event - The event triggered by date selection.
    */
   onDateSelect(event: any): void {
-    // Check if the event is already a Date object
-    if (event instanceof Date) {
-      this.selectedDate = event;
-    } else {
-      console.error('Invalid date selected:', event);
-      this.selectedDate = null;
-    }
+    const fullHolidayIndex = this.fullHolidayDates.findIndex(date => date.getDate() === event.getDate() &&
+    date.getMonth() === event.getMonth() &&
+    date.getFullYear() === event.getFullYear());
+    const halfHolidayIndex = this.halfHolidayDates.findIndex(date => date.getDate() === event.getDate() &&
+    date.getMonth() === event.getMonth() &&
+    date.getFullYear() === event.getFullYear());
 
-    if (this.selectedDate) {
-      const dateKey = this.selectedDate.toDateString();
-      this.isHoliday = !!this.holidays[dateKey]; // Check if the selected date is already a holiday
-      this.displayHolidayDialog = true;
+    this.selectedDate = event;
+    
+    if(fullHolidayIndex != -1 || halfHolidayIndex != -1){
+      this.isHoliday = true;
     }
+    else{
+      this.isHoliday = false;
+    }
+    this.displayHolidayDialog = true;
   }
 
   /**
@@ -48,11 +72,28 @@ export class CallenderComponent {
    * @param {string} type - The type of holiday (e.g., 'full' or 'half').
    */
   setHoliday(type: string): void {
-    if (this.selectedDate) {
-      const dateKey = this.selectedDate.toDateString();
-      this.holidays[dateKey] = type;
-    }
+    type == "full_day"? this.fullHolidayDates.push(new Date(this.selectedDate)):this.halfHolidayDates.push(new Date(this.selectedDate));
+    this.createHolidayAndPost(type);
     this.displayHolidayDialog = false;
+  }
+
+  createHolidayAndPost(type:string){
+    const localDate = new Date(this.selectedDate);
+    localDate.setHours(0, 0, 0, 0); 
+    const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000).toISOString();
+
+    const newHoliday:CalendarModel = {
+      holidayName : "Added Holiday",
+      holidayDate:utcDate,
+      holidayType : type,
+      region : "COC/TVM",
+      remarks : "Added holiday"
+    };
+    this.holidayToEmit.emit(newHoliday);
+    this.api.addHoliday(newHoliday)
+    .subscribe(data => {
+      console.log(data);
+    }); 
   }
 
   /**
@@ -60,26 +101,19 @@ export class CallenderComponent {
    */
   removeHoliday(): void {
     if (this.selectedDate) {
-      const dateKey = this.selectedDate.toDateString();
-      delete this.holidays[dateKey]; // Remove the holiday from the selected date
+      const dateString = `${this.selectedDate.getFullYear()}-${this.selectedDate.getMonth() + 1}-${this.selectedDate.getDate()}`;
+      this.api.removeHoliday(dateString)
+      .subscribe(data => {
+        console.log(data);
+      });
+      this.fullHolidayDates = this.fullHolidayDates.filter(date => !this.areDatesEqual(date, this.selectedDate));
+      this.halfHolidayDates = this.halfHolidayDates.filter(date => !this.areDatesEqual(date, this.selectedDate));
     }
+    this.DeleteHolidaysToEmit.emit(this.selectedDate);
     this.displayHolidayDialog = false;
   }
 
-  /**
-   * Returns a CSS class based on the holiday type for a given date.
-   * @param {any} date - The date object provided by the calendar component.
-   * @returns {string} - The CSS class for full or half holidays.
-   */
-  getHolidayClass(date: any): string {
-    const dateKey = new Date(date.year, date.month, date.day).toDateString();
-    if (this.holidays[dateKey] === 'full') {
-      return 'full-holiday';
-    } else if (this.holidays[dateKey] === 'half') {
-      return 'half-holiday';
-    }
-    return '';
-  }
+
 
   /**
    * Checks if the given date falls on a Sunday.
@@ -90,4 +124,42 @@ export class CallenderComponent {
     const dayOfWeek = new Date(date.year, date.month, date.day).getDay();
     return dayOfWeek === 0; // 0 represents Sunday
   }
+
+  // loadCompanyHoliday(){
+  //   this.api.getHolidaysOfAYear(new Date().getFullYear())
+  //   .subscribe(data => {
+  //     this.companyHolidays = data;
+  //     this.companyHolidays.forEach((item) =>{
+  //       if(item.holidayType == "full_day"){
+  //         this.fullHolidayDates.push(new Date(item.holidayDate));
+  //       }
+  //       else{
+  //         this.halfHolidayDates.push(new Date(item.holidayDate));
+  //       }
+  //     });
+  //   }); 
+  // }
+
+  areDatesEqual(d1: Date, d2: Date): boolean {
+    return (
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+    );
+  }
+
+  isCompanyHoliday(date:any): boolean{
+    return this.fullHolidayDates.some(holidayDate =>
+      holidayDate.getFullYear() === date.year &&
+      holidayDate.getMonth() === date.month &&
+      holidayDate.getDate() === date.day
+  )};
+
+  isCompanyHalfHoliday(date:any):boolean{
+    return this.halfHolidayDates.some(holidayDate =>
+      holidayDate.getFullYear() === date.year &&
+      holidayDate.getMonth() === date.month &&
+      holidayDate.getDate() === date.day
+  )};
+
 }

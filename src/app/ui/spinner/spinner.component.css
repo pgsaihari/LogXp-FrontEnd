@@ -1,0 +1,34 @@
+/* Wrapper for the spinner */
+.spinner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.8); /* Overlay background */
+    z-index: 9999; /* Ensures it's on top of other content */
+  }
+  
+  /* Spinner image fade effect */
+  .fade-spinner {
+    width: 150px; /* Adjust size as needed */
+    height: auto;
+    animation: fadeInOut 2s infinite; /* Fade in and out effect */
+  }
+  
+  /* Keyframes for fading in and out */
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  
