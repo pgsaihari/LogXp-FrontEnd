@@ -35,7 +35,7 @@
 
 .navbar i {
   font-size: 24px;
-  color: #c7c7c7;
+  color: var(--nav-bar-hover-color);
   transition: all 0.3s ease; /* Smooth transition for color and background */
 }
 
@@ -47,7 +47,7 @@
 }
 
 .navbar li:hover i {
-  color: var(--nav-bar-hover-color);
+  color: var(--secondary-color)
 }
 
 .logo-container {
