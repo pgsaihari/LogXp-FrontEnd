@@ -38,8 +38,8 @@ export class EditCallenderPageComponent implements OnInit {
   ngOnInit() {
       this.items = [
           { label: 'Trainee Control', icon: 'pi pi-user-edit', command: () => this.onTraineeClick() },
-          { label: 'Calendar', icon: 'pi pi-calendar-plus', command: () => this.onCalendarClick() },
-          { label: 'Batch Control', icon: 'pi pi-users', command: () => this.onBatchClick() }
+          { label: 'Calendar', icon: 'pi pi-calendar-plus', command: () => this.onCalendarClick() }
+          // { label: 'Batch Control', icon: 'pi pi-users', command: () => this.onBatchClick() }
           
       ];
       this.activeItem = this.items[0];
