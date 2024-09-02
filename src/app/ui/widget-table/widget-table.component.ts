@@ -23,6 +23,7 @@ export class WidgetTableComponent implements OnChanges {
   maxDate: Date = new Date(); // Maximum selectable date, set from the latest log date
   widgetAttendance: WidgetAttendance[] = []; // Holds attendance data fetched from the attendanceService
   showTableHeader = false; // Controls the visibility of the table header
+  sortableColumn: string = 'loginTime';
 
   constructor( // Service for attendance-related operations
     private attendanceService: TraineeAttendancelogService // Service for fetching trainee attendance logs
@@ -50,7 +51,17 @@ export class WidgetTableComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['tableHeader']?.currentValue) {
+      this.setSortableColumn();
       this.fetchAttendanceLogs(); // Only fetch logs if the header is defined
+    }
+  }
+
+  setSortableColumn() {
+    // Set sortable column based on table header
+    if (this.tableHeader === 'Early Departures') {
+      this.sortableColumn = 'logoutTime';
+    } else {
+      this.sortableColumn = 'loginTime';
     }
   }
 
@@ -72,12 +83,19 @@ export class WidgetTableComponent implements OnChanges {
     this.attendanceService.updateSelectedDate({ day: day, month: month, year: year })
 
     // Map table headers to their corresponding attendanceService calls
-    // Map table headers to their corresponding attendanceService calls
     const dataFetchMap: Record<string, () => Observable<WidgetAttendance[]>> = {
-      'On Time': () => this.attendanceService.onTimeLogs(day, month, year).pipe(map(response => response.earlyArrivals)),
-      'Late Arrivals': () => this.attendanceService.lateArrivalLogs(day, month, year).pipe(map(response => response.lateArrivals)),
-      'Absent': () => this.attendanceService.absenteeLogs(day, month, year).pipe(map(response => response.absentees)),
-      'Early Departures': () => this.attendanceService.earlyDeparturesLogs(day, month, year).pipe(map(response => response.earlyDepartures))
+      'On Time': () => this.attendanceService.onTimeLogs(day, month, year).pipe(
+        map(response => response.earlyArrivals.map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
+      ),
+      'Late Arrivals': () => this.attendanceService.lateArrivalLogs(day, month, year).pipe(
+        map(response => response.lateArrivals.map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
+      ),
+      'Absent': () => this.attendanceService.absenteeLogs(day, month, year).pipe(
+        map(response => response.absentees.map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
+      ),
+      'Early Departures': () => this.attendanceService.earlyDeparturesLogs(day, month, year).pipe(
+        map(response => response.earlyDepartures.map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
+      ),
     };
 
     // Get the appropriate attendanceService call based on the table header
@@ -100,25 +118,13 @@ export class WidgetTableComponent implements OnChanges {
       console.error('Unknown table header:', this.tableHeader);
     }
   }
-
-
-
+  
 
   /**
    * Determines which time to display based on the table category.
    */
-  getTime(trainee: WidgetAttendance): string {
-    // Simplifies time selection logic based on the category
-    switch (this.tableHeader) {
-      case 'On Time':
-      case 'Late Arrivals':
-        return trainee?.loginTime || '';
-      case 'Early Departures':
-        return trainee?.logoutTime || '';
-      case 'Absent':
-        return 'N/A';
-      default:
-        return '';
-    }
+  getTime(trainee: WidgetAttendance): Date | null {
+    const time = this.tableHeader === 'Early Departures' ? trainee.logoutTime : trainee.loginTime;
+    return time instanceof Date && !isNaN(time.getTime()) ? time : null;
   }
 }

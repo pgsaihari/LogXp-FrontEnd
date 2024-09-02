@@ -3,14 +3,15 @@
         <h2>{{tableHeader}}</h2>
     </div>
     <div class="card table-container">
-
         <p-table [value]="widgetAttendance" [scrollable]="true" scrollHeight="300px" [rows]="4" [sortMode]="'single'">
             <ng-template pTemplate="header">
                 <tr>
                     <th>ID</th>
                     <th>Trainee</th>
                     <th>ILP</th>
-                    <th [id]="toggleField" pSortableColumn="true">{{ toggleField }}<p-sortIcon></p-sortIcon></th>
+                    <th pSortableColumn="{{sortableColumn}}">
+                        {{ toggleField }}<p-sortIcon field="{{sortableColumn}}"></p-sortIcon>
+                    </th>     
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-trainee>
@@ -20,14 +21,13 @@
                     <td><strong>{{ trainee.name }}</strong></td>
                     <td><strong>{{ trainee.batch }}</strong></td>
                     <td>
-                        <strong *ngIf="getTime(trainee) !== 'N/A'; else notAvailable">
+                        <strong *ngIf="getTime(trainee); else notAvailable">
                             {{ getTime(trainee) | date:'hh:mm a' }}
                         </strong>
                         <ng-template #notAvailable>
-                            <strong>{{ getTime(trainee) }}</strong>
+                            <strong>N/A</strong>
                         </ng-template>
                     </td>
-
                 </tr>
             </ng-template>         
         </p-table>
