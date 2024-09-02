@@ -1,23 +1,28 @@
+
 <div class="card">
     <p-toast></p-toast>
-    <p-table
+    
+
+    <p-table 
         #dt
         [value]="trainees"
         [rows]="10"
         [scrollable]="true"
-        scrollHeight="390px"
+        scrollHeight="460px"
         [globalFilterFields]="['employeeCode', 'name', 'email', 'batch']"
-        [tableStyle]="{ 'min-width': '20rem' }"
+        [tableStyle]="{ 'min-width': '40rem' }"
         [(selection)]="selectedTrainees"
         [rowHover]="true"
         (selectionChange)="onSelectionChange($event)"
         dataKey="employeeCode"
+     
+        [loading]="isLoading"
         
     >
         <ng-template pTemplate="caption">
            
             <div class="flex align-items-center justify-content-evenly">
-                <h2 style=" align-items:  center; ">Trainee Details</h2>
+                <h4 style=" align-items:  center; ">Trainee Details</h4>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input 
@@ -32,21 +37,23 @@
 (click)="openBatchDialog()"></button>
 
 <!-- Batch Dialog -->
-<p-dialog header="Add New Batch" [(visible)]="batchDialog" [modal]="true" [closable]="false" [style]="{width: '30vw'}">
+<p-dialog header="Add New Batch"  [(visible)]="batchDialog" [modal]="true" [closable]="true" [style]="{width: '30vw'}">
+   
 <div class="p-fluid">
+  
 <div class="p-field">
 <label for="batchName">Batch Name</label>
 <input id="batchName" type="text" pInputText [(ngModel)]="newBatch.batchName" />
 </div>
 <div class="p-field">
 <label for="year">Year</label>
-<input id="year" type="number" pInputText [(ngModel)]="newBatch.year" />
+<input id="year"  pInputText [(ngModel)]="newBatch.year" />
 </div>
 </div>
 
 <p-footer>
-<button pButton label="Cancel" icon="pi pi-times" (click)="hideBatchDialog()" class="p-button-text"></button>
-<button pButton label="Save" icon="pi pi-check" (click)="saveBatch()" class="p-button-primary"></button>
+
+<button pButton label="Save"  (click)="saveBatch()" class="p-button-primary batchs"></button>
 </p-footer>
 </p-dialog>
 
@@ -84,11 +91,11 @@
                     Name
                    
                 </th>
-                <th pSortableColumn="email" style="width: 7rem;" >
+                <th style="width: 7rem;" >
                     Email
                    
                 </th>
-                <th pSortableColumn="batchName"> <!-- Updated line -->
+                <th>
                       <p-dropdown 
                     class="batch-filter"
                     [options]="batchOptions" 
@@ -100,16 +107,20 @@
                 </p-dropdown>
 
                 </th>
-                <th pSortableColumn="isActive">
+                <th >
                     Active Status
                    
                 </th>
-                <th pSortableColumn="Edit">
+                <th >
                     Edit</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-trainee>
+            <div class="empty-state-container" *ngIf="trainees.length === 0">
+                <i class="fas fa-exclamation-circle not-found-icon"></i>
+                <p>No data found for the Selected Date</p>
+            </div>
             <tr>
                 <td>
                     <p-tableCheckbox [value]="trainee"></p-tableCheckbox>
@@ -142,6 +153,13 @@
                 </td>
             </tr>
         </ng-template>
+
+  <p-progressSpinner 
+  *ngIf="isLoading" 
+  [style]="{'position': 'absolute', 'top': '50%', 'left': '50%', 'transform': 'translate(-50%, -50%)'}"
+  strokeWidth="5" 
+  diameter="40"></p-progressSpinner>
+  
     </p-table>
 
     <p-dialog 
@@ -203,7 +221,8 @@
     <ng-template pTemplate="footer">
         <p-button 
             label="Save" 
-            styleClass="p-button-success" 
+            styleClass="p-button-success"
+            class="addsave" 
             [text]="true"
             (onClick)="saveTrainee()">
         </p-button>
@@ -228,7 +247,7 @@
     [closable]="true"
     appendTo="body"
     styleClass="p-fluid set-status-dialog"
-    [contentStyle]="{ 'padding': '1rem', 'text-align': 'center' }">
+    [contentStyle]="{ 'padding': '1rem', 'text-align': 'center','margin-bottom':'2rem' }">
 
     <ng-template pTemplate="header">
         <div class="header-container">
@@ -261,3 +280,4 @@
 
   
 </div>
+
