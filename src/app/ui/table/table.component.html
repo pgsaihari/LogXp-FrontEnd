@@ -54,6 +54,7 @@
               <mat-selection-list
                 *ngIf="showList"
                 (selectionChange)="applyStatusFilter($event)"
+                (click)="$event.stopPropagation()"
               >
                 <mat-list-option
                   *ngFor="let status of statuses"
@@ -70,6 +71,7 @@
               <mat-selection-list
                 *ngIf="showBatchList"
                 (selectionChange)="applyBatchFilter($event)"
+                (click)="$event.stopPropagation()"
               >
                 <mat-list-option *ngFor="let batch of batches" [value]="batch">
                   {{ batch }}
@@ -168,6 +170,7 @@
     </div>
   </div>
 </div>
+
 @if (isSideProfileVisible) {
 <app-side-user-profile
   [employeeCode]="selectedTraineeCode"

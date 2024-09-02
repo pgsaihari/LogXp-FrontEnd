@@ -101,8 +101,9 @@ export class TableComponent implements OnInit {
 
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
-    this.getTraineeAttendanceLogs(); // Fetch data from the API
     this.getLatestDate();
+    this.getTraineeAttendanceLogs(); // Fetch data from the API
+   
 
     this.renderer.listen('document', 'click', (event: Event) => {
       // Check if the click is outside both the table component and the side profile
@@ -149,7 +150,7 @@ export class TableComponent implements OnInit {
     this.traineeAttendancelogService.getLatestDate().subscribe({
       next: (response) => {
         this.selectedDate = new Date(response.latestDate);
-        this.getTraineeAttendanceLogs(); // Fetch data from the API after getting the latest date
+        this.filterByDate(); // Fetch data from the API after getting the latest date
       },
       error: (error) => {
         console.error('Error fetching latest date:', error);
@@ -159,17 +160,18 @@ export class TableComponent implements OnInit {
   
   filterTrainees(query: string): void {
     if (query) {
-      // Filter trainees based on the search query
+      // Filter trainees based on the search query applied to the date-filtered data
       this.filteredTrainees = this.originalTraineeLogs.filter(
         (trainee) =>
           trainee.name &&
           trainee.name.toLowerCase().includes(query.toLowerCase())
       );
     } else {
-      // Reset to the original data if the query is empty
+      // Reset to the date-filtered data if the query is empty
       this.filteredTrainees = [...this.originalTraineeLogs];
     }
   }
+  
 
   filterByDate(): void {
     if (this.selectedDateRange && this.selectedDateRange.length === 2) {
@@ -177,28 +179,59 @@ export class TableComponent implements OnInit {
       const endDateString = this.datePipe.transform(this.selectedDateRange[1], 'yyyy-MM-dd') || '';
   
       this.traineeAttendancelogService
-        .getFilteredTraineeAttendanceLogs([], startDateString, endDateString, [])
+        .getFilteredTraineeAttendanceLogs(
+          this.selectedStatuses, // Pass the selected statuses
+          startDateString,
+          endDateString,
+          this.selectedBatches // Pass the selected batches
+        )
         .subscribe({
           next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
             if (response && Array.isArray(response.logs)) {
-              this.filteredTrainees = response.logs;
+              this.originalTraineeLogs = response.logs; // Save the filtered data
+              this.filteredTrainees = [...this.originalTraineeLogs]; // Initialize filtered data
             } else {
               console.error('API did not return an array:', response);
+              this.originalTraineeLogs = [];
               this.filteredTrainees = [];
             }
           },
           error: (error) => {
             console.error('Error fetching filtered trainee logs:', error);
+            this.originalTraineeLogs = [];
             this.filteredTrainees = [];
           },
         });
-    } else {
-      // If the date range is empty or not properly selected, fetch data for the latest date
-      this.getLatestDate(); // Calls method to get data for the latest date
+    }  else {
+      // No date range selected, use the selected date (latest date) to filter the data
+      const formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
+  
+      this.traineeAttendancelogService
+        .getFilteredTraineeAttendanceLogs(
+          this.selectedStatuses, // Pass the selected statuses
+          formattedDate,
+          formattedDate,
+          this.selectedBatches // Pass the selected batches
+        )
+        .subscribe({
+          next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
+            if (response && Array.isArray(response.logs)) {
+              this.originalTraineeLogs = response.logs; // Save the filtered data
+              this.filteredTrainees = [...this.originalTraineeLogs]; // Initialize filtered data
+            } else {
+              console.error('API did not return an array:', response);
+              this.originalTraineeLogs = [];
+              this.filteredTrainees = [];
+            }
+          },
+          error: (error) => {
+            console.error('Error fetching filtered trainee logs:', error);
+            this.originalTraineeLogs = [];
+            this.filteredTrainees = [];
+          },
+        });
     }
   }
-  
-
   applyStatusFilter(event: MatSelectionListChange) {
     // Update selected statuses based on the selected options
     this.selectedStatuses = event.source.selectedOptions.selected.map(
@@ -217,34 +250,7 @@ export class TableComponent implements OnInit {
   }
 
   applyFilters() {
-    const startDateFilter: string = this.selectedStartDate
-        ? this.datePipe.transform(this.selectedStartDate, 'yyyy-MM-dd') ?? ''
-        : '';
-
-    const endDateFilter: string = this.selectedEndDate
-        ? this.datePipe.transform(this.selectedEndDate, 'yyyy-MM-dd') ?? ''
-        : '';
-
-    // Call the service with the date range and other filters
-    this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs(
-        this.selectedStatuses,
-        startDateFilter,
-        endDateFilter,
-        this.selectedBatches
-    ).subscribe({
-        next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
-            if (response && Array.isArray(response.logs)) {
-                this.filteredTrainees = response.logs;
-            } else {
-                console.error('API did not return an array:', response);
-                this.filteredTrainees = [];
-            }
-        },
-        error: (error) => {
-            console.error('Error fetching filtered trainee logs:', error);
-            this.filteredTrainees = [];
-        }
-    });
+    this.filterByDate();
 }
 
 
