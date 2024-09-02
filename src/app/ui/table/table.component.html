@@ -123,7 +123,7 @@
             <td>
               <strong>{{ formatDate(trainee.date) }}</strong>
             </td>
-            <td>
+            <td class="status-column">
               <strong
                 ><span [ngClass]="getStatusClass(trainee.status)">{{
                   trainee.status
@@ -153,7 +153,7 @@
               >
             </td>
             <td>
-              <strong>{{ trainee.totalWorkHour }} Hrs</strong>
+              <strong>{{ formatWorkHours(trainee.totalWorkHour) }} Hrs</strong>
             </td>
           </tr>
         </ng-template>
@@ -162,7 +162,7 @@
    
         <div class="empty-state-container" *ngIf="filteredTrainees.length === 0">
         <i class="fas fa-exclamation-circle not-found-icon"></i>
-        <p>No data found for the Selected Date</p>
+        <p>No data found for the Selected Dates</p>
         </div>
        
     </div>
