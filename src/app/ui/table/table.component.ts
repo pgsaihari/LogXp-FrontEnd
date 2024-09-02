@@ -111,23 +111,27 @@ export class TableComponent implements OnInit {
         .subscribe({
           next: (response: any) => {
             if (response && Array.isArray(response.logs)) {
-              this.filteredTrainees = response.logs;
+              this.originalTraineeLogs = response.logs; // Save original data
+              this.filteredTrainees = [...this.originalTraineeLogs]; // Initialize filtered data
             } else {
               console.error('API did not return an array:', response);
+              this.originalTraineeLogs = [];
               this.filteredTrainees = [];
             }
           },
           error: (error) => {
             console.error('Error fetching trainee attendance logs:', error);
+            this.originalTraineeLogs = [];
             this.filteredTrainees = [];
           },
         });
     }
   }
+  
 
   search(query: string): void {
-    // const query = this.searchQuery;
-    this.filterTrainees(query);
+    this.searchQuery = query; // Update the search query
+    this.filterTrainees(query); // Call filter method with the new query
   }
 
   getLatestDate(): void {
@@ -144,6 +148,7 @@ export class TableComponent implements OnInit {
   
   filterTrainees(query: string): void {
     if (query) {
+      // Filter trainees based on the search query
       this.filteredTrainees = this.originalTraineeLogs.filter(
         (trainee) =>
           trainee.name &&
@@ -151,8 +156,7 @@ export class TableComponent implements OnInit {
       );
     } else {
       // Reset to the original data if the query is empty
-      this.filteredTrainees = [...this.originalTraineeLogs]; // Changed to use originalTraineeLogs
-      this.filterByDate();
+      this.filteredTrainees = [...this.originalTraineeLogs];
     }
   }
 
