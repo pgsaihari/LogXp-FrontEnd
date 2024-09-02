@@ -18,6 +18,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { BatchService } from '../../core/services/batch.service';  // Import BatchService
 import { TooltipModule } from 'primeng/tooltip';
 import { Batch } from '../../core/model/batch.model';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
 
 @Component({
   selector: 'app-user-table',
@@ -36,7 +38,9 @@ import { Batch } from '../../core/model/batch.model';
     DropdownModule,
     MultiSelectModule,
     TagModule,
-    TooltipModule
+    TooltipModule,
+    ProgressSpinnerModule
+
   ],
   providers: [MessageService, ConfirmationService, TraineeServiceService, BatchService],
   templateUrl: './user-table.component.html',
@@ -55,8 +59,7 @@ export class UserTableComponent implements OnInit {
   allTrainees: Trainee[] = [];
   batchDialog: boolean = false;  // To control the visibility of the batch dialog
   newBatch: Batch = { batchId: 0, batchName: '', year: 0 };  // To hold the new batch data
-
-  
+  isLoading = true;
   constructor(
     private traineeService: TraineeServiceService,
     private batchService: BatchService,  // Inject BatchService
@@ -70,23 +73,45 @@ export class UserTableComponent implements OnInit {
     }
   }
 
+
+  // Inside your component class
+ 
   /**
    * Initialize the component by loading trainees and batch options.
    */
   ngOnInit() {
+    // Set loading to true initially
+    this.isLoading = true;
+  
+    // Fetch trainees from the backend
     this.traineeService.getTrainees().subscribe((data) => {
       this.trainees = data;
-      this.allTrainees = data; 
+      this.allTrainees = data;
+      
+      // Check if both data sets are loaded
+      this.checkLoadingStatus();
     });
-
+  
     // Fetch batches from the backend
     this.batchService.getBatches().subscribe((batches) => {
       this.batchOptions = batches.map((batch) => ({
-          label: batch.batchName,  // Ensure batchName is a string
-          value: batch.batchId     // Ensure batchId is a number
+        label: batch.batchName,  // Ensure batchName is a string
+        value: batch.batchId     // Ensure batchId is a number
       }));
+  
+      // Check if both data sets are loaded
+      this.checkLoadingStatus();
     });
   }
+  
+  // Method to check if loading can be stopped
+  checkLoadingStatus() {
+    // Assuming both data fetches need to complete before setting isLoading to false
+    if (this.trainees && this.batchOptions) {
+      this.isLoading = false;
+    }
+  }
+  
 
 
 

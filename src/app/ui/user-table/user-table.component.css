@@ -1,72 +1,13 @@
 
-::ng-deep.card{
-  border: 2px grey;
-  border-radius: 20px;
-}
-
 
 ::ng-deep .card .p-datatable {
   border-radius: 10px;
-  overflow: hidden; /* Ensures child elements respect the border radius */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
-  background-color: #ffffff; /* Ensures a white background */
-}
-
-::ng-deep.p-table tbody tr td {
-  height: 5rem; /* Adjust the height as needed */
-  line-height: 1.2;
- padding: 0rem, 1rem !important;
-}
-
-/* Optionally, you can adjust padding for table cells */
-.p-table tbody td {
-  padding: 0.5rem; /* Adjust the padding as needed */
-}
-.trainee-status-table th{
-  display:  flex;
-  justify-content: center;
-  font-size: small;
-}
-::ng-deep.p-sortable-column{
-  font-size: small;
-}
-::ng-deep.p-datatable-tbody tr{
-  font-size: small;
-  font-weight: bold;
-  padding: 0rem 1rem;
-}
-.trainee-status-table td {
- text-align: center;
-  border-bottom: 1px solid #ddd;
-}
-
-.trainee-status-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-
-.status {
-  padding: 4px ; /* Reduced padding */
-  border-radius: 4px;
-  color: var(text-color-white);
-  font-weight: bold;
-}
-
-.status.enabled {
-  background-color: green;
-}
-
-.status.disabled {
-  background-color: var(--primary-color);
+  overflow: hidden; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  background-color: #ffffff;
 }
 
 
-.edit-button:hover {
-  background-color: #0056b3;
-}
-.card {
- margin-top: 2%;
-}
 
 .flex {
   display: flex;
@@ -74,185 +15,72 @@
   align-items: center;
 }
 
+::ng-deep .p-inputtext{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 
 
-
-.table-header {
-  font-weight: bold;
-  font-size: 0.25rem;
+::ng-deep .p-tag-success{
+  width: 60px !important;
+}
+/* Add this to your user-table.component.css */
+.p-progressSpinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* Ensure spinner appears on top */
 }
 
 ::ng-deep.p-datatable-body{
   padding: 0rem,1rem;
 }
-::ng-deep.p-grid{
-display: flex;
-flex-direction: column;
-gap: 7px;
-}
+
 ::ng-deep.p-button {
 color: var(--primary-color);
 background: none;
-border: none;
+border: var(--primary-color);
 padding: 0.75rem 1.25rem;
 font-size: 1rem;
 
 border-radius: 6px;
 outline-color: transparent;
 }
-
-.trainee-dialog .p-dialog-content {
-  padding: 2rem;
+::ng-deep .p-input-icon-left > .p-inputtext{
+padding-top: 0.5rem;
+padding-bottom: 0.5rem;
+width: 10rem;
 }
 
-.trainee-dialog .header-container {
-  position: relative;
-  padding-right: 2rem; /* Adjust padding to avoid overlap */
+h4{
+margin:0rem !important;
 }
 
-.trainee-dialog .p-dialog-footer {
-  padding-top: 1rem;
-}
-::ng-deep.equal-length-tag {
-  width: 100px; /* Adjust width as needed */
-  text-align: center;
-  display: inline-block;
-}
-::ng-deep.p-tag-value{
-  width: 70px;
-}
+
+
+
 :host ::ng-deep .p-datatable .p-datatable-header{
-  padding: 0.25rem
-}
-
-::ng-deep .batch-filter {
- 
-    display: inline-block;
-    width: 100%;
-    background: transparent;
-    border: none;
-    padding: 0;
-    text-align: center; /* Center the dropdown text */
-    font-weight: bold;
-    font-size: 0.875rem;
-    color: #495057; /* Adjust the color as needed */
-    border-radius: 4px;
-}
-
-::ng-deep .batch-dropdown .batch-filter{
-  width: 2rem; /* Adjust the width to fit the icon */
-  height: 2rem; /* Adjust the height to fit the icon */
-  padding: 0; /* Remove padding */
-  border: none; /* Remove border */
-  background: none; /* Remove background */
-  text-align: center; /* Center the icon */
-}
-
-::ng-deep .batch-dropdown .p-dropdown-trigger {
-  padding: 0; /* Remove padding around the trigger */
-  border: none; /* Remove border around the trigger */
-  background: none; /* Remove background */
-}
-
-::ng-deep .batch-dropdown .p-dropdown-trigger .pi-chevron-down {
-  font-size: 1rem; /* Adjust font size for the icon */
-  color: #000; /* Set color for the icon */
-}
-
-::ng-deep .p-dropdown-panel {
-  min-width: 150px; /* Adjust dropdown width as needed */
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-items {
-  max-height: 200px; /* Set max height for dropdown items */
-  overflow-y: auto; /* Add scroll if needed */
-}
-:host::ng-deep 
-  .p-dropdown {
-    display: inline-flex;
-    cursor: pointer;
-    position: relative;
-    -webkit-user-select: none;
-    user-select: none;
-    border: none;
-    background: transparent;
-    padding: 0%;
+  padding-top: 0rem;
+  padding-bottom: 0rem;
+  padding-left: 2rem;
 
 }
 :host::ng-deep .p-dropdown-label{
   font-weight: bold;
   font-size:small;
 }
-:host::ng-deep.p-placeholder {
-    color: black;
-    padding: 0%;
-}
-/* Styles for p-table */
-.p-table {
-  width: 100%;
-  overflow-x: auto;
-}
-
-/* Make the table headers responsive */
-.p-table thead th {
-  text-align: center;
-}
-
-/* Responsive design for the dropdown in the table header */
-.batch-filter {
-  width: 100%;
-  max-width: 200px;
-}
-
-/* Style for the dialog */
-.trainee-dialog {
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.set-status-dialog {
-  max-width: 100%;
-}
-
-/* Responsive grid for dialog content */
-.p-grid {
-  flex-wrap: wrap;
-}
-
-/* Media Queries for mobile devices */
-@media (max-width: 768px) {
-  .p-table thead th, .p-table tbody td {
-      font-size: 0.9rem;
-      padding: 0.5rem;
-  }
-
-  .p-input-icon-left {
-      font-size: 0.8rem;
-  }
-
-  .p-dialog {
-      width: 90vw; /* Adjust dialog width for smaller screens */
-      height: auto;
-  }
-}
-
-
 ::ng-deep .p-datatable .p-datatable-thead >tr >th
 {
-  padding: 15px 15px;
+  font-size: small;
+  padding: 5px 15px;
+  font-weight: bold;
 }
 ::ng-deep .p-datatable .p-datatable-tbody > tr > td
 {
-  padding: 5px 15px;
-}
-::ng-deep .p-dialog .p-dialog-content {
-  padding: 1.5em;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
+  padding: 0px 15px;
+  font-size: small;
+  font-weight: bold;
 }
 
 .p-float-label input[type="text"], 
@@ -262,19 +90,27 @@ outline-color: transparent;
   box-sizing: border-box;
 }
 
-.p-error {
-  color:var(--primary-color);
-  font-size: 0.75em;
-  margin-top: -0.5em;
+::ng-deep.p-dropdown.p-component.p-inputwrapper
+{
+  border: none !important;
+  background: none !important;
 }
-
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+::ng-deep.p-dropdown-label{
+  padding: 0rem !important;
 }
+::ng-deep.p-dropdown:not(.p-disabled).p-focus{
+  border: none;
+}
+/* .addsave{
+  
+    border: 2px solid var(--primary-color) !important;
+    padding: 1rem !important;
+    border-radius: 5px !important;
+    
+}  */
+.batchs{
+  border: 2px solid var(--primary-color) !important;
+  padding: 0.5rem !important;
+  border-radius: 5px !important;
 
-.p-button-success {
-  width: 100%;
-  margin-top: 1em;
 }
