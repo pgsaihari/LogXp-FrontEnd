@@ -2,8 +2,8 @@ export interface WidgetAttendance {
     employeeCode: string,
     name: string,
     batch: string,
-    loginTime: string,
-    logoutTime: string,
+    loginTime: Date,
+    logoutTime: Date,
     status: string,
     date:string
 }

@@ -6,10 +6,10 @@
     </div>
     <div class="graph-container">
       <ng-template #homeTemplate>
-        <div *ngIf="!isVisible || tableHeader=='Working Days'">
+        <div *ngIf="tableHeader === 'Working Days'">
           <app-graph></app-graph>
         </div>
-        <div *ngIf="isVisible">
+        <div *ngIf="isVisible && tableHeader !== 'Working Days'">
           <app-widget-table [tableHeader]="tableHeader" [toggleField]="toggleField"></app-widget-table>
         </div>
       </ng-template>
