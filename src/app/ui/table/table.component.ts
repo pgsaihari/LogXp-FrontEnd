@@ -105,31 +105,24 @@ export class TableComponent implements OnInit {
   }
 
   getTraineeAttendanceLogs() {
-    this.traineeAttendancelogService.getTraineeAttendanceLogs().subscribe({
-      next: (response: any) => {
-        if (
-          response &&
-          response.attendanceLogs &&
-          Array.isArray(response.attendanceLogs)
-        ) {
-          this.originalTraineeLogs = response.attendanceLogs;
-          this.filteredTrainees = [...this.originalTraineeLogs];
-          this.filterByDate();
-        } else {
-          console.error('API did not return an array:', response);
-          this.originalTraineeLogs = [];
-          this.filteredTrainees = [];
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching trainee attendance logs:', error);
-        this.originalTraineeLogs = [];
-        this.filteredTrainees = [];
-      },
-      complete: () => {
-        console.log('Trainee attendance logs fetched successfully.');
-      },
-    });
+    if (this.selectedDate) {
+      const formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
+      this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs([], formattedDate, formattedDate, [])
+        .subscribe({
+          next: (response: any) => {
+            if (response && Array.isArray(response.logs)) {
+              this.filteredTrainees = response.logs;
+            } else {
+              console.error('API did not return an array:', response);
+              this.filteredTrainees = [];
+            }
+          },
+          error: (error) => {
+            console.error('Error fetching trainee attendance logs:', error);
+            this.filteredTrainees = [];
+          },
+        });
+    }
   }
 
   search(query: string): void {
@@ -148,7 +141,7 @@ export class TableComponent implements OnInit {
       },
     });
   }
-
+  
   filterTrainees(query: string): void {
     if (query) {
       this.filteredTrainees = this.originalTraineeLogs.filter(
@@ -169,7 +162,7 @@ export class TableComponent implements OnInit {
       const endDateString = this.datePipe.transform(this.selectedDateRange[1], 'yyyy-MM-dd') || '';
   
       this.traineeAttendancelogService
-        .getFilteredTraineeAttendanceLogs([], startDateString, endDateString,[])
+        .getFilteredTraineeAttendanceLogs([], startDateString, endDateString, [])
         .subscribe({
           next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
             if (response && Array.isArray(response.logs)) {
@@ -185,7 +178,8 @@ export class TableComponent implements OnInit {
           },
         });
     } else {
-      this.filteredTrainees = [...this.originalTraineeLogs]; // Reset to original data if no date is selected
+      // If the date range is empty or not properly selected, fetch data for the latest date
+      this.getLatestDate(); // Calls method to get data for the latest date
     }
   }
   
@@ -323,6 +317,18 @@ export class TableComponent implements OnInit {
     } else {
       return ''; // No additional class if after 6 PM
     }
+  }
+
+  formatWorkHours(workHours: string): string {
+    if (!workHours) return '';
+  
+    // Assuming the workHours is in the format "HH:mm:ss"
+    const timeParts = workHours.split(':');
+    const hours = timeParts[0];
+    const minutes = timeParts[1];
+  
+    // Return formatted time as "HH:mm"
+    return `${hours}:${minutes}`;
   }
 
   showSideProfile(employeeCode: string): void {
