@@ -48,6 +48,8 @@ export class TableComponent implements OnInit {
   isSideProfileVisible?: boolean | undefined = false;
   selectedDate: Date | undefined;
   searchQuery: string = '';
+  selectedStartDate: any;
+  selectedEndDate: any;
 
   constructor(
     private traineeAttendancelogService: TraineeAttendancelogService,
@@ -59,6 +61,7 @@ export class TableComponent implements OnInit {
   todayDate: string | undefined;
   selectedOptions: any[] = [];
   yesterday: Date = new Date();
+  selectedDateRange: Date[] = [];
 
   selectedStatuses: string[] = [];
 
@@ -161,18 +164,14 @@ export class TableComponent implements OnInit {
   }
 
   filterByDate(): void {
-    if (this.selectedDate) {
-      const selectedDateString =
-        this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
-
+    if (this.selectedDateRange && this.selectedDateRange.length === 2) {
+      const startDateString = this.datePipe.transform(this.selectedDateRange[0], 'yyyy-MM-dd') || '';
+      const endDateString = this.datePipe.transform(this.selectedDateRange[1], 'yyyy-MM-dd') || '';
+  
       this.traineeAttendancelogService
-        .getFilteredTraineeAttendanceLogs([], selectedDateString, [])
+        .getFilteredTraineeAttendanceLogs([], startDateString, endDateString,[])
         .subscribe({
-          next: (response: {
-            logs: TraineeAttendanceLogs[];
-            count: number;
-            message: string;
-          }) => {
+          next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
             if (response && Array.isArray(response.logs)) {
               this.filteredTrainees = response.logs;
             } else {
@@ -189,6 +188,7 @@ export class TableComponent implements OnInit {
       this.filteredTrainees = [...this.originalTraineeLogs]; // Reset to original data if no date is selected
     }
   }
+  
 
   applyStatusFilter(event: MatSelectionListChange) {
     // Update selected statuses based on the selected options
@@ -208,14 +208,19 @@ export class TableComponent implements OnInit {
   }
 
   applyFilters() {
-    const dateFilter: string = this.selectedDate
-        ? this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') ?? ''
+    const startDateFilter: string = this.selectedStartDate
+        ? this.datePipe.transform(this.selectedStartDate, 'yyyy-MM-dd') ?? ''
         : '';
 
-    // Call the service with multiple filters
+    const endDateFilter: string = this.selectedEndDate
+        ? this.datePipe.transform(this.selectedEndDate, 'yyyy-MM-dd') ?? ''
+        : '';
+
+    // Call the service with the date range and other filters
     this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs(
         this.selectedStatuses,
-        dateFilter,
+        startDateFilter,
+        endDateFilter,
         this.selectedBatches
     ).subscribe({
         next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
