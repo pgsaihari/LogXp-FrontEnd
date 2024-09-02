@@ -17,8 +17,9 @@ import { catchError, of } from 'rxjs';
   styleUrls: ['./graph.component.css']
 })
 export class GraphComponent  {
-  error: any;
   constructor(private api: TraineeAttendancelogService) {}
+  
+  error: any;
   graphDataMonth: Date | undefined;
   numberOfWorkingDays: number = 25;
   data: any;
@@ -58,7 +59,6 @@ export class GraphComponent  {
         this.noDataDate = this.graphDataMonth;       
       }
       else{this.isAttendanceLogEmpty = false;}
-      // this.graphInit();
       this.bargraphInit();
     });   
   }
@@ -88,6 +88,10 @@ export class GraphComponent  {
     });
     return result
   }
+  /**
+   * calculates the percentage of late arrivals of each working day to be set as the Y-axis
+   * @returns array of numbers containting percentage of late arrivals of each day of the month
+   */
   generateYaxisDataLateArrivals():number[]{
     let result: number[] = []; 
     this.dailyAttendanceData?.forEach(item => {
@@ -109,63 +113,6 @@ export class GraphComponent  {
   /**
    * Initializes the graph with X and Y cordinates as well as other configurations and settings.
    */
-  // graphInit(){
-  //   const documentStyle = getComputedStyle(document.documentElement);
-  //   const textColor = documentStyle.getPropertyValue('--text-color');
-  //   const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-  //   const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-  //   this.generateYaxisData();
-  //   this.data = {
-  //     labels: this.generateXaxisLabel(),
-  //     datasets: [
-  //       {
-  //         label: 'Present',
-  //         data: this.generateYaxisData(),
-  //         fill: true,
-  //         borderColor: "#EA454C",
-  //         tension: 0.4,
-  //         backgroundColor: 'rgba(234, 69, 76, 0.1)'
-  //       },
-  //     ]
-  //   };
-  //   //remove aspect ration to alter height, or change it to alter height
-  //   this.options = {
-  //     maintainAspectRatio: false,
-  //     aspectRatio: 0.9,
-  //     plugins: {
-  //       legend: {
-  //         labels: {
-  //           color: textColor
-  //         }
-  //       }
-  //     },
-  //     scales: {
-  //       x: {
-  //         ticks: {
-  //           color: textColorSecondary
-  //         },
-  //         grid: {
-  //           color: surfaceBorder,
-  //           drawBorder: false
-  //         }
-  //       },
-  //       y: {
-  //         title: {
-  //           display: true,
-  //           text: 'Attendance %' 
-  //         },
-  //         ticks: {
-  //           color: textColorSecondary
-  //         },
-  //         grid: {
-  //           color: surfaceBorder,
-  //           drawBorder: false
-  //         }
-  //       }
-  //     }
-  //   };
-  // }
-
   bargraphInit(){
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
@@ -173,61 +120,59 @@ export class GraphComponent  {
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
     
     this.data = {
-        labels: this.generateXaxisLabel(),
-        datasets: [
-            {
-                label: 'Present',
-                backgroundColor: documentStyle.getPropertyValue('--secondary-color'),
-                borderColor: documentStyle.getPropertyValue('--secondary-color'),
-                data: this.generateYaxisData()
-            },
-            {
-                label: 'Late arrivals',
-                backgroundColor: documentStyle.getPropertyValue('--primary-color'),
-                borderColor: documentStyle.getPropertyValue('--primary-color'),
-                data: this.generateYaxisDataLateArrivals()
-            }
-        ]
-    };
-
-    this.options = {
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        plugins: {
-            legend: {
-                labels: {
-                    color: textColor
-                }
-            }
+      labels: this.generateXaxisLabel(),
+      datasets: [
+        {
+          label: 'Present',
+          backgroundColor: documentStyle.getPropertyValue('--secondary-color'),
+          borderColor: documentStyle.getPropertyValue('--secondary-color'),
+          data: this.generateYaxisData()
         },
-        scales: {
-            x: {
-                ticks: {
-                    color: textColorSecondary,
-                    font: {
-                        weight: 500
-                    }
-                },
-                grid: {
-                    color: surfaceBorder,
-                    drawBorder: false
-                }
-            },
-            y: {
-              title: {
-                display: true,
-                text: 'Attendance %' 
-              },
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder,
-                    drawBorder: false
-                }
-            }
-
+        {
+          label: 'Late arrivals',
+          backgroundColor: documentStyle.getPropertyValue('--primary-color'),
+          borderColor: documentStyle.getPropertyValue('--primary-color'),
+          data: this.generateYaxisDataLateArrivals()
         }
+      ]
+    };
+    this.options = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+        legend: {
+          labels: {
+              color: textColor
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+            font: {
+                weight: 500
+            }
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Attendance %' 
+          },
+          ticks: {
+            color: textColorSecondary
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false
+          }
+        }
+      }
     };
   }
 }        

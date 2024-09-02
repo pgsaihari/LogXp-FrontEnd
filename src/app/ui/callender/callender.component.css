@@ -3,14 +3,17 @@
   color:var(--primary-color);
   }
   
-  .half-holiday {
-    
-    color: #ffc107;
-   
-  }
+.half-holiday {
+  
+  color: #ffc107;
+  
+}
   
   .sunday-holiday {
     color: var(--primary-color); /* Red color for Sundays */
+  }
+  .company-holiday{
+    color: var(--primary-color);
   }
   
   .holiday-dialog {
@@ -112,7 +115,7 @@
 }
 
 ::ng-deep .p-calendar {
-  width: 700px !important
+  width: 670px !important
 }
 
 /* ::ng-deep .p-datepicker-header {

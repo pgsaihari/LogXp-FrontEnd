@@ -6,7 +6,7 @@
         [showWeek]="false" 
         (onSelect)="onDateSelect($event)">
       <ng-template pTemplate="date" let-date>
-        <span [ngClass]="[getHolidayClass(date), isSunday(date) ? 'sunday-holiday' : '']">
+        <span [ngClass]="[ isSunday(date) ? 'sunday-holiday' : '', isCompanyHoliday(date) ? 'company-holiday':'', isCompanyHalfHoliday(date)? 'half-holiday':'']">
           {{ date.day }}
         </span>
       </ng-template>
@@ -43,7 +43,7 @@
             type="button" 
             label="Full Day" 
             class="p-button-success full-holiday-btn" 
-            (click)="setHoliday('full')"
+            (click)="setHoliday('full_day')"
             >
         </p-button>
 
@@ -52,7 +52,7 @@
             type="button" 
             label="Half Day" 
             class="p-button-warning half-holiday-btn" 
-            (click)="setHoliday('half')"
+            (click)="setHoliday('half_day')"
           >
         </p-button>
 
