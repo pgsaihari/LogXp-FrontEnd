@@ -13,7 +13,7 @@ export interface WidgetSummary{
   lateArrivalCount: number,
   earlyDepartureCount: number,
   absentCount: number,
-  latestDate: string
+  latestDate: Date
 }
 
 export interface UserWidgetSummary{
