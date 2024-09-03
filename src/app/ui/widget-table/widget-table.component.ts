@@ -1,165 +1,117 @@
-import {  Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import {  DatePipe, NgClass,NgIf } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { WidgetAttendance } from '../../core/interfaces/widget-attendance';
-import { AttendanceLogsService } from '../../core/services/attendance-logs.service';
-import { catchError, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
+import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
+import { CurrentDateComponent } from "../current-date/current-date.component";
+import { Batch } from '../../core/model/batch.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-widget-table',
   standalone: true,
-  imports: [TableModule, CalendarModule, AutoCompleteModule, FormsModule, NgClass, DatePipe,NgIf],
+  imports: [TableModule, CalendarModule, FormsModule, DatePipe, NgIf, CurrentDateComponent],
   templateUrl: './widget-table.component.html',
-  styleUrl: './widget-table.component.css'
-  
+  styleUrls: ['./widget-table.component.css']
 })
 export class WidgetTableComponent implements OnChanges {
-  private datePipe = new DatePipe('en-US');
-  @Input() tableHeader!: string;
-  @Input() toggleField: string = 'Check-In';
-  date = new Date();
-  currentDay: Date = new Date();
-  day:number = 0;
-  month:number = 0;
-  year:number = 0;
-  time: string = ''
-  widgetAttendance: WidgetAttendance[] = [];
-  error: any;
-  containerVisibility:string = '';
+  @Input() selectedBatch!: Batch;
+  @Input() tableHeader: string = 'On Time'; // Title of the table, determines the category like 'On Time', 'Late Arrivals', etc.
+  @Input() toggleField: string = 'Check-In'; // Column header that toggles based on the table category
 
-  constructor(private traineeAttendancelogService: AttendanceLogsService) {}
+  tableDate: Date = new Date(); // Date used for fetching logs
+  widgetAttendance: WidgetAttendance[] = []; // Holds attendance data fetched from the attendanceService
+  sortableColumn: string = 'loginTime';
+
+  constructor(private attendanceService: TraineeAttendancelogService) {}
+
+  ngOnInit() {
+    // Subscribe to selectedDate$ and fetch logs when the date changes
+    this.attendanceService.selectedDate$.subscribe(date => {
+      this.tableDate = date || this.attendanceService.getSelectedDate();
+      this.fetchAttendanceLogs();
+    });
+
+    // Fetch logs initially when the component is first loaded
+    this.fetchAttendanceLogs();
+  }
+
+  
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['tableHeader'] && this.tableHeader) {
-      this.date.setDate(this.currentDay.getDate() - 1);
-      this.day = this.date.getDate();
-      this.month = this.date.getMonth()+1;
-      this.year = this.date.getFullYear()
+    if (changes['selectedBatch'] || changes['tableHeader']) {
+      this.setSortableColumn();
       this.fetchAttendanceLogs();
     }
   }
 
+  private setSortableColumn() {
+    this.sortableColumn = this.tableHeader === 'Early Departures' ? 'logoutTime' : 'loginTime';
+  }
+
+
   /**
-   * fuction to make API calls and assign the data to the desired table.
+   * Fetches attendance logs based on the selected date and table category.
    */
-  fetchAttendanceLogs() {
-    switch (this.tableHeader) {
-      case 'On Time':
-        this.containerVisibility = '';
-        this.traineeAttendancelogService.onTimeLogs(this.day,this.month,this.year)
-        .pipe(
-          catchError(error => {
-            this.error = error.message;
-            return of([]);
-          })
-        )
-        .subscribe((data:any) =>{
-          this.widgetAttendance = data.earlyArrivals || [];
-          if(this.widgetAttendance.length != 0){
-            const loginTime = this.widgetAttendance[0].date;
-            if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
-            else{console.log("no data");}
-          }
-          else{ this.widgetAttendance = []; }
-        });
-        break;
-      case 'Late Arrivals':
-        this.containerVisibility = '';
-        this.traineeAttendancelogService.lateArrivalLogs(this.day,this.month,this.year)
-        .pipe(
-          catchError(error => {
-            this.error = error.message;
-            this.widgetAttendance = [];
-            return of([]);
-          })
-        )
-        .subscribe((data:any)=>{
-          this.widgetAttendance = data.lateArrivals || []; 
-          if(this.widgetAttendance.length != 0){
-            const loginTime = this.widgetAttendance[0].date;
-            if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
-            else{console.log("no data");} 
-          }
-          else{ this.widgetAttendance = []; }
-        });
-        break;
-      case 'Absent':
-        this.containerVisibility = '';
-        this.traineeAttendancelogService.absenteeLogs(this.day,this.month,this.year)
-        .pipe(
-          catchError(error => {
-            this.error = error.message;
-            this.widgetAttendance = [];
-            return of([]);
-          })
-        )
-        .subscribe((data:any)=>{
-          this.widgetAttendance = data.absentees || []; 
-          if(this.widgetAttendance.length != 0){
-            const loginTime = this.widgetAttendance[0].date;
-            if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
-            else{console.log("no data");}
-          }
-          else{ this.widgetAttendance = []; }
-        });
-        break;
-      case 'Early Departures':
-        this.containerVisibility = '';
-        this.traineeAttendancelogService.earlyDeparturesLogs(this.day,this.month,this.year)
-        .pipe(
-          catchError(error => {
-            this.error = error.message;
-            this.widgetAttendance = [];
-            return of([]);
-          })
-        )
-        .subscribe((data:any)=>{
-          this.widgetAttendance = data.earlyDepartures || []; 
-          if(this.widgetAttendance.length != 0){
-            const loginTime = this.widgetAttendance[0].date;
-            if(loginTime != null){this.updateDateFromLoginTime(loginTime);}
-            else{console.log("no data");} 
-          }
-          else{ this.widgetAttendance = []; }
-        });
-        break;
-      default:
-        this.containerVisibility = "invisible";
-        this.widgetAttendance = [];
-        console.error('Unknown table header:', this.tableHeader);
+  private fetchAttendanceLogs() {
+    const { day, month, year } = this.extractDateParts(this.tableDate);
+    this.attendanceService.updateSelectedDate({ day, month, year });
+
+    const dataFetchFn = this.getDataFetchFunction(day, month, year);
+    if (dataFetchFn) {
+      dataFetchFn()
+        .pipe(catchError(this.handleFetchError.bind(this)))
+        .subscribe(data => this.widgetAttendance = this.filterByBatch(data));
+    } else {
+      console.error('Unknown table header:', this.tableHeader);
     }
   }
 
-  updateDateFromLoginTime(loginTime: string) {
-    if (loginTime) {
-      console.log('Login Time:', loginTime);
-      // Set the date using the loginTime value from the API response
-      this.date = new Date(loginTime); 
-    }
-  }
-  
-  /**
-   * function to assign day,month and year variables and to call the fetchAttendanceLogs() function to make API calls for the specific date and to display its data in the table.
-   */
-  dateChange(){
-    console.log(this.date);
-    this.day = this.date.getDate();
-    this.month = this.date.getMonth()+1;
-    this.year = this.date.getFullYear()
-    this.fetchAttendanceLogs();
+  private extractDateParts(date: Date) {
+    return {
+      day: date.getDate(),
+      month: date.getMonth() + 1,
+      year: date.getFullYear()
+    };
   }
 
-  getTime(trainee: any): string {  
-    const result = this.tableHeader === 'On Time' || this.tableHeader === 'Late Arrivals'
-      ? trainee?.loginTime
-      : this.tableHeader === 'Early Departures'
-      ? trainee?.logoutTime
-      : this.tableHeader === 'Absent'
-      ? 'N/A'
-      : '';
-    return result;
+  private getDataFetchFunction(day: number, month: number, year: number) {
+    const filterByBatch = (logs: WidgetAttendance[]) =>
+      logs.filter(log => log.batch === this.selectedBatch?.batchName)
+        .map(log => ({
+          ...log,
+          loginTime: new Date(log.loginTime),
+          logoutTime: new Date(log.logoutTime)
+        }));
+
+    return {
+      'On Time': () => this.attendanceService.onTimeLogs(day, month, year).pipe(map(response => filterByBatch(response.earlyArrivals))),
+      'Late Arrivals': () => this.attendanceService.lateArrivalLogs(day, month, year).pipe(map(response => filterByBatch(response.lateArrivals))),
+      'Absent': () => this.attendanceService.absenteeLogs(day, month, year).pipe(map(response => filterByBatch(response.absentees))),
+      'Early Departures': () => this.attendanceService.earlyDeparturesLogs(day, month, year).pipe(map(response => filterByBatch(response.earlyDepartures)))
+    }[this.tableHeader];
+  }
+
+  private filterByBatch(logs: WidgetAttendance[]) {
+    return this.selectedBatch
+      ? logs.filter(log => log.batch === this.selectedBatch.batchName)
+      : logs;
+  }
+
+  private handleFetchError(error: HttpErrorResponse): Observable<WidgetAttendance[]> {
+    console.error('Error fetching attendance logs:', error.message);
+    this.widgetAttendance = [];
+    return of([]);
+  }
+
+  /**
+   * Determines which time to display based on the table category.
+   */
+  getTime(trainee: WidgetAttendance): Date | null {
+    const time = this.tableHeader === 'Early Departures' ? trainee.logoutTime : trainee.loginTime;
+    return time instanceof Date && !isNaN(time.getTime()) ? time : null;
   }
 }

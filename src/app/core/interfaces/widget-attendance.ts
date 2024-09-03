@@ -2,7 +2,8 @@ export interface WidgetAttendance {
     employeeCode: string,
     name: string,
     batch: string,
-    loginTime: string,
+    loginTime: Date,
+    logoutTime: Date,
     status: string,
     date:string
 }
@@ -12,7 +13,14 @@ export interface WidgetSummary{
   lateArrivalCount: number,
   earlyDepartureCount: number,
   absentCount: number,
-  latestDate: string
+  latestDate: Date
+}
+
+export interface UserWidgetSummary{
+    absentDaysCount: number,
+    lateArrivalDaysCount: number,
+    onTimeDaysCount: number,
+    earlyDepartureDaysCount: number
 }
 
 export interface EarlyArrivalLogs{

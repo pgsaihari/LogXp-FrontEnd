@@ -17,7 +17,8 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SpinnerInterceptorService } from './core/interceptor/spinner-interceptor.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -40,6 +41,7 @@ import {
   MsalGuard,
   MsalBroadcastService,
 } from '@azure/msal-angular';
+import { AuthInterceptor } from './core/interceptor/auth-interceptor.service';
 
 // MSAL configuration functions
 export function loggerCallback(logLevel: LogLevel, message: string) {
@@ -113,6 +115,7 @@ export const appConfig: ApplicationConfig = {
       useClass: SpinnerInterceptorService,
       multi: true,
     },
+   
 
     // MSAL Interceptor for managing authentication and tokens
     {
@@ -120,7 +123,7 @@ export const appConfig: ApplicationConfig = {
       useClass: MsalInterceptor,
       multi: true,
     },
-
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     // MSAL services and configurations
     {
       provide: MSAL_INSTANCE,

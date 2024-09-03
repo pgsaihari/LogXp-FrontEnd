@@ -1,65 +1,102 @@
-import { DatePipe, NgClass } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { CardModule } from 'primeng/card';
-import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
-import { catchError, of } from 'rxjs';
-import { AttendanceLogsService } from '../../core/services/attendance-logs.service';
+  import { DatePipe, NgClass, NgIf } from '@angular/common';
+  import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+  import { CardModule } from 'primeng/card';
+  import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
+  import { catchError, of } from 'rxjs';
+  import { ButtonModule } from 'primeng/button';
+  import { CalendarModule } from 'primeng/calendar';
+  import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { BatchService } from '../../core/services/batch.service';
+import { Batch } from '../../core/model/batch.model';
 
-@Component({
-  selector: 'app-current-date',
-  standalone: true,
-  imports: [CardModule, NgClass, DatePipe],
-  templateUrl: './current-date.component.html',
-  styleUrl: './current-date.component.css'
-})
-export class CurrentDateComponent implements OnInit{
-  currentTime!: Date;
-  currentDate!: Date;
-  latestLogDate: string = '';
-  timeIcon: string = '';
-  timeOfDay: string = '';
-  error: any;
-  constructor(private api: AttendanceLogsService) {}
-
-  ngOnInit() {
-    this.getThelatestDate();
-    this.updateTime();
-    setInterval(() => this.updateTime(), 1000);
-  }
-
-  updateTime() {
-    this.currentTime = new Date();
-    this.currentDate = new Date();
-
-    const hours = this.currentTime.getHours();
-
-    if (hours >= 6 && hours < 12) {
-      this.timeIcon = 'pi pi-sun'; // Morning sun icon
-    } else if (hours >= 12 && hours < 18) {
-      this.timeIcon = 'pi pi-sun'; // Blazing sun icon
-    } else if (hours >= 18 && hours < 20) {
-      this.timeIcon = 'pi pi-sunset'; // Setting sun icon
-    } else {
-      this.timeIcon = 'pi pi-moon'; // Moon icon
+  @Component({
+    selector: 'app-current-date',
+    standalone: true,
+    imports: [CardModule, DatePipe,ButtonModule, CalendarModule, FormsModule, NgIf, DropdownModule],
+    templateUrl: './current-date.component.html',
+    styleUrl: './current-date.component.css'
+  })
+  export class CurrentDateComponent implements OnInit {
+    @Output() batchSelected = new EventEmitter<Batch>();
+  
+    batches: Batch[] = [];
+    selectedBatch!: Batch;
+    placeholder: string = '';
+    latestLogDate!: Date;
+    selectedDate!: Date;
+    maxDate!: Date;
+    showCalendar: boolean = false;
+  
+    constructor(
+      private api: TraineeAttendancelogService,
+      private elementRef: ElementRef,
+      private batchService: BatchService
+    ) {}
+  
+    ngOnInit() {
+      this.getLatestDate();
+      this.loadBatches();
     }
-
-    if (hours >= 6 && hours < 12) {
-      this.timeOfDay = 'morning';
-    } else if (hours >= 12 && hours < 18) {
-      this.timeOfDay = 'afternoon';
-    } else if (hours >= 18 && hours < 20) {
-      this.timeOfDay = 'evening';
-    } else {
-      this.timeOfDay = 'night';
+  
+    loadBatches() {
+      this.batchService.getBatches().subscribe(batches => {
+        this.batches = batches;
+        if (batches.length) {
+          this.placeholder = batches[0].batchName;
+          this.selectedBatch = batches[0];
+          this.batchSelected.emit(this.selectedBatch);
+        }
+      });
     }
-
+  
+    getLatestDate() {
+      this.api.getWidgetCount().subscribe(data => {
+        if (data.latestDate) {
+          this.latestLogDate = new Date(data.latestDate);
+          this.selectedDate = new Date(this.latestLogDate);
+          this.maxDate = this.latestLogDate;
+          this.api.setSelectedDate(this.selectedDate);
+        }
+      });
+    }
+  
+    toggleCalendar() {
+      this.showCalendar = !this.showCalendar;
+    }
+  
+    onDateSelect(event: Date) {
+      this.selectedDate = event;
+      this.api.setSelectedDate(this.selectedDate);
+      this.showCalendar = false;
+      this.latestLogDate = this.selectedDate;
+      this.onDateChange(this.selectedDate);
+    }
+  
+    onDateChange(date: Date) {
+      const formattedDate = {
+        day: date.getDate(),
+        month: date.getMonth() + 1,
+        year: date.getFullYear()
+      };
+      this.api.updateSelectedDate(formattedDate);
+    }
+  
+    onBatchSelect() {
+      this.batchSelected.emit(this.selectedBatch);
+      if (this.selectedBatch) {
+        this.placeholder = this.selectedBatch.batchName;
+      }
+    }
+  
+    @HostListener('document:click', ['$event'])
+    onClickOutside(event: MouseEvent) {
+      const clickedInside = this.elementRef.nativeElement.contains(event.target);
+      const clickedDropdown = (event.target as HTMLElement).closest('.dropdown-button');
+      
+      if (!clickedInside || clickedDropdown) {
+        this.showCalendar = false;
+      }
+    }
+    
   }
-
-  getThelatestDate(){
-    this.api.getWidgetCount()
-    .subscribe(data => {
-      this.latestLogDate = data.latestDate;
-      console.log(this.latestLogDate);
-    }); 
-  }
-}

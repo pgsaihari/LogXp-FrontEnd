@@ -1,16 +1,20 @@
 <div class="card graphContainer">
     <div class="graphHeading">
-        <p>Montly Attendance Graph</p>
+        <p>Monthly Attendance Graph</p>
         <div class="card monthPicker">
             <p-calendar 
                 [(ngModel)]="graphDataMonth" 
                 view="month" 
                 dateFormat="M yy"
                 [readonlyInput]="true"
-                (onSelect)="monthSelection()"
+                (onSelect)="monthSelection(graphDataMonth)"
                 [maxDate]="maxDate"  />
         </div>
     </div>
     
-    <p-chart type="line" height="300px" [data]="data" [options]="options" class="mychart"/>
+    <p-chart type="bar" height="300px" [data]="data" [options]="options" class="mychart" *ngIf="!isAttendanceLogEmpty" />
+    <div class="empty-state-container" *ngIf="isAttendanceLogEmpty">
+        <i class="fas fa-exclamation-circle not-found-icon"></i>
+        <p>No data found for "<span>{{ noDataDate | date: 'MMMM y' }}</span>" </p>
+    </div>
 </div>

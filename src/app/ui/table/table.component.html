@@ -1,7 +1,7 @@
-<div class="contents">
+<div class="contents" (click)="handleTableClick($event)">
   <div class="container">
     <div class="filter-row">
-      <h3 id="Heading">Attendance Overview</h3>
+      <h2 id="Heading">Attendance Overview</h2>
       <div class="left-filters">
         <input
           class="search-filter"
@@ -14,17 +14,19 @@
       </div>
       <div class="right-filters">
         <p-calendar
-          id="datepick"
-          [(ngModel)]="selectedDate"
-          [iconDisplay]="'input'"
-          [showIcon]="true"
-          [maxDate]="yesterday"
-          inputId="icondisplay"
-          placeholder="Select Date"
-          [dateFormat]="'dd-MM-yy'"
-          (onSelect)="filterByDate()"
-        >
-        </p-calendar>
+  id="datepick"
+  [(ngModel)]="selectedDateRange"
+  [iconDisplay]="'input'"
+  [showIcon]="true"
+  [maxDate]="yesterday"
+  inputId="icondisplay"
+  placeholder="Select Date Range"
+  selectionMode="range"
+  [readonlyInput]="false"
+  [dateFormat]="'dd-MM-yy'"
+  (onSelect)="filterByDate()" 
+>
+</p-calendar>
 
         <button
           pButton
@@ -42,6 +44,7 @@
           class="p-button-rounded-rectangle p-button-secondary"
           (click)="downloadData()"
         ></button>
+        <button pButton type="button" (click)="clearDateRange()" class="p-button-secondary" icon="pi pi-filter-slash"></button>
 
         <p-overlayPanel #filterPanel>
           <div class="filters">
@@ -52,6 +55,7 @@
               <mat-selection-list
                 *ngIf="showList"
                 (selectionChange)="applyStatusFilter($event)"
+                (click)="$event.stopPropagation()"
               >
                 <mat-list-option
                   *ngFor="let status of statuses"
@@ -68,9 +72,10 @@
               <mat-selection-list
                 *ngIf="showBatchList"
                 (selectionChange)="applyBatchFilter($event)"
+                (click)="$event.stopPropagation()"
               >
-                <mat-list-option *ngFor="let batch of batches" [value]="batch">
-                  {{ batch }}
+                <mat-list-option *ngFor="let batch of batches" [value]="batch.batchName">
+                  {{ batch.batchName }}
                 </mat-list-option>
               </mat-selection-list>
             </div>
@@ -108,9 +113,9 @@
             <td>
               <strong>{{ trainee.employeeCode }}</strong>
             </td>
-            <td (click)="showSideProfile(trainee.employeeCode)">
+            <td>
               <strong
-                ><span class="trainee-name"
+                ><span class="trainee-name" (click)="showSideProfile(trainee.employeeCode, $event)"
                   ><u>{{ trainee.name }}</u></span
                 ></strong
               >
@@ -121,7 +126,7 @@
             <td>
               <strong>{{ formatDate(trainee.date) }}</strong>
             </td>
-            <td>
+            <td class="status-column">
               <strong
                 ><span [ngClass]="getStatusClass(trainee.status)">{{
                   trainee.status
@@ -151,7 +156,7 @@
               >
             </td>
             <td>
-              <strong>{{ trainee.totalWorkHour }} Hrs</strong>
+              <strong>{{ formatWorkHours(trainee.totalWorkHour) }} Hrs</strong>
             </td>
           </tr>
         </ng-template>
@@ -160,12 +165,13 @@
    
         <div class="empty-state-container" *ngIf="filteredTrainees.length === 0">
         <i class="fas fa-exclamation-circle not-found-icon"></i>
-        <p>No data found for the Selected Date</p>
+        <p>No data found for the Selected Dates</p>
         </div>
        
     </div>
   </div>
 </div>
+
 @if (isSideProfileVisible) {
 <app-side-user-profile
   [employeeCode]="selectedTraineeCode"
@@ -173,3 +179,7 @@
   (closeProfile)="closeSideProfile()"
 ></app-side-user-profile>
 }
+
+<div *ngIf="spinnerService.isSpinnerVisible()" class="spinner-container">
+  <app-spinner></app-spinner>
+</div>

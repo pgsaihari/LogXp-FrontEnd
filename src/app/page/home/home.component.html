@@ -1,21 +1,22 @@
 <div class="dashboard">
     <div class="app-cards">
-      <app-current-date></app-current-date>
-      <app-widget-cards (widgetSelected)="handleWidgetClick($event)"></app-widget-cards>
+      <app-current-date (batchSelected)="onBatchSelected($event)"></app-current-date>
+      <app-widget-cards [selectedBatch]="selectedBatch" (widgetSelected)="handleWidgetClick($event)"></app-widget-cards>
 
     </div>
     <div class="graph-container">
       <ng-template #homeTemplate>
-        <div *ngIf="!isVisible || tableHeader=='Attendance Graph'">
+        <div *ngIf="tableHeader === 'Working Days'">
           <app-graph></app-graph>
         </div>
-        <div *ngIf="isVisible">
-          <app-widget-table [tableHeader]="tableHeader" [toggleField]="toggleField"></app-widget-table>
+        <div *ngIf="isVisible && tableHeader !== 'Working Days'">
+          <app-widget-table [selectedBatch]="selectedBatch" [tableHeader]="tableHeader" [toggleField]="toggleField"></app-widget-table>
         </div>
       </ng-template>
       <ng-container *ngTemplateOutlet="homeTemplate"></ng-container>
     </div>
   </div>
   <!-- spinner, uses the interceptor to work -->
-  <ngx-spinner [bdColor]="'rgba(0, 0, 0, 0.8)'"></ngx-spinner>
- 
+  <div *ngIf="spinnerService.isSpinnerVisible()" class="spinner-container">
+    <app-spinner></app-spinner>
+  </div>

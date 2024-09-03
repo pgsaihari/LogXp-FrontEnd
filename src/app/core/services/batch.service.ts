@@ -3,12 +3,14 @@ import { Observable, catchError, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { Batch } from '../model/batch.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BatchService {
-  private apiUrl = 'https://localhost:7074/api/LogXP/batch'; // Replace with your actual API endpoint
+
+  private apiUrl = environment.apiUrl+`/batch`; // Replace with your actual API endpoint
 
   constructor(private http: HttpClient) {}
 
@@ -21,11 +23,8 @@ export class BatchService {
   }
 
   // Add a new batch
-  addBatch(batch: Batch): Observable<boolean> {
-    return this.http.post<boolean>(`${this.apiUrl}/add`, batch)
-      .pipe(
-        catchError(this.handleError<boolean>('addBatch', false))
-      );
+  addBatch(batch: { batchName: string; year: string }): Observable<Batch> {
+    return this.http.post<Batch>(this.apiUrl, batch);
   }
 
   // Delete a batch

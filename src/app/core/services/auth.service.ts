@@ -3,19 +3,23 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Currentuser } from '../interfaces/currentuser';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+    // Backend API base URL
+    private apiUrl = environment.apiUrl+`/Auth`;
+
   private currentUser: Currentuser ={
-    UserId:"string",
-    UserName:"string",
-    Email:"string",
-    Role:"string"
+    userId:"string",
+    name:"string",
+    email:"string",
+    role:"string"
   }
   private readonly USER_KEY = 'currentUser'; // Key for localStorage
-
+  private readonly TOKEN_KEY = 'jwtToken';
   constructor(private http: HttpClient) {
     // Check if user data exists in localStorage and set it
     const storedUser = localStorage.getItem(this.USER_KEY);
@@ -31,7 +35,7 @@ export class AuthService {
 
   // Getter for current user role
   getCurrentUserRole(): string | null {
-    return this.currentUser?.Role || null;
+    return this.currentUser?.role || null;
   }
 
   // Setter for current user and stores in localStorage
@@ -40,8 +44,9 @@ export class AuthService {
     localStorage.setItem(this.USER_KEY, JSON.stringify(user)); // Save to localStorage
   }
 
-  // Backend API base URL
-  private apiUrl = 'https://localhost:7074/api/logXp/Auth'; // Replace with your actual backend URL
+  setToken(token: string): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
+  }
 
   // Fetches the user role from the backend
   getUserRole(token: string): Observable<any> {

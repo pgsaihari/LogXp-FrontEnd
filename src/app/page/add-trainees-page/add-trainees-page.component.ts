@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TopHeaderComponent } from "../../ui/top-header/top-header.component";
+import { TopHeaderComponent } from "../../shared/top-header/top-header.component";
 import { FormComponent } from '../../ui/form/form.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -10,16 +10,17 @@ import { Trainee } from '../../core/model/trainee.model';
 import { NgClass } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 
-
 import { NgxSpinnerComponent } from 'ngx-spinner';
+import { TooltipModule } from 'primeng/tooltip';
+
+
 
 
 @Component({
   selector: 'app-add-trainees-page',
   standalone: true,
 
-  imports: [ FormComponent, ToastModule,NgClass,DialogModule, NgxSpinnerComponent],
-
+  imports: [ FormComponent, ToastModule,NgClass,DialogModule, NgxSpinnerComponent,TooltipModule],
   templateUrl: './add-trainees-page.component.html',
   styleUrls: ['./add-trainees-page.component.css'],
   providers: [MessageService]
@@ -53,34 +54,46 @@ export class AddTraineesPageComponent {
   }
 
   processExcel(data: Uint8Array) {
-    // Parse the Excel file using XLSX
     const workbook = XLSX.read(data, { type: 'array' });
     const firstSheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[firstSheetName];
-    
-    // Type the result of the sheet_to_json as any[][]
+  
     const rows: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-    // Map over the rows to create an array of Trainee objects
-    const trainees: Trainee[] = rows.slice(1) // Skip header row
-      .map((row: any[]) => ({
-        employeeCode: row[0]?.toString(),
-        name: row[1]?.toString(),
-        email: row[2]?.toString(),
-        isActive: row[3]?.toString() === 'true',
-        batchId: Number(row[4])
-      }));
-console.log(trainees);
-    // Send parsed data to the backend
-    this.traineeService.addTrainees(trainees).subscribe({
-      
-      next: () => this.showSuccess(),
-      error: (error) => {
-        console.error('Upload failed:', error);
-        this.showError(error);
+  
+    // Skip the header row and map each row to a Trainee object
+    const trainees: Trainee[] = rows.slice(1).map((row: any[], index: number) => {
+      // Perform validation and provide default values or handle errors
+      const employeeCode = row[0]?.toString().trim();
+      const name = row[1]?.toString().trim();
+      const email = row[2]?.toString().trim();
+      const isActive = row[3]?.toString().toLowerCase() === 'true';
+      const batchId = Number(row[4]) || 0;
+  
+      if (!employeeCode || !name || !email || batchId === 0) {
+        console.error(`Row ${index + 2} contains invalid data:`, row);
+        return null;
       }
+  
+      return {
+        employeeCode,
+        name,
+        email,
+        isActive,
+        batchId,
+      };
+    }).filter(trainee => trainee !== null);
+  
+    if (trainees.length === 0) {
+      this.showError(new Error('No valid data found in Excel sheet.'));
+      return;
+    }
+  
+    this.traineeService.addTrainees(trainees).subscribe({
+      next: () => this.showSuccess(),
+      error: (error) => this.showError(error)
     });
   }
+  
 
   showSuccess() {
     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel sheet uploaded and trainees added successfully!' });

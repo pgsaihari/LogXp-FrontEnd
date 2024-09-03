@@ -3,6 +3,12 @@
   width: 100%;
 }
 
+.holidayContainer{
+  background-color: var(--background-color);
+  margin-top: 20px;
+  border-radius: 8px;
+  padding: 5px;
+}
 .section-heading {
   font-size: 24px;
   font-weight: bold;
@@ -97,7 +103,12 @@
 }
 
 ::ng-deep .p-tabmenu {
-  width: min-content;
+  width: 100%;
+}
+
+::ng-deep .p-tabmenu {
+  display: flex;
+  justify-content: space-around;
 }
 
 ::ng-deep .p-card {
@@ -107,6 +118,36 @@
 .holiday-summary{
   font-size: 22px;
   font-weight: 400;
+}
+
+.calendar-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.futureHolidays{
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollable-container {
+  width: auto; 
+  height: auto; 
+  border-radius: 8px; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.highlight-row{
+  color: var(--primary-color);
+}
+
+.highlight-row-half{
+  color: rgba(255, 193, 7);
+}
+
+::ng-deep #holidayTable .p-datatable>.p-datatable-wrapper{
+  border-radius: 8px;
 }
 
 /* Styling for navbar */
@@ -137,6 +178,8 @@
   }
   
   .calendar-container{
+    height: fit-content;
+    padding-bottom: 50px;
     display: flex;
     flex-direction: column;
     gap: 30px;

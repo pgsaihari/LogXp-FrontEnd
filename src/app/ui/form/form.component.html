@@ -1,24 +1,53 @@
 <div class="form-container">
   <h4>Upload individual trainee data.</h4>
   <form [formGroup]="traineeForm" (ngSubmit)="onSubmit()">
+    <!-- Employee Code Field -->
     <div class="form-group">
       <label for="employee-code">Trainee Id</label>
       <input type="text" id="employee-code" formControlName="employeeCode" placeholder="Enter Trainee Code" required>
+      <div *ngIf="traineeForm.controls['employeeCode'].invalid && traineeForm.controls['employeeCode'].touched">
+        <small class="error" *ngIf="traineeForm.controls['employeeCode'].errors?.['required']">Trainee Id is required.</small>
+        <small class="error" *ngIf="traineeForm.controls['employeeCode'].errors?.['minlength']">Trainee Id must be at least 5 characters long.</small>
+        <small class="error" *ngIf="traineeForm.controls['employeeCode'].errors?.['maxlength']">Trainee Id cannot be more than 15 characters long.</small>
+        <small class="error" *ngIf="traineeForm.controls['employeeCode'].errors?.['pattern']">Trainee Id must be alphanumeric.</small>
+      </div>
     </div>
+
+    <!-- Name Field -->
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" id="name" formControlName="name" placeholder="Enter Name">
+      <div *ngIf="traineeForm.controls['name'].invalid && traineeForm.controls['name'].touched">
+        <small class="error" *ngIf="traineeForm.controls['name'].errors?.['required']">Name is required.</small>
+        <small class="error" *ngIf="traineeForm.controls['name'].errors?.['minlength']">Name must be at least 2 characters long.</small>
+        <small class="error" *ngIf="traineeForm.controls['name'].errors?.['maxlength']">Name cannot be more than 50 characters long.</small>
+        <small class="error" *ngIf="traineeForm.controls['name'].errors?.['pattern']">Name can only contain letters and spaces.</small>
+      </div>
     </div>
+
+    <!-- Email Field -->
     <div class="form-group">
       <label for="email">Email</label>
       <input type="email" id="email" formControlName="email" placeholder="Enter Email">
+      <div *ngIf="traineeForm.controls['email'].invalid && traineeForm.controls['email'].touched">
+        <small class="error" *ngIf="traineeForm.controls['email'].errors?.['required']">Email is required.</small>
+        <small class="error" *ngIf="traineeForm.controls['email'].errors?.['email']">Please enter a valid email address.</small>
+        <small class="error" *ngIf="traineeForm.controls['email'].errors?.['domain']">Email must be from the domain  &#64;experionglobal.com.</small>
+      </div>
     </div>
+
+    <!-- Batch Field -->
     <div class="form-group">
       <label for="batch">Batch</label>
-      <select id="batchId" formControlName="batchId" placeholder="Select batch" >
+      <select id="batchId" formControlName="batchId" placeholder="Select batch">
         <option *ngFor="let batch of batches" [value]="batch.batchId">{{ batch.batchName }}</option>
       </select>
+      <div *ngIf="traineeForm.controls['batchId'].invalid && traineeForm.controls['batchId'].touched">
+        <small class="error" *ngIf="traineeForm.controls['batchId'].errors?.['required']">Batch is required.</small>
+      </div>
     </div>
+
+    <!-- Active Status Field -->
     <div class="form-group">
       <label for="isActive">Active Status</label>
       <select id="isActive" formControlName="isActive">
@@ -26,9 +55,10 @@
         <option [value]="false">Inactive</option>
       </select>
     </div>
+
+    <!-- Submit Button -->
     <div>
-      <button type="submit" class="submit-button">Submit</button>
+      <button type="submit" class="submit-button" [disabled]="traineeForm.invalid">Submit</button>
     </div>
-    
   </form>
 </div>

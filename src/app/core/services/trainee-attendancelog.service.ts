@@ -1,9 +1,12 @@
 import { HttpClient, HttpParams, } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import {  TraineeAttendanceLogs } from '../model/traineeAttendanceLogs.model';
-import { DailyAttendanceOfMonth } from '../interfaces/daily-attendance-of-month';
+import { DailyAttendanceOfMonth, OfficeEntryTime } from '../interfaces/daily-attendance-of-month';
 import { AbsenceAndLate, CurrentTraineeLog, PatchResponse } from '../interfaces/side-profile';
+import { AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, UserWidgetSummary, WidgetSummary } from '../interfaces/widget-attendance';
+import { environment } from '../../../environments/environment';
+import { Batch } from '../model/batch.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +16,29 @@ import { AbsenceAndLate, CurrentTraineeLog, PatchResponse } from '../interfaces/
  */
 export class TraineeAttendancelogService {
 
-  private apiUrl = 'https://localhost:7074/api/LogXP/traineeAttendanceLogs';
+  private apiUrl = environment.apiUrl+`/traineeAttendanceLogs`;
+
+  // BehaviorSubject to keep track of the selected date
+  private selectedDateSubject = new BehaviorSubject<{ day: number, month: number, year: number }>({
+    day: new Date().getDate(),
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear()
+  });
+
+  // Initialize selectedDateSource with the current date to avoid null values.
+  private selectedDateSource = new BehaviorSubject<Date>(new Date());
+  selectedDate$ = this.selectedDateSource.asObservable();
+
+  // private selectedBatchSubject = new BehaviorSubject<Batch | null>(null);
+  // selectedBatch$ = this.selectedBatchSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
+
+  // setSelectedBatch(batch: Batch) {
+  //   this.selectedBatchSubject.next(batch);
+  // }
+  
   /**
    * Retrieves all trainee attendance logs.
    * @returns {Observable<TraineeAttendanceLogs[]>} - An observable containing a list of trainee attendance logs.
@@ -53,15 +75,40 @@ export class TraineeAttendancelogService {
    * @param batches An array of batch filters.
    * @returns An observable containing logs, count, and a message.
    */
-  getFilteredTraineeAttendanceLogs(status: string, date: string, batches: string[]): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
-    let params = new HttpParams();
-    if (status) params = params.set('status', status);
-    if (date) params = params.set('date', date);
-    if (batches.length > 0) params = params.set('batch', batches.join(','));
+   getFilteredTraineeAttendanceLogs(
+    statuses: string[],
+    startDate: string | null,
+    endDate: string | null,
+    batches: string[]
+): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
+    let url = `${this.apiUrl}/filterLogs?`;
 
-    const url = `${this.apiUrl}/filterLogs`;
-    return this.http.get<{ logs: TraineeAttendanceLogs[], count: number, message: string }>(url, { params });
-  }
+    // Handle multiple statuses
+    if (statuses.length > 0) {
+        statuses.forEach(status => {
+            url += `status=${encodeURIComponent(status)}&`;
+        });
+    }
+
+    // Handle start date and end date
+    if (startDate && endDate) {
+        url += `startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&`;
+    } else if (startDate) {
+        url += `date=${encodeURIComponent(startDate)}&`; // Fallback for single date
+    }
+
+    // Handle multiple batches
+    if (batches.length > 0) {
+        batches.forEach(batch => {
+            url += `batch=${encodeURIComponent(batch)}&`;
+        });
+    }
+
+    // Remove the trailing '&' or '?' from the URL
+    url = url.slice(-1) === '&' || url.slice(-1) === '?' ? url.slice(0, -1) : url;
+
+    return this.http.get<{ logs: TraineeAttendanceLogs[], count: number, message: string }>(url);
+}
 
    /**
    * Retrieves the latest attendance date.
@@ -78,7 +125,89 @@ export class TraineeAttendancelogService {
   }
 
   // Function to get absences and leave count of a trainee
-  getAbsenceOfTrainee(traineeCode: string): Observable<AbsenceAndLate> {
-    return this.http.get<AbsenceAndLate>(`${this.apiUrl}/GetAbsenceOfTrainee?traineeCode=${traineeCode}`);
+  GetAttendanceCountOfTrainee(traineeCode: string): Observable<AbsenceAndLate> {
+    return this.http.get<AbsenceAndLate>(`${this.apiUrl}/GetAttendanceCountOfTrainee?traineeCode=${traineeCode}`);
   }
+
+   /**
+   * FUNC : To make an API call to get the data of trainees with the status "Early Arrival" on a particular day, along with the count and a success message.
+   * @param day
+   * @param month 
+   * @param year 
+   * @returns Observable<EarlyArrivalLogs>
+   */
+   onTimeLogs(day:number, month:number, year:number): Observable<EarlyArrivalLogs>{
+    const url = `${this.apiUrl}/earlyArrivalsByDate?day=${day}&month=${month}&year=${year}`;
+    return this.http.get<EarlyArrivalLogs>(url)
+  }
+  /**
+   * FUNC : To make an API call to get the data of trainees with the status "Late Arrival" on a particular day, along with the count and a success message.
+   * @param day
+   * @param month 
+   * @param year 
+   * @returns Observable<LateArrivalsLog>
+   */
+  lateArrivalLogs(day:number, month:number, year:number): Observable<LateArrivalsLog>{
+    const url = `${this.apiUrl}/lateArrivalsByDate?day=${day}&month=${month}&year=${year}`;
+    return this.http.get<LateArrivalsLog>(url)
+  }
+  /**
+   * FUNC : To make an API call to get the data of trainees with the status "Early Departure" on a particular day, along with the count and a success message.
+   * @param day
+   * @param month 
+   * @param year 
+   * @returns Observable<EarlyDepartureLog>
+   */
+  earlyDeparturesLogs(day:number, month:number, year:number): Observable<EarlyDepartureLog>{
+    const url = `${this.apiUrl}/earlyDeparturesByDate?day=${day}&month=${month}&year=${year}`;
+    return this.http.get<EarlyDepartureLog>(url)
+  }
+  /**
+   * FUNC : To make an API call to get the data of trainees with the status "On Leave"(Absent) on a particular day, along with the count and a success message.
+   * @param day
+   * @param month 
+   * @param year 
+   * @returns Observable<AbsenteeLog>
+   */
+  absenteeLogs(day:number, month:number, year:number): Observable<AbsenteeLog>{
+    const url = `${this.apiUrl}/absenteesByDate?day=${day}&month=${month}&year=${year}`;
+    return this.http.get<AbsenteeLog>(url)
+  }
+  /**
+   * FUNC : To make an API call to get the Count of trainees in accordance with the trainee status on the latest date
+   * @returns Observable<WidgetSummary>
+   */
+  getWidgetCount(): Observable<WidgetSummary> {
+    const url = `${this.apiUrl}/latestAttendanceSummary`
+    return this.http.get<WidgetSummary>(url)
+  }
+
+  getUserWidgetCount(traineeCode:number): Observable<UserWidgetSummary>{
+    const url = `${this.apiUrl}/GetAttendanceCountOfTrainee?traineeCode=${traineeCode}`;
+    return this.http.get<UserWidgetSummary>(url)
+  }
+
+  // Function to retrieve the latest selected date
+  getSelectedDate(): Date {
+    return this.selectedDateSource.value || new Date();
 }
+
+  updateSelectedDate(date: { day: number, month: number, year: number }) {
+    this.selectedDateSubject.next(date);
+  }
+
+  setSelectedDate(date: Date) {
+    this.selectedDateSource.next(date);
+  }
+
+  getOfficeEntryTime():Observable<OfficeEntryTime>{
+    const url = `${this.apiUrl}/getOfficeEntryTime`;
+    return this.http.get<OfficeEntryTime>(url);
+  }
+
+  
+  setOfficeEntryTime(officeEntryTime:OfficeEntryTime):Observable<any>{
+    const url = `${this.apiUrl}/setOfficeEntryTime`;
+    return this.http.post<any>(url, officeEntryTime);
+  }
+}  
