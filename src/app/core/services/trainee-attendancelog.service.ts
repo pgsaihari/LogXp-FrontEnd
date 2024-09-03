@@ -36,12 +36,6 @@ export class TraineeAttendancelogService {
     return this.http.get<TraineeAttendanceLogs[]>(this.apiUrl);
   }
 
-  getTraineeAttendanceLogsByDateRange(startDate: string, endDate: string) {
-    return this.http.get<TraineeAttendanceLogs[]>(
-      `/api/traineeAttendanceLogs/bydaterange?startDate=${startDate}&endDate=${endDate}`
-    );
-  }
-
   /**
    * Retrieves the daily attendance logs for a specific month and year.
    * @param {number} month - The month for which attendance logs are being retrieved.
@@ -76,7 +70,7 @@ export class TraineeAttendancelogService {
     endDate: string | null,
     batches: string[]
 ): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
-    let url = `https://localhost:7074/api/LogXP/traineeAttendanceLogs/filterLogs?`;
+    let url = `${this.apiUrl}/filterLogs?`;
 
     // Handle multiple statuses
     if (statuses.length > 0) {
