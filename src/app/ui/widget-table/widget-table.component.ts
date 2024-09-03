@@ -8,6 +8,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { CurrentDateComponent } from "../current-date/current-date.component";
 import { Batch } from '../../core/model/batch.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-widget-table',
@@ -22,108 +23,89 @@ export class WidgetTableComponent implements OnChanges {
   @Input() toggleField: string = 'Check-In'; // Column header that toggles based on the table category
 
   tableDate: Date = new Date(); // Date used for fetching logs
-  maxDate: Date = new Date(); // Maximum selectable date, set from the latest log date
   widgetAttendance: WidgetAttendance[] = []; // Holds attendance data fetched from the attendanceService
-  showTableHeader = false; // Controls the visibility of the table header
   sortableColumn: string = 'loginTime';
 
-  constructor( // Service for attendance-related operations
-    private attendanceService: TraineeAttendancelogService // Service for fetching trainee attendance logs
-  ) {
-    this.attendanceService.selectedDate$.subscribe(date => {
-      if (date) {
-        this.tableDate = date;
-        this.fetchAttendanceLogs(); // Fetch logs whenever the date changes
-      }
-    });
-  }
+  constructor(private attendanceService: TraineeAttendancelogService) {}
 
   ngOnInit() {
-    // Subscribe to the selected date from the service
-    this.attendanceService.selectedDate$.subscribe((date) => {
-      if (date) {
-        this.tableDate = date;
-      } else {
-        // If no date is selected, use the latestLogDate as the default
-        this.tableDate = this.attendanceService.getSelectedDate();
-      }
+    // Subscribe to selectedDate$ and fetch logs when the date changes
+    this.attendanceService.selectedDate$.subscribe(date => {
+      this.tableDate = date || this.attendanceService.getSelectedDate();
+      this.fetchAttendanceLogs();
     });
+
+    // Fetch logs initially when the component is first loaded
+    this.fetchAttendanceLogs();
   }
+
   
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['selectedBatch'] && this.selectedBatch) {
-      console.log('Batch received in WidgetTableComponent:', this.selectedBatch);
-    }
-    if (changes['tableHeader']?.currentValue) {
+    if (changes['selectedBatch'] || changes['tableHeader']) {
       this.setSortableColumn();
+      this.fetchAttendanceLogs();
     }
-      this.fetchAttendanceLogs(); // Only fetch logs if the header is defined
   }
 
-  setSortableColumn() {
-    // Set sortable column based on table header
-    if (this.tableHeader === 'Early Departures') {
-      this.sortableColumn = 'logoutTime';
-    } else {
-      this.sortableColumn = 'loginTime';
-    }
+  private setSortableColumn() {
+    this.sortableColumn = this.tableHeader === 'Early Departures' ? 'logoutTime' : 'loginTime';
   }
+
 
   /**
    * Fetches attendance logs based on the selected date and table category.
    */
-  fetchAttendanceLogs() {
-    if (!this.tableHeader) {
-      console.error('Unknown table header:', this.tableHeader);
-    }
-    
-    this.widgetAttendance = []; // Clear previous data before fetching new logs
+  private fetchAttendanceLogs() {
+    const { day, month, year } = this.extractDateParts(this.tableDate);
+    this.attendanceService.updateSelectedDate({ day, month, year });
 
-    // Extract date parts to pass to the attendanceService
-    const day = this.tableDate.getDate();
-    const month = this.tableDate.getMonth() + 1;
-    const year = this.tableDate.getFullYear();
-
-    this.attendanceService.updateSelectedDate({ day: day, month: month, year: year })
-
-    // Map table headers to their corresponding attendanceService calls
-    const dataFetchMap: Record<string, () => Observable<WidgetAttendance[]>> = {
-      'On Time': () => this.attendanceService.onTimeLogs(day, month, year).pipe(
-        map(response => response.earlyArrivals.filter(log => log.batch === this.selectedBatch?.batchName).map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
-      ),
-      'Late Arrivals': () => this.attendanceService.lateArrivalLogs(day, month, year).pipe(
-        map(response => response.lateArrivals.filter(log => log.batch === this.selectedBatch?.batchName).map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
-      ),
-      'Absent': () => this.attendanceService.absenteeLogs(day, month, year).pipe(
-        map(response => response.absentees.filter(log => log.batch === this.selectedBatch?.batchName).map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
-      ),
-      'Early Departures': () => this.attendanceService.earlyDeparturesLogs(day, month, year).pipe(
-        map(response => response.earlyDepartures.filter(log => log.batch === this.selectedBatch?.batchName).map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
-      ),
-    };
-
-    // Get the appropriate attendanceService call based on the table header
-    const dataFetchFn = dataFetchMap[this.tableHeader];
-
+    const dataFetchFn = this.getDataFetchFunction(day, month, year);
     if (dataFetchFn) {
-      // Execute the attendanceService call and handle the response
       dataFetchFn()
-        .pipe(
-          catchError(error => {
-            this.widgetAttendance = []; // Clear data on error
-            console.error('Error fetching attendance logs:', error.message);
-            return of([]); // Return an empty array as fallback
-          })
-        )
-        .subscribe((data: WidgetAttendance[]) => {
-          this.widgetAttendance = data; // Populate attendance data
-        });
+        .pipe(catchError(this.handleFetchError.bind(this)))
+        .subscribe(data => this.widgetAttendance = this.filterByBatch(data));
     } else {
       console.error('Unknown table header:', this.tableHeader);
     }
   }
-  
+
+  private extractDateParts(date: Date) {
+    return {
+      day: date.getDate(),
+      month: date.getMonth() + 1,
+      year: date.getFullYear()
+    };
+  }
+
+  private getDataFetchFunction(day: number, month: number, year: number) {
+    const filterByBatch = (logs: WidgetAttendance[]) =>
+      logs.filter(log => log.batch === this.selectedBatch?.batchName)
+        .map(log => ({
+          ...log,
+          loginTime: new Date(log.loginTime),
+          logoutTime: new Date(log.logoutTime)
+        }));
+
+    return {
+      'On Time': () => this.attendanceService.onTimeLogs(day, month, year).pipe(map(response => filterByBatch(response.earlyArrivals))),
+      'Late Arrivals': () => this.attendanceService.lateArrivalLogs(day, month, year).pipe(map(response => filterByBatch(response.lateArrivals))),
+      'Absent': () => this.attendanceService.absenteeLogs(day, month, year).pipe(map(response => filterByBatch(response.absentees))),
+      'Early Departures': () => this.attendanceService.earlyDeparturesLogs(day, month, year).pipe(map(response => filterByBatch(response.earlyDepartures)))
+    }[this.tableHeader];
+  }
+
+  private filterByBatch(logs: WidgetAttendance[]) {
+    return this.selectedBatch
+      ? logs.filter(log => log.batch === this.selectedBatch.batchName)
+      : logs;
+  }
+
+  private handleFetchError(error: HttpErrorResponse): Observable<WidgetAttendance[]> {
+    console.error('Error fetching attendance logs:', error.message);
+    this.widgetAttendance = [];
+    return of([]);
+  }
 
   /**
    * Determines which time to display based on the table category.
