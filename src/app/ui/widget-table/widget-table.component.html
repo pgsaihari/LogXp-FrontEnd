@@ -8,7 +8,6 @@
                 <tr>
                     <th>ID</th>
                     <th>Trainee</th>
-                    <th>ILP</th>
                     <th pSortableColumn="{{sortableColumn}}">
                         {{ toggleField }}<p-sortIcon field="{{sortableColumn}}"></p-sortIcon>
                     </th>     
@@ -19,7 +18,6 @@
 
                     <td><strong>{{ trainee.employeeCode }}</strong></td>
                     <td><strong>{{ trainee.name }}</strong></td>
-                    <td><strong>{{ trainee.batch }}</strong></td>
                     <td>
                         <strong *ngIf="getTime(trainee); else notAvailable">
                             {{ getTime(trainee) | date:'hh:mm a' }}

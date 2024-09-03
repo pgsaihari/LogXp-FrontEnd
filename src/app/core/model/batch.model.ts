@@ -1,7 +1,9 @@
+import { DatePipe } from "@angular/common";
+
 export interface Batch {
-     batchId: number;
+  batchId: number;
    batchName: string;
-   year : number;
+   year :string;
 
   }
   
