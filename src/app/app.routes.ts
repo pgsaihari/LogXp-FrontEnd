@@ -5,6 +5,7 @@ import { RoleGuard } from './core/guards/role.guard';
 import { UnauthorizedComponent } from './page/unauthorized/unauthorized.component';
 import { NotFoundComponent } from './page/not-found/not-found.component';
 import { LoginComponent } from './page/login/login.component';
+import { TestPageComponent } from './page/test-page/test-page.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -61,7 +62,9 @@ export const routes: Routes = [
         path: 'unauthorized',
         component: UnauthorizedComponent, // Display if user is unauthorized
       },
+      {path:'test',component:TestPageComponent},
       { path: '**', component: NotFoundComponent },
+      
     ],
   },
 ];
