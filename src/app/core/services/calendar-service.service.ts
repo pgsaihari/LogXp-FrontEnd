@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {  CalendarModel } from '../model/calendar.model';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalendarServiceService {
 
-  private apiUrl = 'https://localhost:7074/api/LogXP/HolidayCalendar';
+  private apiUrl = environment.apiUrl+`/HolidayCalendar`;
   constructor(private http: HttpClient) { }
 
   getHolidaysOfAYear(year:number): Observable<CalendarModel[]> {
