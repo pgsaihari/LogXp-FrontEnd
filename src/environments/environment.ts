@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
 
-    apiUrl: 'https://localhost:7074/api/logXP'
+    apiUrl: 'https://localhost:7074/api/logXp'
 
 };
