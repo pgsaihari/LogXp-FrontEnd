@@ -20,7 +20,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Batch } from '../../core/model/batch.model';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
-
+import moment from 'moment';
+import { Calendar, CalendarModule } from 'primeng/calendar';
 @Component({
   selector: 'app-user-table',
   standalone: true,
@@ -39,7 +40,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     MultiSelectModule,
     TagModule,
     TooltipModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    CalendarModule
 
   ],
   providers: [MessageService, ConfirmationService, TraineeServiceService, BatchService],
@@ -47,7 +49,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   styleUrls: ['./user-table.component.css'],
 })
 export class UserTableComponent implements OnInit {
-
+  startYear: Date | undefined;
+  endYear: Date | undefined;
   traineeDialog: boolean = false;
   trainees: Trainee[] = [];
   trainee: Trainee = {};
@@ -58,7 +61,7 @@ export class UserTableComponent implements OnInit {
   batchOptions: { label: string; value: number }[] = [];
   allTrainees: Trainee[] = [];
   batchDialog: boolean = false;  // To control the visibility of the batch dialog
-  newBatch: Batch = { batchId: 0, batchName: '', year: 0 };  // To hold the new batch data
+  newBatch: Batch = { batchId: 0, batchName: '', year: '' };  // To hold the new batch data
   isLoading = true;
   years: any[] | undefined;
   constructor(
@@ -107,7 +110,13 @@ export class UserTableComponent implements OnInit {
       this.checkLoadingStatus();
     });
   }
-  
+  updateYearRange() {
+    if (this.startYear && this.endYear) {
+      const startYearString = moment(this.startYear).format('YYYY');
+      const endYearString = moment(this.endYear).format('YYYY');
+      this.newBatch.year = `${startYearString}-${endYearString}`;
+    }
+  }
   // Method to check if loading can be stopped
   checkLoadingStatus() {
     // Assuming both data fetches need to complete before setting isLoading to false
@@ -145,7 +154,7 @@ export class UserTableComponent implements OnInit {
    * Open the batch dialog for adding a new batch.
    */
     openBatchDialog() {
-      this.newBatch = { batchId: 0, batchName: '', year: 0 };  // Reset the batch data
+      this.newBatch = { batchId: 0, batchName: '', year: ''};  // Reset the batch data
       this.batchDialog = true;  // Show the dialog
     }
   

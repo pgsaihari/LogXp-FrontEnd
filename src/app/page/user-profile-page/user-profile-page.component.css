@@ -10,6 +10,7 @@
   }
   .profiletable{
     width: 75%;
+    height: 75%;
     
   }
   .card{
@@ -128,10 +129,7 @@
     font-weight: 400;
   }
   
-  .calendar-left {
-    display: flex;
-    flex-direction: column;
-  }
+  
   
   .futureHolidays{
     display: flex;
