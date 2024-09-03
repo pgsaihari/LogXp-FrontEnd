@@ -1,7 +1,7 @@
 <div class="dashboard">
     <div class="app-cards">
-      <app-current-date></app-current-date>
-      <app-widget-cards (widgetSelected)="handleWidgetClick($event)"></app-widget-cards>
+      <app-current-date (batchSelected)="onBatchSelected($event)"></app-current-date>
+      <app-widget-cards [selectedBatch]="selectedBatch" (widgetSelected)="handleWidgetClick($event)"></app-widget-cards>
 
     </div>
     <div class="graph-container">
@@ -10,7 +10,7 @@
           <app-graph></app-graph>
         </div>
         <div *ngIf="isVisible && tableHeader !== 'Working Days'">
-          <app-widget-table [tableHeader]="tableHeader" [toggleField]="toggleField"></app-widget-table>
+          <app-widget-table [selectedBatch]="selectedBatch" [tableHeader]="tableHeader" [toggleField]="toggleField"></app-widget-table>
         </div>
       </ng-template>
       <ng-container *ngTemplateOutlet="homeTemplate"></ng-container>
