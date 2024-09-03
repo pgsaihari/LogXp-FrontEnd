@@ -13,7 +13,6 @@
 .search-filter {
   width: 200px; /* Decrease the width */
   height: 10px; /* Increase the height */
-  font-size: 16px; /* Adjust font size for better readability */
   padding: 10px; /* Adjust padding for better spacing */
   border-radius: 5px; /* Optional: rounded corners */
   border: 1px solid #ccc; /* Optional: border styling */
@@ -21,10 +20,9 @@
 
 #search-bar {
   flex: 1;
-  font-size: 14px;
   margin-left: 50px; /* Reduce margin to decrease the space around the search bar */
-  font-size: 12px; /* Reduce font size for a more compact appearance */
-  padding: 14px; /* Reduce padding to decrease height */
+  font-size: 16px; /* Reduce font size for a more compact appearance */
+  padding: 12px; /* Reduce padding to decrease height */
   height: auto; /* Allow height to adjust automatically */
 }
 

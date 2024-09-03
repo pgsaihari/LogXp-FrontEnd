@@ -120,7 +120,6 @@ export class TableComponent implements OnInit {
     });
   }
 
-
   clearDateRange(): void {
     this.selectedDateRange = []; // Clear the selected date range
     this.selectedBatches = [];
@@ -202,7 +201,6 @@ export class TableComponent implements OnInit {
     }
   }
   
-
   filterByDate(): void {
     if (this.selectedDateRange && this.selectedDateRange.length === 2) {
       const startDateString = this.datePipe.transform(this.selectedDateRange[0], 'yyyy-MM-dd') || '';
@@ -263,8 +261,6 @@ export class TableComponent implements OnInit {
     }
   }
 
-
-  
   applyStatusFilter(event: MatSelectionListChange) {
     // Update selected statuses based on the selected options
     this.selectedStatuses = event.source.selectedOptions.selected.map(
