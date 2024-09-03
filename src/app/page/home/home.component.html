@@ -1,16 +1,16 @@
 <div class="dashboard">
     <div class="app-cards">
-      <app-current-date></app-current-date>
-      <app-widget-cards (widgetSelected)="handleWidgetClick($event)"></app-widget-cards>
+      <app-current-date (batchSelected)="onBatchSelected($event)"></app-current-date>
+      <app-widget-cards [selectedBatch]="selectedBatch" (widgetSelected)="handleWidgetClick($event)"></app-widget-cards>
 
     </div>
     <div class="graph-container">
       <ng-template #homeTemplate>
-        <div *ngIf="!isVisible || tableHeader=='Working Days'">
+        <div *ngIf="tableHeader === 'Working Days'">
           <app-graph></app-graph>
         </div>
-        <div *ngIf="isVisible">
-          <app-widget-table [tableHeader]="tableHeader" [toggleField]="toggleField"></app-widget-table>
+        <div *ngIf="isVisible && tableHeader !== 'Working Days'">
+          <app-widget-table [selectedBatch]="selectedBatch" [tableHeader]="tableHeader" [toggleField]="toggleField"></app-widget-table>
         </div>
       </ng-template>
       <ng-container *ngTemplateOutlet="homeTemplate"></ng-container>

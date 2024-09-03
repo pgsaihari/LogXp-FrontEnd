@@ -19,12 +19,19 @@ export class NavbarComponent implements OnInit {
   constructor(
     // @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     
-    public authService:AuthService
+    public authService:AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
     
    this.role=this.authService.getCurrentUserRole()
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.updateNavbar(event.urlAfterRedirects);
+      } 
+    });
+    this.updateNavbar(this.router.url);
   }
 
   setActive(index: number) {

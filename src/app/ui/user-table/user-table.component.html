@@ -8,7 +8,7 @@
         [value]="trainees"
         [rows]="10"
         [scrollable]="true"
-        scrollHeight="460px"
+        scrollHeight="410px"
         [globalFilterFields]="['employeeCode', 'name', 'email', 'batch']"
         [tableStyle]="{ 'min-width': '40rem' }"
         [(selection)]="selectedTrainees"
@@ -36,26 +36,73 @@
 <button pButton label="Add Batch" icon="pi pi-plus" class="p-button-success" style="width: 150px;"
 (click)="openBatchDialog()"></button>
 
-<!-- Batch Dialog -->
-<p-dialog header="Add New Batch"  [(visible)]="batchDialog" [modal]="true" [closable]="true" [style]="{width: '30vw'}">
-   
-<div class="p-fluid">
-  
-<div class="p-field">
-<label for="batchName">Batch Name</label>
-<input id="batchName" type="text" pInputText [(ngModel)]="newBatch.batchName" />
-</div>
-<div class="p-field">
-<label for="year">Year</label>
-<input id="year"  pInputText [(ngModel)]="newBatch.year" />
-</div>
-</div>
+<p-dialog header="Add New Batch" [(visible)]="batchDialog" [modal]="true" [closable]="true" [style]="{width: '50vw'}">
+    <div class="p-fluid">
+        <div class="p-field">
+            <label for="batchName">Batch Name</label>
+            <input id="batchName" type="text" pInputText [(ngModel)]="newBatch.batchName" />
+        </div>
 
-<p-footer>
+        <div class="p-field">
+            <label for="yearRange">Year Range</label>
+            <div class="year-range-picker">
+                <p-calendar 
+                    id="startYear" 
+                    [(ngModel)]="startYear" 
+                    view="year" 
+                    dateFormat="yy" 
+                    yearNavigator="true" 
+                    yearRange="2000:2050"
+                    (onSelect)="updateYearRange()" 
+                    [showIcon]="true"
+                    placeholder="year">
+                </p-calendar>
+                <span> - </span>
+                <p-calendar 
+                    id="endYear" 
+                    [(ngModel)]="endYear" 
+                    view="year" 
+                    dateFormat="yy" 
+                    yearNavigator="true" 
+                    yearRange="2000:2050"
+                    (onSelect)="updateYearRange()" 
+                    [showIcon]="true"
+                    placeholder="year">
+                </p-calendar>
+            </div>
+        </div>
+    </div>
 
-<button pButton label="Save"  (click)="saveBatch()" class="p-button-primary batchs"></button>
-</p-footer>
+    <p-footer>
+        <button pButton label="Save" (click)="saveBatch()" class="p-button-primary batchs"></button>
+    </p-footer>
 </p-dialog>
+
+<!-- set arrival time button -->
+<button pButton label="Set Arrival Time" icon="pi pi-clock" class="p-button-success" style="width: 200px;"
+(click)="openTimeSetterDialog()"></button>
+<!-- Set arival time Dialog -->
+<p-dialog header="Set the allowed arrival time for trainees" [(visible)]="timeSetterVisible"  [modal]="true" [closable]="true" [style]="{width: '30vw',height:'400px'}">  
+    <div>
+        <p>Current Arrival Time : {{curArrivalTime | date:'h:mm a' }}</p>
+    </div>
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="timeSetter">Select time</label>
+        <p-calendar 
+        id="timeSetter"
+        inputId="calendar-timeonly" 
+        [(ngModel)]="selectedTime" 
+        [timeOnly]="true"
+        placeholder="Set the arrival time" />
+      </div>
+    </div>
+  
+    <p-footer>
+      <button pButton label="Save" (click)="saveArrivalTime()" class="p-button-primary batchs"></button>
+    </p-footer>
+</p-dialog>
+  
 
 
                 <div class="p-field">

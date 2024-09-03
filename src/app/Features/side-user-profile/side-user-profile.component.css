@@ -199,6 +199,7 @@
 .additional-info {
     padding-left: 10%;
     margin-top: 15px; /* Add space above the additional info */
+    margin-bottom: 15px;
     font-size: 14px; /* Larger font size for better readability */
     color: #333; /* Darker text color for better contrast */
 }
@@ -236,8 +237,14 @@
     gap: 5px;
     font-size: 15px;
     width: 50%;
+    justify-content: center;
 }
 
 .trainee-details h3{
     margin-top: 0;
+}
+
+/* Footer  */
+.additional-info[_ngcontent-ng-c1018305043]{
+    padding-left: 0;
 }

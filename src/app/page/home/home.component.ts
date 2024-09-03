@@ -9,6 +9,7 @@ import { WidgetTableComponent } from "../../ui/widget-table/widget-table.compone
 import { NgxSpinnerComponent } from 'ngx-spinner';
 import { SpinnerService } from '../../core/services/spinner-control.service';
 import { SpinnerComponent } from '../../ui/spinner/spinner.component';
+import { Batch } from '../../core/model/batch.model';
 //import for the spinner , which runs by the interceptor
 @Component({
   selector: 'app-home',
@@ -18,7 +19,14 @@ import { SpinnerComponent } from '../../ui/spinner/spinner.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  tableHeader!: string;
+
+  selectedBatch!: Batch;
+
+  onBatchSelected(batch: Batch) {
+    this.selectedBatch = batch;
+  }
+
+  tableHeader: string = 'Working Days';
   toggleField: string = 'Check-Out'; // Initialize default value
   isVisible:boolean=false;
   
@@ -26,16 +34,22 @@ export class HomeComponent {
 
   handleWidgetClick(dataReceived: {header: string }) {
     // Update visibility and tableHeader based on the widget clicked
-    this.isVisible = true;
+    // this.isVisible = true;
     this.tableHeader = dataReceived.header;
+      // Check if the header is 'Working Days'
+    if (this.tableHeader === 'Working Days') {
+      this.isVisible = false;  // Do not show the table
+    } else {
+      this.isVisible = true;   // Show the table for other headers
+    }
   
     // Conditionally update toggleField based on the clicked widget card's header
     if (this.tableHeader === 'On Time' || this.tableHeader === 'Late Arrivals') {
       this.toggleField = 'Check-In';
     } else if (this.tableHeader === 'Early Departures') {
       this.toggleField = 'Check-Out';
-    } else {
-      this.toggleField = 'Monthly Leave Percentage';
+    } else if (this.tableHeader === 'Absent') {
+    this.toggleField = 'Monthly Leave Percentage';
     }
   }
 }
