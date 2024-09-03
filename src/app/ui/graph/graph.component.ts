@@ -87,10 +87,16 @@ export class GraphComponent  {
    */
   generateXaxisLabel(): string[] {
     const result: string[] = []; 
-      this.dailyAttendanceData?.forEach(item => {
-        let convertToDate = new Date(<any>item.day);
-        result.push(convertToDate.getDate() + " " + this.monthNames[convertToDate.getMonth()])
-      });
+    this.dailyAttendanceData?.forEach(item => {
+      let convertToDate = new Date(<any>item.day);
+      result.push(convertToDate.getDate() + " " + this.monthNames[convertToDate.getMonth()])
+    });
+    // if (result.length < 8){
+    //   const nullsToAdd = 8 - result.length;
+    //   for (let i = 0; i < nullsToAdd; i++) {
+    //     result.push(null);
+    //   }
+    // }    
     return result;
   }
   /**

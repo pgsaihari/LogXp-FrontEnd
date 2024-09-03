@@ -20,6 +20,10 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Batch } from '../../core/model/batch.model';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
+import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
+import { catchError, of } from 'rxjs';
+import { OfficeEntryTime } from '../../core/interfaces/daily-attendance-of-month';
+
 import moment from 'moment';
 import { Calendar, CalendarModule } from 'primeng/calendar';
 @Component({
@@ -41,6 +45,7 @@ import { Calendar, CalendarModule } from 'primeng/calendar';
     TagModule,
     TooltipModule,
     ProgressSpinnerModule,
+    CalendarModule,
     CalendarModule
 
   ],
@@ -51,6 +56,10 @@ import { Calendar, CalendarModule } from 'primeng/calendar';
 export class UserTableComponent implements OnInit {
   startYear: Date | undefined;
   endYear: Date | undefined;
+  timeSetterVisible:boolean = false
+  selectedTime:Date | undefined;
+  curArrivalTime!:Date;
+  officeEntryTime!:OfficeEntryTime;
   traineeDialog: boolean = false;
   trainees: Trainee[] = [];
   trainee: Trainee = {};
@@ -64,10 +73,12 @@ export class UserTableComponent implements OnInit {
   newBatch: Batch = { batchId: 0, batchName: '', year: '' };  // To hold the new batch data
   isLoading = true;
   years: any[] | undefined;
+  error: any;
   constructor(
     private traineeService: TraineeServiceService,
     private batchService: BatchService,  // Inject BatchService
-    private messageService: MessageService
+    private messageService: MessageService,
+    private traineeAttendancelogService: TraineeAttendancelogService
   ) {}
   onSelectionChange(event: any) {
     if (this.selectedTrainees.length === this.trainees.length && this.trainees.length > 0) {
@@ -321,5 +332,57 @@ export class UserTableComponent implements OnInit {
   private showError(summary: string, err: any) {
     console.error(summary, err);
     this.showMessage('error', 'Error', `${summary}: ${err.message}`);
+  }
+
+  openTimeSetterDialog(){
+    this.traineeAttendancelogService.getOfficeEntryTime()
+    .pipe(
+      catchError(error => {
+        this.error = error.message;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error while fetching.' });
+        return of([]);
+      })
+    )
+    .subscribe(data => {
+      this.officeEntryTime = data as OfficeEntryTime;
+      let convertToDateTime = new Date();
+      convertToDateTime.setHours(this.officeEntryTime.hours,this.officeEntryTime.minutes,this.officeEntryTime.seconds)
+      this.curArrivalTime = convertToDateTime;
+
+      this.selectedTime = convertToDateTime
+      this.timeSetterVisible = true;
+    });
+  }
+
+  saveArrivalTime(){
+    if(this.selectedTime){
+      const date = this.selectedTime;
+      const newArrivalTime: OfficeEntryTime = {
+        hours:date.getHours(),
+        minutes:date.getMinutes(),
+        seconds:59
+      }
+      this.timeSetterVisible = false;
+
+      this.traineeAttendancelogService.setOfficeEntryTime(newArrivalTime)
+      .pipe(
+        catchError(error => {
+          this.error = error.message;
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Could not update the arrival time.' });
+          return of([]);
+        })
+      )
+      .subscribe(data => {
+        if(data){
+          this.messageService.add({ severity: 'success', summary: 'Entry Time Updated', detail: 'Updated the entry time for trainees.' });
+        }
+        else{this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Could not update the arrival time.' });}
+      });
+      
+    }
+    else{
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No time selected.' });
+    }
+    
   }
 }
