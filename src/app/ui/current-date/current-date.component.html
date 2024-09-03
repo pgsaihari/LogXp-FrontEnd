@@ -11,7 +11,7 @@
           </div>
         </div>
         <div class="filter-group">
-          <p-dropdown [options]="batches" [(ngModel)]="selectedBatch" (ngModelChange)="onBatchSelect()" optionLabel="batchName" placeholder="Select a Batch"></p-dropdown>
+          <p-dropdown [options]="batches" [(ngModel)]="selectedBatch" (ngModelChange)="onBatchSelect()" optionLabel="batchName" [placeholder]="placeholder" class="dropdown-button"></p-dropdown>
           <button pButton label="Date" icon="pi pi-calendar" iconPos="right" class="custom-button"
             (click)="toggleCalendar()"></button>
         </div>
