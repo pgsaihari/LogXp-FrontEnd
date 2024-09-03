@@ -40,8 +40,8 @@ import { HttpErrorResponse } from '@angular/common/http';
     ) {}
   
     ngOnInit(): void {
-      this.subscribeToDateUpdates();
       this.fetchLatestDateAndCounts();
+      this.subscribeToDateUpdates();  // Subscribe after fetching the latest date
       this.fetchTotalTrainees();
     }
   
@@ -71,12 +71,14 @@ import { HttpErrorResponse } from '@angular/common/http';
             month: date.getMonth() + 1,
             year: date.getFullYear(),
           };
-          console.log(this.selectedDate);
+          console.log('Date selected:', this.selectedDate);
           this.fetchCounts();
+        } else {
+          console.log('Invalid date received:', date);
         }
       });
     }
-  
+
     private fetchLatestDateAndCounts(): void {
       this.traineeAttendanceLogs.getLatestDate().subscribe({
         next: (response: { latestDate: string }) => {
@@ -87,6 +89,7 @@ import { HttpErrorResponse } from '@angular/common/http';
               month: latestDate.getMonth() + 1,
               year: latestDate.getFullYear()
             };
+            this.traineeAttendanceLogs.setSelectedDate(latestDate);
             this.fetchCounts();
           }
         },
