@@ -9,6 +9,7 @@ import { WidgetTableComponent } from "../../ui/widget-table/widget-table.compone
 import { NgxSpinnerComponent } from 'ngx-spinner';
 import { SpinnerService } from '../../core/services/spinner-control.service';
 import { SpinnerComponent } from '../../ui/spinner/spinner.component';
+import { Batch } from '../../core/model/batch.model';
 //import for the spinner , which runs by the interceptor
 @Component({
   selector: 'app-home',
@@ -18,6 +19,13 @@ import { SpinnerComponent } from '../../ui/spinner/spinner.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
+
+  selectedBatch!: Batch;
+
+  onBatchSelected(batch: Batch) {
+    this.selectedBatch = batch;
+  }
+
   tableHeader: string = 'Working Days';
   toggleField: string = 'Check-Out'; // Initialize default value
   isVisible:boolean=false;

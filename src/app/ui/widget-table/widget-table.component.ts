@@ -7,6 +7,7 @@ import { WidgetAttendance } from '../../core/interfaces/widget-attendance';
 import { catchError, map, Observable, of } from 'rxjs';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { CurrentDateComponent } from "../current-date/current-date.component";
+import { Batch } from '../../core/model/batch.model';
 
 @Component({
   selector: 'app-widget-table',
@@ -16,6 +17,7 @@ import { CurrentDateComponent } from "../current-date/current-date.component";
   styleUrls: ['./widget-table.component.css']
 })
 export class WidgetTableComponent implements OnChanges {
+  @Input() selectedBatch!: Batch;
   @Input() tableHeader: string = 'On Time'; // Title of the table, determines the category like 'On Time', 'Late Arrivals', etc.
   @Input() toggleField: string = 'Check-In'; // Column header that toggles based on the table category
 
@@ -52,6 +54,9 @@ export class WidgetTableComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['tableHeader']?.currentValue) {
       this.setSortableColumn();
+    if (changes['selectedBatch'] && this.selectedBatch) {
+      console.log('Batch received in WidgetTableComponent:', this.selectedBatch);
+    }
       this.fetchAttendanceLogs(); // Only fetch logs if the header is defined
     }
   }

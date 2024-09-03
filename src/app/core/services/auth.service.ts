@@ -3,11 +3,15 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Currentuser } from '../interfaces/currentuser';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+    // Backend API base URL
+    private apiUrl = environment.apiUrl+`/Auth`;
+
   private currentUser: Currentuser ={
     userId:"string",
     name:"string",
@@ -43,8 +47,6 @@ export class AuthService {
   setToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
-  // Backend API base URL
-  private apiUrl = 'https://localhost:7074/api/logXp/Auth'; // Replace with your actual backend URL
 
   // Fetches the user role from the backend
   getUserRole(token: string): Observable<any> {
