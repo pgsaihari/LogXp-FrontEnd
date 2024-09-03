@@ -19,12 +19,15 @@ import { AbsenceAndLate } from '../../core/interfaces/side-profile';
 })
 export class SideUserProfileComponent implements OnInit {
 
-totalLeaves: any=0;
-lateArrivals: any=0;
-absenceAndLate:AbsenceAndLate = {
-  numberOfDaysAbsent: 0,
-  numberOfDaysLate: 0
-}
+  numberOfDaysAbsent: any=0;
+  numberOfDaysLate: any=0;
+  attendanceCount:AbsenceAndLate = {
+    absentDaysCount: 0,
+    earlyDepartureDaysCount: 0,
+    lateArrivalDaysCount: 0,
+    onTimeDaysCount: 0
+  }
+  
   
   ngOnInit(): void {
 
@@ -33,7 +36,7 @@ absenceAndLate:AbsenceAndLate = {
         this.getBatches(); 
         this.getTraineeDetails(this.employeeCode);
         this.getLogsByEmployeeCode(this.employeeCode);
-        this.getAbsenceOfTrainee(this.employeeCode);
+        this.GetAttendanceCountOfTrainee(this.employeeCode);
       }
 
   }
@@ -121,8 +124,8 @@ absenceAndLate:AbsenceAndLate = {
 
 
   // Function to get absences and leave count of a trainee
-  getAbsenceOfTrainee(employeeCode: string): void {
-    this.traineeAttendancelogService.getAbsenceOfTrainee(employeeCode).pipe(
+  GetAttendanceCountOfTrainee(employeeCode: string): void {
+    this.traineeAttendancelogService.GetAttendanceCountOfTrainee(employeeCode).pipe(
       catchError((error) => {
         console.error('Error fetching absence and late data:', error);
         return throwError(() => new Error(error));
@@ -132,10 +135,10 @@ absenceAndLate:AbsenceAndLate = {
       })
     ).subscribe(
       (data: AbsenceAndLate) => {
-        this.absenceAndLate = data; // Store the absence and leave data
-        console.log('Absence and Late data:', this.absenceAndLate.numberOfDaysAbsent);
-        this.totalLeaves = this.absenceAndLate.numberOfDaysAbsent;
-        this.lateArrivals = this.absenceAndLate.numberOfDaysLate;
+        this.attendanceCount = data; // Store the absence and leave data
+        console.log('Absence and Late data:', this.attendanceCount);
+        this.numberOfDaysAbsent = this.attendanceCount.absentDaysCount;
+        this.numberOfDaysLate = this.attendanceCount.lateArrivalDaysCount;
       }
     );
   }

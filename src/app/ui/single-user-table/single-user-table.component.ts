@@ -50,12 +50,9 @@ export class SingleUserTableComponent {
   };
 
   statusOptions: { label: string; value: string }[] = [
-    { label: 'Present', value: 'Present' },
     { label: 'Late Arrival', value: 'Late Arrival' },
     { label: 'Early Departure', value: 'Early Departure' },
-    { label: 'Late Arrival and Early Departure', value: 'Late Arrival and Early Departure' },
-    { label: 'On Leave', value: 'On Leave' },
-    { label: 'Early Arrival', value: 'Early Arrival' },
+    { label: 'On Leave', value: 'On Leave' }
   ];
 
   constructor(

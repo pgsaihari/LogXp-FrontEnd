@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import {
 
   AutoCompleteModule,
@@ -53,7 +53,8 @@ export class TableComponent implements OnInit {
 
   constructor(
     private traineeAttendancelogService: TraineeAttendancelogService,
-    public spinnerService:SpinnerService
+    public spinnerService:SpinnerService,
+    private elementRef: ElementRef, private renderer: Renderer2
   ) {}
 
   selectedItem: any;
@@ -74,7 +75,9 @@ export class TableComponent implements OnInit {
     'Early Departure',
     'Late Arrival and Early Departure',
   ]; // List of statuses
-  batches = ['Batch 4','Batch 3'];
+
+  batches = ['Batch 3','Batch 4'];
+
   selectedBatches: string[] = [];
 
   toggleVisibility(section: string) {
@@ -102,6 +105,16 @@ export class TableComponent implements OnInit {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getTraineeAttendanceLogs(); // Fetch data from the API
     this.getLatestDate();
+
+    this.renderer.listen('document', 'click', (event: Event) => {
+      // Check if the click is outside both the table component and the side profile
+      const isInsideTable = this.elementRef.nativeElement.contains(event.target);
+      const isInsideSideProfile = event.target instanceof HTMLElement && event.target.closest('app-side-user-profile');      
+
+      if (this.isSideProfileVisible && !isInsideTable && !isInsideSideProfile) {
+        this.closeSideProfile();
+      }
+    });
   }
 
   getTraineeAttendanceLogs() {
@@ -111,23 +124,27 @@ export class TableComponent implements OnInit {
         .subscribe({
           next: (response: any) => {
             if (response && Array.isArray(response.logs)) {
-              this.filteredTrainees = response.logs;
+              this.originalTraineeLogs = response.logs; // Save original data
+              this.filteredTrainees = [...this.originalTraineeLogs]; // Initialize filtered data
             } else {
               console.error('API did not return an array:', response);
+              this.originalTraineeLogs = [];
               this.filteredTrainees = [];
             }
           },
           error: (error) => {
             console.error('Error fetching trainee attendance logs:', error);
+            this.originalTraineeLogs = [];
             this.filteredTrainees = [];
           },
         });
     }
   }
+  
 
   search(query: string): void {
-    // const query = this.searchQuery;
-    this.filterTrainees(query);
+    this.searchQuery = query; // Update the search query
+    this.filterTrainees(query); // Call filter method with the new query
   }
 
   getLatestDate(): void {
@@ -144,6 +161,7 @@ export class TableComponent implements OnInit {
   
   filterTrainees(query: string): void {
     if (query) {
+      // Filter trainees based on the search query
       this.filteredTrainees = this.originalTraineeLogs.filter(
         (trainee) =>
           trainee.name &&
@@ -151,8 +169,7 @@ export class TableComponent implements OnInit {
       );
     } else {
       // Reset to the original data if the query is empty
-      this.filteredTrainees = [...this.originalTraineeLogs]; // Changed to use originalTraineeLogs
-      this.filterByDate();
+      this.filteredTrainees = [...this.originalTraineeLogs];
     }
   }
 
@@ -331,12 +348,28 @@ export class TableComponent implements OnInit {
     return `${hours}:${minutes}`;
   }
 
-  showSideProfile(employeeCode: string): void {
+  showSideProfile(employeeCode: string, event: MouseEvent): void {
+
+    event.stopPropagation();
+
     this.selectedTraineeCode = employeeCode;
-    this.isSideProfileVisible = true; // Show the side profile when an employee is clicked
+    if (this.isSideProfileVisible == false){
+      this.isSideProfileVisible = true; // Show the side profile when an employee is clicked
+    }
+    else if(this.isSideProfileVisible == true){
+      this.isSideProfileVisible = false;
+      setTimeout(() => {
+        this.isSideProfileVisible = true; // Reopen the side profile for the new trainee
+      }, 10);
+    } 
   }
   closeSideProfile(): void {
     this.isSideProfileVisible = false; // Set to false when hiding the side profile
+  }
+
+  handleTableClick(event: MouseEvent): void {
+    event.stopPropagation();  // Prevent click event from closing the side profile immediately
+    this.closeSideProfile();
   }
 
   getDisplayTime(time: string, status: string): string {
