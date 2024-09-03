@@ -123,3 +123,6 @@ margin:0rem !important;
   box-shadow: none;
   border: none;
 }
+::ng-deep.p-tag.p-tag-success{
+  background-color: darkgreen;
+}

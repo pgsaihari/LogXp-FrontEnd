@@ -23,7 +23,7 @@ export class BatchService {
   }
 
   // Add a new batch
-  addBatch(batch: { batchName: string; year: number }): Observable<Batch> {
+  addBatch(batch: { batchName: string; year: string }): Observable<Batch> {
     return this.http.post<Batch>(this.apiUrl, batch);
   }
 

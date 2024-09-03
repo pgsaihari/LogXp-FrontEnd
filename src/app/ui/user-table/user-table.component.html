@@ -8,7 +8,7 @@
         [value]="trainees"
         [rows]="10"
         [scrollable]="true"
-        scrollHeight="460px"
+        scrollHeight="410px"
         [globalFilterFields]="['employeeCode', 'name', 'email', 'batch']"
         [tableStyle]="{ 'min-width': '40rem' }"
         [(selection)]="selectedTrainees"
@@ -36,32 +36,50 @@
 <button pButton label="Add Batch" icon="pi pi-plus" class="p-button-success" style="width: 150px;"
 (click)="openBatchDialog()"></button>
 
-<!-- Batch Dialog -->
-<p-dialog header="Add New Batch" [(visible)]="batchDialog" [modal]="true" [closable]="true" [style]="{width: '30vw'}">
-   
+<p-dialog header="Add New Batch" [(visible)]="batchDialog" [modal]="true" [closable]="true" [style]="{width: '50vw'}">
     <div class="p-fluid">
-    
-      <div class="p-field">
-        <label for="batchName">Batch Name</label>
-        <input id="batchName" type="text" pInputText [(ngModel)]="newBatch.batchName" />
-      </div>
-      
-      <div class="p-field">
-        <label for="year">Year</label>
-        <p-dropdown 
-          id="year" 
-          [options]="years" 
-          [(ngModel)]="newBatch.year" 
-          placeholder="Select a Year">
-        </p-dropdown>
-      </div>
-    
+        <div class="p-field">
+            <label for="batchName">Batch Name</label>
+            <input id="batchName" type="text" pInputText [(ngModel)]="newBatch.batchName" />
+        </div>
+
+        <div class="p-field">
+            <label for="yearRange">Year Range</label>
+            <div class="year-range-picker">
+                <p-calendar 
+                    id="startYear" 
+                    [(ngModel)]="startYear" 
+                    view="year" 
+                    dateFormat="yy" 
+                    yearNavigator="true" 
+                    yearRange="2000:2050"
+                    (onSelect)="updateYearRange()" 
+                    [showIcon]="true"
+                    placeholder="year">
+                </p-calendar>
+                <span> - </span>
+                <p-calendar 
+                    id="endYear" 
+                    [(ngModel)]="endYear" 
+                    view="year" 
+                    dateFormat="yy" 
+                    yearNavigator="true" 
+                    yearRange="2000:2050"
+                    (onSelect)="updateYearRange()" 
+                    [showIcon]="true"
+                    placeholder="year">
+                </p-calendar>
+            </div>
+        </div>
     </div>
-  
+
     <p-footer>
-      <button pButton label="Save" (click)="saveBatch()" class="p-button-primary batchs"></button>
+        <button pButton label="Save" (click)="saveBatch()" class="p-button-primary batchs"></button>
     </p-footer>
-  </p-dialog>
+</p-dialog>
+
+
+
   
 
 
