@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { User } from '../model/user.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   //move to .env
-  private apiUrl = 'https://localhost:7074/api/User';  // Replace with your actual API URL
+  private apiUrl = environment.apiUrl+`/user`; // Replace with your actual API endpoint
 
   constructor(private http: HttpClient) { }
 

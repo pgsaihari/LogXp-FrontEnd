@@ -1,20 +1,27 @@
   import { DatePipe, NgClass, NgIf } from '@angular/common';
-  import { Component, ElementRef, HostListener, Input, OnInit } from '@angular/core';
+  import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
   import { CardModule } from 'primeng/card';
   import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
   import { catchError, of } from 'rxjs';
   import { ButtonModule } from 'primeng/button';
   import { CalendarModule } from 'primeng/calendar';
   import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { BatchService } from '../../core/services/batch.service';
+import { Batch } from '../../core/model/batch.model';
 
   @Component({
     selector: 'app-current-date',
     standalone: true,
-    imports: [CardModule, DatePipe,ButtonModule, CalendarModule, FormsModule, NgIf],
+    imports: [CardModule, DatePipe,ButtonModule, CalendarModule, FormsModule, NgIf, DropdownModule],
     templateUrl: './current-date.component.html',
     styleUrl: './current-date.component.css'
   })
   export class CurrentDateComponent implements OnInit{
+    @Output() batchSelected = new EventEmitter<Batch>();
+
+    batches: Batch[] = []; // Array to hold the list of batches
+    selectedBatch!: Batch; // Store the selected batch
     currentTime!: Date;
     currentDate!: Date;
     latestLogDate!: Date
@@ -24,43 +31,21 @@
     showCalendar: boolean = false; // Control calendar visibility
     selectedDate!: Date // Store selected date
     maxDate!: Date;
-    constructor(private api: TraineeAttendancelogService, private elementRef: ElementRef) {}
+    constructor(private api: TraineeAttendancelogService, private elementRef: ElementRef,private batchService: BatchService)
+     {
+     }
 
     ngOnInit() {
-       this.getThelatestDate();
-      // this.updateTime();
-      // setInterval(() => this.updateTime(), 1000);
+       this.getLatestDate();
+       this.loadBatches();
+    
     }
 
-    // updateTime() {
-    //   this.currentTime = new Date();
-    //   this.currentDate = new Date();
+    loadBatches() {
+      this.batchService.getBatches().subscribe(batches => this.batches = batches);
+    }
 
-    //   const hours = this.currentTime.getHours();
-
-    //   if (hours >= 6 && hours < 12) {
-    //     this.timeIcon = 'pi pi-sun'; // Morning sun icon
-    //   } else if (hours >= 12 && hours < 18) {
-    //     this.timeIcon = 'pi pi-sun'; // Blazing sun icon
-    //   } else if (hours >= 18 && hours < 20) {
-    //     this.timeIcon = 'pi pi-sunset'; // Setting sun icon
-    //   } else {
-    //     this.timeIcon = 'pi pi-moon'; // Moon icon
-    //   }
-
-    //   if (hours >= 6 && hours < 12) {
-    //     this.timeOfDay = 'morning';
-    //   } else if (hours >= 12 && hours < 18) {
-    //     this.timeOfDay = 'afternoon';
-    //   } else if (hours >= 18 && hours < 20) {
-    //     this.timeOfDay = 'evening';
-    //   } else {
-    //     this.timeOfDay = 'night';
-    //   }
-
-    // }
-
-    getThelatestDate() {
+    getLatestDate() {
       this.api.getWidgetCount().subscribe((data) => {
         if (data.latestDate) {
           this.latestLogDate = new Date(data.latestDate);
@@ -96,6 +81,12 @@
         year: date.getFullYear()
       };
       this.api.updateSelectedDate(formattedDate);
+    }
+
+    onBatchSelect() {
+      console.log('Selected Batch:', this.selectedBatch);
+      this.batchSelected.emit(this.selectedBatch);
+      // Implement any other logic you want to execute when a batch is selected.
     }
     
     @HostListener('document:click', ['$event'])

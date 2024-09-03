@@ -37,25 +37,32 @@
 (click)="openBatchDialog()"></button>
 
 <!-- Batch Dialog -->
-<p-dialog header="Add New Batch"  [(visible)]="batchDialog" [modal]="true" [closable]="true" [style]="{width: '30vw'}">
+<p-dialog header="Add New Batch" [(visible)]="batchDialog" [modal]="true" [closable]="true" [style]="{width: '30vw'}">
    
-<div class="p-fluid">
+    <div class="p-fluid">
+    
+      <div class="p-field">
+        <label for="batchName">Batch Name</label>
+        <input id="batchName" type="text" pInputText [(ngModel)]="newBatch.batchName" />
+      </div>
+      
+      <div class="p-field">
+        <label for="year">Year</label>
+        <p-dropdown 
+          id="year" 
+          [options]="years" 
+          [(ngModel)]="newBatch.year" 
+          placeholder="Select a Year">
+        </p-dropdown>
+      </div>
+    
+    </div>
   
-<div class="p-field">
-<label for="batchName">Batch Name</label>
-<input id="batchName" type="text" pInputText [(ngModel)]="newBatch.batchName" />
-</div>
-<div class="p-field">
-<label for="year">Year</label>
-<input id="year"  pInputText [(ngModel)]="newBatch.year" />
-</div>
-</div>
-
-<p-footer>
-
-<button pButton label="Save"  (click)="saveBatch()" class="p-button-primary batchs"></button>
-</p-footer>
-</p-dialog>
+    <p-footer>
+      <button pButton label="Save" (click)="saveBatch()" class="p-button-primary batchs"></button>
+    </p-footer>
+  </p-dialog>
+  
 
 
                 <div class="p-field">
