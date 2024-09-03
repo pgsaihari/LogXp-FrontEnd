@@ -52,13 +52,13 @@ export class WidgetTableComponent implements OnChanges {
   
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['tableHeader']?.currentValue) {
-      this.setSortableColumn();
     if (changes['selectedBatch'] && this.selectedBatch) {
       console.log('Batch received in WidgetTableComponent:', this.selectedBatch);
     }
-      this.fetchAttendanceLogs(); // Only fetch logs if the header is defined
+    if (changes['tableHeader']?.currentValue) {
+      this.setSortableColumn();
     }
+      this.fetchAttendanceLogs(); // Only fetch logs if the header is defined
   }
 
   setSortableColumn() {
@@ -90,16 +90,16 @@ export class WidgetTableComponent implements OnChanges {
     // Map table headers to their corresponding attendanceService calls
     const dataFetchMap: Record<string, () => Observable<WidgetAttendance[]>> = {
       'On Time': () => this.attendanceService.onTimeLogs(day, month, year).pipe(
-        map(response => response.earlyArrivals.map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
+        map(response => response.earlyArrivals.filter(log => log.batch === this.selectedBatch?.batchName).map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
       ),
       'Late Arrivals': () => this.attendanceService.lateArrivalLogs(day, month, year).pipe(
-        map(response => response.lateArrivals.map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
+        map(response => response.lateArrivals.filter(log => log.batch === this.selectedBatch?.batchName).map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
       ),
       'Absent': () => this.attendanceService.absenteeLogs(day, month, year).pipe(
-        map(response => response.absentees.map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
+        map(response => response.absentees.filter(log => log.batch === this.selectedBatch?.batchName).map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
       ),
       'Early Departures': () => this.attendanceService.earlyDeparturesLogs(day, month, year).pipe(
-        map(response => response.earlyDepartures.map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
+        map(response => response.earlyDepartures.filter(log => log.batch === this.selectedBatch?.batchName).map(log => ({ ...log, loginTime: new Date(log.loginTime), logoutTime: new Date(log.logoutTime) })))
       ),
     };
 
