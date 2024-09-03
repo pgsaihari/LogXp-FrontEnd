@@ -60,6 +60,7 @@ export class UserTableComponent implements OnInit {
   batchDialog: boolean = false;  // To control the visibility of the batch dialog
   newBatch: Batch = { batchId: 0, batchName: '', year: 0 };  // To hold the new batch data
   isLoading = true;
+  years: any[] | undefined;
   constructor(
     private traineeService: TraineeServiceService,
     private batchService: BatchService,  // Inject BatchService
@@ -80,6 +81,9 @@ export class UserTableComponent implements OnInit {
    * Initialize the component by loading trainees and batch options.
    */
   ngOnInit() {
+    this.years = Array.from({length: 26}, (v, k) => {
+      return { label: `${2000 + k}`, value: 2000 + k };
+    });
     // Set loading to true initially
     this.isLoading = true;
   
