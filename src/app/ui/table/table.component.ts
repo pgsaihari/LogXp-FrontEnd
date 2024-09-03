@@ -75,7 +75,9 @@ export class TableComponent implements OnInit {
     'Early Departure',
     'Late Arrival and Early Departure',
   ]; // List of statuses
+
   batches = ['Batch 3','Batch 4'];
+
   selectedBatches: string[] = [];
 
   toggleVisibility(section: string) {
