@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {  TraineeAttendanceLogs } from '../model/traineeAttendanceLogs.model';
-import { DailyAttendanceOfMonth } from '../interfaces/daily-attendance-of-month';
+import { DailyAttendanceOfMonth, OfficeEntryTime } from '../interfaces/daily-attendance-of-month';
 import { AbsenceAndLate, CurrentTraineeLog, PatchResponse } from '../interfaces/side-profile';
 import { AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, UserWidgetSummary, WidgetSummary } from '../interfaces/widget-attendance';
 import { environment } from '../../../environments/environment';
@@ -201,5 +201,16 @@ export class TraineeAttendancelogService {
 
   setSelectedDate(date: Date) {
     this.selectedDateSource.next(date);
+  }
+
+  getOfficeEntryTime():Observable<OfficeEntryTime>{
+    const url = `${this.apiUrl}/getOfficeEntryTime`;
+    return this.http.get<OfficeEntryTime>(url);
+  }
+
+  
+  setOfficeEntryTime(officeEntryTime:OfficeEntryTime):Observable<any>{
+    const url = `${this.apiUrl}/setOfficeEntryTime`;
+    return this.http.post<any>(url, officeEntryTime);
   }
 }  

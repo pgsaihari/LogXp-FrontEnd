@@ -4,3 +4,9 @@ export interface DailyAttendanceOfMonth {
     lateArrivals?:number
     totalEmployees?:number;
 }
+
+export interface OfficeEntryTime {
+    hours:number;
+    minutes:number;
+    seconds:number;
+}
