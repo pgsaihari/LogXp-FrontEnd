@@ -5,6 +5,7 @@ import {  TraineeAttendanceLogs } from '../model/traineeAttendanceLogs.model';
 import { DailyAttendanceOfMonth } from '../interfaces/daily-attendance-of-month';
 import { AbsenceAndLate, CurrentTraineeLog, PatchResponse } from '../interfaces/side-profile';
 import { AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, UserWidgetSummary, WidgetSummary } from '../interfaces/widget-attendance';
+import { environment } from '../../../environments/environment';
 import { Batch } from '../model/batch.model';
 
 @Injectable({
@@ -15,7 +16,7 @@ import { Batch } from '../model/batch.model';
  */
 export class TraineeAttendancelogService {
 
-  private apiUrl = 'https://localhost:7074/api/LogXP/traineeAttendanceLogs';
+  private apiUrl = environment.apiUrl+`/traineeAttendanceLogs`;
 
   // BehaviorSubject to keep track of the selected date
   private selectedDateSubject = new BehaviorSubject<{ day: number, month: number, year: number }>({
@@ -43,12 +44,6 @@ export class TraineeAttendancelogService {
    */
   getTraineeAttendanceLogs(): Observable<TraineeAttendanceLogs[]> {
     return this.http.get<TraineeAttendanceLogs[]>(this.apiUrl);
-  }
-
-  getTraineeAttendanceLogsByDateRange(startDate: string, endDate: string) {
-    return this.http.get<TraineeAttendanceLogs[]>(
-      `/api/traineeAttendanceLogs/bydaterange?startDate=${startDate}&endDate=${endDate}`
-    );
   }
 
   /**
@@ -85,7 +80,7 @@ export class TraineeAttendancelogService {
     endDate: string | null,
     batches: string[]
 ): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
-    let url = `https://localhost:7074/api/LogXP/traineeAttendanceLogs/filterLogs?`;
+    let url = `${this.apiUrl}/filterLogs?`;
 
     // Handle multiple statuses
     if (statuses.length > 0) {
@@ -123,6 +118,8 @@ export class TraineeAttendancelogService {
    getLatestDate(): Observable<{ latestDate: string }> {
     return this.http.get<{ latestDate: string }>(`${this.apiUrl}/latestAttendanceSummary`);
   }
+
+
 
   // Function to update status and remark of a trainee
   updateTraineeLog(id: number, updatedLog: CurrentTraineeLog): Observable<PatchResponse> {
