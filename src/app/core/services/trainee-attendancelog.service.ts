@@ -2,9 +2,11 @@ import { HttpClient, HttpParams, } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {  TraineeAttendanceLogs } from '../model/traineeAttendanceLogs.model';
-import { DailyAttendanceOfMonth } from '../interfaces/daily-attendance-of-month';
+import { DailyAttendanceOfMonth, OfficeEntryTime } from '../interfaces/daily-attendance-of-month';
 import { AbsenceAndLate, CurrentTraineeLog, PatchResponse } from '../interfaces/side-profile';
 import { AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, UserWidgetSummary, WidgetSummary } from '../interfaces/widget-attendance';
+import { environment } from '../../../environments/environment';
+import { Batch } from '../model/batch.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ import { AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, User
  */
 export class TraineeAttendancelogService {
 
-  private apiUrl = 'https://localhost:7074/api/LogXP/traineeAttendanceLogs';
+  private apiUrl = environment.apiUrl+`/traineeAttendanceLogs`;
 
   // BehaviorSubject to keep track of the selected date
   private selectedDateSubject = new BehaviorSubject<{ day: number, month: number, year: number }>({
@@ -23,23 +25,26 @@ export class TraineeAttendancelogService {
     year: new Date().getFullYear()
   });
 
-  private selectedDateSource = new BehaviorSubject<Date | null>(null);
+  // Initialize selectedDateSource with the current date to avoid null values.
+  private selectedDateSource = new BehaviorSubject<Date>(new Date());
   selectedDate$ = this.selectedDateSource.asObservable();
+
+  // private selectedBatchSubject = new BehaviorSubject<Batch | null>(null);
+  // selectedBatch$ = this.selectedBatchSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
+
+  // setSelectedBatch(batch: Batch) {
+  //   this.selectedBatchSubject.next(batch);
+  // }
+  
   /**
    * Retrieves all trainee attendance logs.
    * @returns {Observable<TraineeAttendanceLogs[]>} - An observable containing a list of trainee attendance logs.
    */
   getTraineeAttendanceLogs(): Observable<TraineeAttendanceLogs[]> {
     return this.http.get<TraineeAttendanceLogs[]>(this.apiUrl);
-  }
-
-  getTraineeAttendanceLogsByDateRange(startDate: string, endDate: string) {
-    return this.http.get<TraineeAttendanceLogs[]>(
-      `/api/traineeAttendanceLogs/bydaterange?startDate=${startDate}&endDate=${endDate}`
-    );
   }
 
   /**
@@ -76,7 +81,7 @@ export class TraineeAttendancelogService {
     endDate: string | null,
     batches: string[]
 ): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
-    let url = `https://localhost:7074/api/LogXP/traineeAttendanceLogs/filterLogs?`;
+    let url = `${this.apiUrl}/filterLogs?`;
 
     // Handle multiple statuses
     if (statuses.length > 0) {
@@ -105,8 +110,6 @@ export class TraineeAttendancelogService {
     return this.http.get<{ logs: TraineeAttendanceLogs[], count: number, message: string }>(url);
 }
 
-
-
    /**
    * Retrieves the latest attendance date.
    * @returns {Observable<{ latestDate: string }>} - An observable containing the latest attendance date.
@@ -122,8 +125,8 @@ export class TraineeAttendancelogService {
   }
 
   // Function to get absences and leave count of a trainee
-  getAbsenceOfTrainee(traineeCode: string): Observable<AbsenceAndLate> {
-    return this.http.get<AbsenceAndLate>(`${this.apiUrl}/GetAbsenceOfTrainee?traineeCode=${traineeCode}`);
+  GetAttendanceCountOfTrainee(traineeCode: string): Observable<AbsenceAndLate> {
+    return this.http.get<AbsenceAndLate>(`${this.apiUrl}/GetAttendanceCountOfTrainee?traineeCode=${traineeCode}`);
   }
 
    /**
@@ -195,5 +198,16 @@ export class TraineeAttendancelogService {
 
   setSelectedDate(date: Date) {
     this.selectedDateSource.next(date);
+  }
+
+  getOfficeEntryTime():Observable<OfficeEntryTime>{
+    const url = `${this.apiUrl}/getOfficeEntryTime`;
+    return this.http.get<OfficeEntryTime>(url);
+  }
+
+  
+  setOfficeEntryTime(officeEntryTime:OfficeEntryTime):Observable<any>{
+    const url = `${this.apiUrl}/setOfficeEntryTime`;
+    return this.http.post<any>(url, officeEntryTime);
   }
 }  

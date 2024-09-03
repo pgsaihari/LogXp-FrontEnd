@@ -58,6 +58,11 @@ margin:0rem !important;
 }
 
 
+:host ::ng-deep #timeSetter .p-calendar .p-inputtext{
+  padding-top: 0.5rem;
+padding-bottom: 0.5rem;
+width: 11rem;
+}
 
 
 :host ::ng-deep .p-datatable .p-datatable-header{
@@ -113,4 +118,16 @@ margin:0rem !important;
   padding: 0.5rem !important;
   border-radius: 5px !important;
 
+}
+.p-button:focus {
+   box-shadow:none
+}
+::ng-deep.p-dropdown:not(.p-disabled).p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: none;
+  border: none;
+}
+::ng-deep.p-tag.p-tag-success{
+  background-color: darkgreen;
 }

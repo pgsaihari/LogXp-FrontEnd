@@ -1,8 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {
-
-  AutoCompleteModule,
-} from 'primeng/autocomplete';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { AutoCompleteModule,} from 'primeng/autocomplete';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +16,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { SpinnerComponent } from "../spinner/spinner.component";
 import { SpinnerService } from '../../core/services/spinner-control.service';
+import { BatchService } from '../../core/services/batch.service';
+import { Batch } from '../../core/model/batch.model';
 
 @Component({
   selector: 'app-table',
@@ -53,7 +52,9 @@ export class TableComponent implements OnInit {
 
   constructor(
     private traineeAttendancelogService: TraineeAttendancelogService,
-    public spinnerService:SpinnerService
+    private batchService: BatchService,
+    public spinnerService:SpinnerService,
+    private elementRef: ElementRef, private renderer: Renderer2
   ) {}
 
   selectedItem: any;
@@ -74,7 +75,9 @@ export class TableComponent implements OnInit {
     'Early Departure',
     'Late Arrival and Early Departure',
   ]; // List of statuses
-  batches = ['Batch 4','Batch 3'];
+
+  batches: Batch [] = [];
+
   selectedBatches: string[] = [];
 
   toggleVisibility(section: string) {
@@ -100,9 +103,47 @@ export class TableComponent implements OnInit {
 
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
-    this.getTraineeAttendanceLogs(); // Fetch data from the API
     this.getLatestDate();
+    this.getTraineeAttendanceLogs(); // Fetch data from the API
+    this.fetchBatches(); // Fetch batches
+  
+   
+
+    this.renderer.listen('document', 'click', (event: Event) => {
+      // Check if the click is outside both the table component and the side profile
+      const isInsideTable = this.elementRef.nativeElement.contains(event.target);
+      const isInsideSideProfile = event.target instanceof HTMLElement && event.target.closest('app-side-user-profile');      
+
+      if (this.isSideProfileVisible && !isInsideTable && !isInsideSideProfile) {
+        this.closeSideProfile();
+      }
+    });
   }
+
+  clearDateRange(): void {
+    this.selectedDateRange = []; // Clear the selected date range
+    this.selectedBatches = [];
+    this.selectedStatuses = [];
+
+    // Optionally, you can call filterByDate() or other methods if needed
+    console.log('Date Range Cleared');
+    this.filterByDate();
+  }
+
+  fetchBatches(): void {
+    this.batchService.getBatches().subscribe({
+      next: (batches: Batch[]) => {
+        this.batches = batches;
+        // Optionally initialize selectedBatches with IDs or another identifier
+        this.selectedBatches = this.batches.map(batch => batch.batchName); // Adjust based on your logic
+      },
+      error: (error) => {
+        console.error('Error fetching batches:', error);
+        this.batches = [];
+      }
+    });
+  }
+
 
   getTraineeAttendanceLogs() {
     if (this.selectedDate) {
@@ -111,30 +152,34 @@ export class TableComponent implements OnInit {
         .subscribe({
           next: (response: any) => {
             if (response && Array.isArray(response.logs)) {
-              this.filteredTrainees = response.logs;
+              this.originalTraineeLogs = response.logs; // Save original data
+              this.filteredTrainees = [...this.originalTraineeLogs]; // Initialize filtered data
             } else {
               console.error('API did not return an array:', response);
+              this.originalTraineeLogs = [];
               this.filteredTrainees = [];
             }
           },
           error: (error) => {
             console.error('Error fetching trainee attendance logs:', error);
+            this.originalTraineeLogs = [];
             this.filteredTrainees = [];
           },
         });
     }
   }
+  
 
   search(query: string): void {
-    // const query = this.searchQuery;
-    this.filterTrainees(query);
+    this.searchQuery = query; // Update the search query
+    this.filterTrainees(query); // Call filter method with the new query
   }
 
   getLatestDate(): void {
     this.traineeAttendancelogService.getLatestDate().subscribe({
       next: (response) => {
         this.selectedDate = new Date(response.latestDate);
-        this.getTraineeAttendanceLogs(); // Fetch data from the API after getting the latest date
+        this.filterByDate(); // Fetch data from the API after getting the latest date
       },
       error: (error) => {
         console.error('Error fetching latest date:', error);
@@ -144,45 +189,77 @@ export class TableComponent implements OnInit {
   
   filterTrainees(query: string): void {
     if (query) {
+      // Filter trainees based on the search query applied to the date-filtered data
       this.filteredTrainees = this.originalTraineeLogs.filter(
         (trainee) =>
           trainee.name &&
           trainee.name.toLowerCase().includes(query.toLowerCase())
       );
     } else {
-      // Reset to the original data if the query is empty
-      this.filteredTrainees = [...this.originalTraineeLogs]; // Changed to use originalTraineeLogs
-      this.filterByDate();
+      // Reset to the date-filtered data if the query is empty
+      this.filteredTrainees = [...this.originalTraineeLogs];
     }
   }
-
+  
   filterByDate(): void {
     if (this.selectedDateRange && this.selectedDateRange.length === 2) {
       const startDateString = this.datePipe.transform(this.selectedDateRange[0], 'yyyy-MM-dd') || '';
       const endDateString = this.datePipe.transform(this.selectedDateRange[1], 'yyyy-MM-dd') || '';
   
       this.traineeAttendancelogService
-        .getFilteredTraineeAttendanceLogs([], startDateString, endDateString, [])
+        .getFilteredTraineeAttendanceLogs(
+          this.selectedStatuses, // Pass the selected statuses
+          startDateString,
+          endDateString,
+          this.selectedBatches // Pass the selected batches
+        )
         .subscribe({
           next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
             if (response && Array.isArray(response.logs)) {
-              this.filteredTrainees = response.logs;
+              this.originalTraineeLogs = response.logs; // Save the filtered data
+              this.filteredTrainees = [...this.originalTraineeLogs]; // Initialize filtered data
             } else {
               console.error('API did not return an array:', response);
+              this.originalTraineeLogs = [];
               this.filteredTrainees = [];
             }
           },
           error: (error) => {
             console.error('Error fetching filtered trainee logs:', error);
+            this.originalTraineeLogs = [];
             this.filteredTrainees = [];
           },
         });
-    } else {
-      // If the date range is empty or not properly selected, fetch data for the latest date
-      this.getLatestDate(); // Calls method to get data for the latest date
+    }  else {
+      // No date range selected, use the selected date (latest date) to filter the data
+      const formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
+  
+      this.traineeAttendancelogService
+        .getFilteredTraineeAttendanceLogs(
+          this.selectedStatuses, // Pass the selected statuses
+          formattedDate,
+          formattedDate,
+          this.selectedBatches // Pass the selected batches
+        )
+        .subscribe({
+          next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
+            if (response && Array.isArray(response.logs)) {
+              this.originalTraineeLogs = response.logs; // Save the filtered data
+              this.filteredTrainees = [...this.originalTraineeLogs]; // Initialize filtered data
+            } else {
+              console.error('API did not return an array:', response);
+              this.originalTraineeLogs = [];
+              this.filteredTrainees = [];
+            }
+          },
+          error: (error) => {
+            console.error('Error fetching filtered trainee logs:', error);
+            this.originalTraineeLogs = [];
+            this.filteredTrainees = [];
+          },
+        });
     }
   }
-  
 
   applyStatusFilter(event: MatSelectionListChange) {
     // Update selected statuses based on the selected options
@@ -202,34 +279,7 @@ export class TableComponent implements OnInit {
   }
 
   applyFilters() {
-    const startDateFilter: string = this.selectedStartDate
-        ? this.datePipe.transform(this.selectedStartDate, 'yyyy-MM-dd') ?? ''
-        : '';
-
-    const endDateFilter: string = this.selectedEndDate
-        ? this.datePipe.transform(this.selectedEndDate, 'yyyy-MM-dd') ?? ''
-        : '';
-
-    // Call the service with the date range and other filters
-    this.traineeAttendancelogService.getFilteredTraineeAttendanceLogs(
-        this.selectedStatuses,
-        startDateFilter,
-        endDateFilter,
-        this.selectedBatches
-    ).subscribe({
-        next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
-            if (response && Array.isArray(response.logs)) {
-                this.filteredTrainees = response.logs;
-            } else {
-                console.error('API did not return an array:', response);
-                this.filteredTrainees = [];
-            }
-        },
-        error: (error) => {
-            console.error('Error fetching filtered trainee logs:', error);
-            this.filteredTrainees = [];
-        }
-    });
+    this.filterByDate();
 }
 
 
@@ -331,12 +381,28 @@ export class TableComponent implements OnInit {
     return `${hours}:${minutes}`;
   }
 
-  showSideProfile(employeeCode: string): void {
+  showSideProfile(employeeCode: string, event: MouseEvent): void {
+
+    event.stopPropagation();
+
     this.selectedTraineeCode = employeeCode;
-    this.isSideProfileVisible = true; // Show the side profile when an employee is clicked
+    if (this.isSideProfileVisible == false){
+      this.isSideProfileVisible = true; // Show the side profile when an employee is clicked
+    }
+    else if(this.isSideProfileVisible == true){
+      this.isSideProfileVisible = false;
+      setTimeout(() => {
+        this.isSideProfileVisible = true; // Reopen the side profile for the new trainee
+      }, 10);
+    } 
   }
   closeSideProfile(): void {
     this.isSideProfileVisible = false; // Set to false when hiding the side profile
+  }
+
+  handleTableClick(event: MouseEvent): void {
+    event.stopPropagation();  // Prevent click event from closing the side profile immediately
+    this.closeSideProfile();
   }
 
   getDisplayTime(time: string, status: string): string {
