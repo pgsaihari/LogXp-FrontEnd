@@ -1,69 +1,100 @@
 <div class="popup">
-    <div class="popup-content">
-      <!-- Close Icon -->
-      <button class="close-btn" (click)="close()">
-        &#10005;
+  <div class="popup-content">
+    <!-- Close Icon -->
+    <button class="close-btn" (click)="close()">
+      &#10005;
+    </button>
+
+    <!-- Toggle Buttons -->
+    <div class="toggle-buttons">
+      <button 
+        (click)="toggleTable(true)" 
+        [class.active]="showLateArrivals"
+      >
+        Late Arrivals
       </button>
-  
-      <!-- Toggle Buttons -->
-      <div class="toggle-buttons">
-        <button 
-          (click)="toggleTable(true)" 
-          [class.active]="showLateArrivals"
-        >
-          Late Arrivals
-        </button>
-        <button 
-          (click)="toggleTable(false)" 
-          [class.active]="!showLateArrivals"
-        >
-          All Trainees
-        </button>
+      <button 
+        (click)="toggleTable(false)" 
+        [class.active]="!showLateArrivals"
+      >
+        Live Swipe Actions
+      </button>
+    </div>
+
+    <!-- Late Arrivals Table -->
+    <div *ngIf="showLateArrivals">
+      <h3>Today's Late Arrivals</h3>
+
+      <!-- Filter for Late Arrivals -->
+      <div class="filter-container">
+        <label for="lateArrivalFilter">Filter by Batch:</label>
+        <select id="lateArrivalFilter" [(ngModel)]="selectedBatchLateArrivals" (ngModelChange)="filterLateArrivals()" class="filter-button">
+          <option value="">All Batches</option>
+          <option value="1">Batch 4</option>
+          <option value="2">Batch 3</option>
+        </select>
       </div>
-  
-      <!-- Late Arrivals Table -->
-      <div class="table-container" *ngIf="showLateArrivals">
-        <h3>Today's Late Arrivals</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Trainee Code</th>
-              <th>Name</th>
-              <th>Location</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let arrival of lateArrivals">
-              <td>{{ arrival.traineeCode }}</td>
-              <td>{{ arrival.name }}</td>
-              <td>{{ arrival.location }}</td>
-            </tr>
-          </tbody>
-        </table>
+
+      <!-- Pagination Controls for Late Arrivals -->
+      <pagination-controls (pageChange)="pageLateArrivals = $event"></pagination-controls>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Batch</th>
+            <th>Time</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let arrival of filteredLateArrivals | paginate: { itemsPerPage: 10, currentPage: pageLateArrivals }">
+            <td>{{ arrival.employeeName }}</td>
+            <td>{{ arrival.batchName === '1' ? 'Batch 4' : arrival.batchName === '2' ? 'Batch 3' : 'Unknown Batch' }}</td>
+            <td>{{ arrival.logDateTime | date:'shortTime' }}</td>
+            <td>{{ arrival.place }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Live Swipe Actions Table -->
+    <div *ngIf="!showLateArrivals">
+      <h3>Live Swipe Actions</h3>
+
+      <!-- Filter for Live Swipe Actions -->
+      <div class="filter-container">
+        <label for="traineeFilter">Filter by Batch:</label>
+        <select id="traineeFilter" [(ngModel)]="selectedBatchTrainees" (ngModelChange)="filterTrainees()" class="filter-button">
+          <option value="">All Batches</option>
+          <option value="1">Batch 4</option>
+          <option value="2">Batch 3</option>
+        </select>
       </div>
-  
-      <!-- All Trainees Table -->
-      <div class="table-container" *ngIf="!showLateArrivals">
-        <h3>All Trainees</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Trainee Code</th>
-              <th>Name</th>
-              <th>Action</th>
-              <th>Location</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let trainee of trainees">
-              <td>{{ trainee.traineeCode }}</td>
-              <td>{{ trainee.name }}</td>
-              <td>{{ trainee.action }}</td>
-              <td>{{ trainee.location }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+
+      <!-- Pagination Controls for Live Swipe Actions -->
+      <pagination-controls (pageChange)="pageTrainees = $event"></pagination-controls>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Trainee Name</th>
+            <th>Action</th>
+            <th>Batch Name</th>
+            <th>Time</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let trainee of filteredTrainees | paginate: { itemsPerPage: 10, currentPage: pageTrainees }">
+            <td>{{ trainee.employeeName }}</td>
+            <td>{{ trainee.direction === '1' ? 'Came Inside' : trainee.direction === '2' ? 'Went Outside' : '' }}</td>
+            <td>{{ trainee.batchName === '1' ? 'Batch 4' : trainee.batchName === '2' ? 'Batch 3' : 'Unknown Batch' }}</td>
+            <td>{{ trainee.logDateTime | date:'shortTime' }}</td>
+            <td>{{ trainee.place }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  
+</div>

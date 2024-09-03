@@ -1,144 +1,155 @@
-/* Popup */
 .popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Black shade with transparency */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000; /* Ensure it appears on top of other content */
-    padding: 10px; /* Add padding to allow some space around the popup */
-    
-  }
-  
-  .popup-content {
-    position: relative; /* Added to allow absolute positioning of close icon */
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 600px; /* Maximum width for the popup */
-    max-height: 90vh; /* Maximum height for the popup */
-    box-sizing: border-box; /* Include padding in the width */
-    text-align: center;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 1001; /* Ensure content appears above the background */
-    overflow-y: auto; /* Enable vertical scrolling if content overflows */
-  }
-  
-  /* Close Icon */
-  .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  
-  .close-btn i {
-    color: #db0000;
-  }
-  
-  /* Toggle Buttons */
-  .toggle-buttons {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .toggle-buttons button {
-    background-color: #f2f2f2;
-    border: 1px solid #ddd;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-right: 10px;
-    border-radius: 4px;
-  }
-  
-  .toggle-buttons button.active {
-    background-color: #db0000;
-    color: white;
-  }
-  
-  .toggle-buttons button:last-child {
-    margin-right: 0;
-  }
-  
-  /* Table container with scrolling */
-  .table-container {
-    max-height: calc(5 * 40px); /* Adjust height based on row height (40px per row) */
-    overflow-y: auto;
-    margin-bottom: 20px;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  table, th, td {
-    border: 1px solid #ddd;
-  }
-  
-  th, td {
-    padding: 8px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .popup-content {
-      padding: 15px; /* Reduce padding on smaller screens */
-      max-width: 90%; /* Make the popup wider relative to the screen */
-      max-height: 80vh; /* Adjust max height for smaller screens */
-    }
-  
-    th, td {
-      font-size: 14px; /* Reduce font size for smaller screens */
-    }
-  
-    .table-container {
-      max-height: calc(5 * 35px); /* Adjust height based on row height (35px per row) for smaller screens */
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .popup-content {
-      padding: 10px; /* Further reduce padding on very small screens */
-      max-width: 100%; /* Make the popup full width */
-      max-height: 80vh; /* Further adjust max height for very small screens */
-    }
-  
-    th, td {
-      font-size: 12px; /* Further reduce font size */
-    }
-  
-    .table-container {
-      max-height: calc(5 * 30px); /* Adjust height based on row height (30px per row) for very small screens */
-    }
-  }
-  .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background-color: transparent;
-    border: none;
-    font-size: 1.5rem;
-    color: #333;
-    cursor: pointer;
-    z-index: 2000; /* Ensure the close button is always visible */
-    padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Black shade with transparency */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure it appears on top of other content */
+  padding: 10px; /* Add padding to allow some space around the popup */
+}
+
+.popup-content {
+  position: relative; /* Added to allow absolute positioning of close icon */
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 80%; /* Increased maximum width for the popup */
+  height: 90vh; /* Set height to 90% of the viewport height */
+  max-height: 90vh; /* Set maximum height to 90% of the viewport height */
+  box-sizing: border-box; /* Include padding in the width */
+  text-align: center;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1001; /* Ensure content appears above the background */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  display: flex;
+  flex-direction: column; /* Allow flexible layout to manage child heights */
+}
+
+/* Close Icon */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  z-index: 2000; /* Ensure the close button is always visible */
+  padding: 0;
 }
 
 .close-btn:hover {
-    color: #ff0000; /* Red color on hover to indicate action */
+  color: #ff0000; /* Red color on hover to indicate action */
+}
+
+/* Toggle Buttons */
+.toggle-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.toggle-buttons button {
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+.toggle-buttons button.active {
+  background-color: #db0000;
+  color: white;
+}
+
+.toggle-buttons button:last-child {
+  margin-right: 0;
+}
+
+/* Table container with maximum height like the popup */
+.table-container {
+  flex: 1; /* Let the table container grow to take available space */
+  max-height: 100%; /* Maximum height of the table container relative to the popup */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .popup-content {
+      padding: 15px; /* Reduce padding on smaller screens */
+      max-width: 90%; /* Make the popup wider relative to the screen */
+      height: 80vh; /* Adjust height for smaller screens */
+      max-height: 80vh; /* Adjust max height for smaller screens */
+  }
+
+  th, td {
+      font-size: 14px; /* Reduce font size for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-content {
+      padding: 10px; /* Further reduce padding on very small screens */
+      max-width: 100%; /* Make the popup full width */
+      height: 80vh; /* Further adjust height for very small screens */
+      max-height: 80vh; /* Further adjust max height for very small screens */
+  }
+
+  th, td {
+      font-size: 12px; /* Further reduce font size */
+  }
+}
+/* Style for the filter button */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filter-container label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.filter-button {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+
+.filter-button:focus {
+  outline: none;
+  border-color: #db0000;
+}
+
+.filter-button:hover {
+  background-color: #e0e0e0;
 }
