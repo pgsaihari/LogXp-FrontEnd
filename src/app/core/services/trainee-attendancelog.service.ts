@@ -5,6 +5,7 @@ import {  TraineeAttendanceLogs } from '../model/traineeAttendanceLogs.model';
 import { DailyAttendanceOfMonth } from '../interfaces/daily-attendance-of-month';
 import { AbsenceAndLate, CurrentTraineeLog, PatchResponse } from '../interfaces/side-profile';
 import { AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, UserWidgetSummary, WidgetSummary } from '../interfaces/widget-attendance';
+import { Batch } from '../model/batch.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +27,16 @@ export class TraineeAttendancelogService {
   private selectedDateSource = new BehaviorSubject<Date | null>(null);
   selectedDate$ = this.selectedDateSource.asObservable();
 
+  private selectedBatchSubject = new BehaviorSubject<Batch | null>(null);
+  selectedBatch$ = this.selectedBatchSubject.asObservable();
+
   constructor(private http: HttpClient) { }
 
+
+  setSelectedBatch(batch: Batch) {
+    this.selectedBatchSubject.next(batch);
+  }
+  
   /**
    * Retrieves all trainee attendance logs.
    * @returns {Observable<TraineeAttendanceLogs[]>} - An observable containing a list of trainee attendance logs.

@@ -1,28 +1,27 @@
 <div class="card-container">
-    <div class="card flex justify-content-center">
-        <p-card styleClass="p-card">
-            <div class="card-content">
-              <div class="date-container">
-                <div class="realtime-insight">
-                  Attendance Data on :
-                </div>
-                <div class="greeting today">
-                  <span>{{ latestLogDate | date:'d MMM yyyy' }}</span>
-                </div>
-              </div>
-              <div class = "filter-group">
-                <button pButton label="Batch" icon="pi pi-filter" iconPos="right" class="custom-button"></button>
-                <button pButton label="Date" icon="pi pi-calendar" iconPos="right" class="custom-button" (click)="toggleCalendar()"></button>
-              </div>
-            <!-- <p-calendar *ngIf="showCalendar" [(ngModel)]="selectedDate" (onSelect)="onDateSelect($event)" [showButtonBar]="true" [inline]="true"></p-calendar> -->
-            </div>
-        </p-card>
-    </div>
-        <!-- Calendar Popup -->
-        <div *ngIf="showCalendar" class="calendar-popup">
-          <p-calendar [(ngModel)]="selectedDate" [maxDate]="maxDate" (onSelect)="onDateSelect($event)" [showButtonBar]="false" [inline]="true"></p-calendar>
+  <div class="card flex justify-content-center">
+    <p-card styleClass="p-card">
+      <div class="card-content">
+        <div class="date-container">
+          <div class="realtime-insight">
+            Attendance Data on :
+          </div>
+          <div class="greeting today">
+            <span>{{ latestLogDate | date:'d MMM yyyy' }}</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <p-dropdown [options]="batches" [(ngModel)]="selectedBatch" (ngModelChange)="onBatchSelect()" optionLabel="batchName" placeholder="Select a Batch"></p-dropdown>
+          <button pButton label="Date" icon="pi pi-calendar" iconPos="right" class="custom-button"
+            (click)="toggleCalendar()"></button>
+        </div>
+        <!-- <p-calendar *ngIf="showCalendar" [(ngModel)]="selectedDate" (onSelect)="onDateSelect($event)" [showButtonBar]="true" [inline]="true"></p-calendar> -->
       </div>
+    </p-card>
+  </div>
+  <!-- Calendar Popup -->
+  <div *ngIf="showCalendar" class="calendar-popup">
+    <p-calendar [(ngModel)]="selectedDate" [maxDate]="maxDate" (onSelect)="onDateSelect($event)" [showButtonBar]="false"
+      [inline]="true"></p-calendar>
+  </div>
 </div>
-
-
-  
