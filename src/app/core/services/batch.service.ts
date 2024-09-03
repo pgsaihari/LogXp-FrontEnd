@@ -3,12 +3,14 @@ import { Observable, catchError, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { Batch } from '../model/batch.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BatchService {
-  private apiUrl = 'https://localhost:7074/api/LogXP/batch'; // Replace with your actual API endpoint
+
+  private apiUrl = environment.apiUrl+`/batch`; // Replace with your actual API endpoint
 
   constructor(private http: HttpClient) {}
 
