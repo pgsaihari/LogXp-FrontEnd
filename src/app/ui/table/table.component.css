@@ -233,7 +233,8 @@ p-table th {
   background-color: #ea454c;
   border: none;
   color: white;
-  padding: 8px 16px; /* Adjust padding for better appearance */
+  padding: 6px 8px; /* Adjust padding for better appearance */
+  border-radius: 4px;
 }
 
 .p-button-secondary:hover {
@@ -390,4 +391,5 @@ mat-list-option {
   color: #ea454c; /* Highlight key information like dates with a subtle accent color */
   font-weight: bold;
 }
+
 

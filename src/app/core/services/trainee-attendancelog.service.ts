@@ -5,6 +5,7 @@ import {  TraineeAttendanceLogs } from '../model/traineeAttendanceLogs.model';
 import { DailyAttendanceOfMonth } from '../interfaces/daily-attendance-of-month';
 import { AbsenceAndLate, CurrentTraineeLog, PatchResponse } from '../interfaces/side-profile';
 import { AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, UserWidgetSummary, WidgetSummary } from '../interfaces/widget-attendance';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ import { AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, User
  */
 export class TraineeAttendancelogService {
 
-  private apiUrl = 'https://localhost:7074/api/LogXP/traineeAttendanceLogs';
+  private apiUrl = environment.apiUrl+`/traineeAttendanceLogs`;
 
   // BehaviorSubject to keep track of the selected date
   private selectedDateSubject = new BehaviorSubject<{ day: number, month: number, year: number }>({
@@ -108,6 +109,8 @@ export class TraineeAttendancelogService {
    getLatestDate(): Observable<{ latestDate: string }> {
     return this.http.get<{ latestDate: string }>(`${this.apiUrl}/latestAttendanceSummary`);
   }
+
+
 
   // Function to update status and remark of a trainee
   updateTraineeLog(id: number, updatedLog: CurrentTraineeLog): Observable<PatchResponse> {

@@ -1,8 +1,5 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import {
-
-  AutoCompleteModule,
-} from 'primeng/autocomplete';
+import { AutoCompleteModule,} from 'primeng/autocomplete';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +16,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { SpinnerComponent } from "../spinner/spinner.component";
 import { SpinnerService } from '../../core/services/spinner-control.service';
+import { BatchService } from '../../core/services/batch.service';
+import { Batch } from '../../core/model/batch.model';
 
 @Component({
   selector: 'app-table',
@@ -53,6 +52,7 @@ export class TableComponent implements OnInit {
 
   constructor(
     private traineeAttendancelogService: TraineeAttendancelogService,
+    private batchService: BatchService,
     public spinnerService:SpinnerService,
     private elementRef: ElementRef, private renderer: Renderer2
   ) {}
@@ -76,7 +76,7 @@ export class TableComponent implements OnInit {
     'Late Arrival and Early Departure',
   ]; // List of statuses
 
-  batches = ['Batch 3','Batch 4'];
+  batches: Batch [] = [];
 
   selectedBatches: string[] = [];
 
@@ -105,6 +105,8 @@ export class TableComponent implements OnInit {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getLatestDate();
     this.getTraineeAttendanceLogs(); // Fetch data from the API
+    this.fetchBatches(); // Fetch batches
+  
    
 
     this.renderer.listen('document', 'click', (event: Event) => {
@@ -117,6 +119,32 @@ export class TableComponent implements OnInit {
       }
     });
   }
+
+
+  clearDateRange(): void {
+    this.selectedDateRange = []; // Clear the selected date range
+    this.selectedBatches = [];
+    this.selectedStatuses = [];
+
+    // Optionally, you can call filterByDate() or other methods if needed
+    console.log('Date Range Cleared');
+    this.filterByDate();
+  }
+
+  fetchBatches(): void {
+    this.batchService.getBatches().subscribe({
+      next: (batches: Batch[]) => {
+        this.batches = batches;
+        // Optionally initialize selectedBatches with IDs or another identifier
+        this.selectedBatches = this.batches.map(batch => batch.batchName); // Adjust based on your logic
+      },
+      error: (error) => {
+        console.error('Error fetching batches:', error);
+        this.batches = [];
+      }
+    });
+  }
+
 
   getTraineeAttendanceLogs() {
     if (this.selectedDate) {
@@ -234,6 +262,9 @@ export class TableComponent implements OnInit {
         });
     }
   }
+
+
+  
   applyStatusFilter(event: MatSelectionListChange) {
     // Update selected statuses based on the selected options
     this.selectedStatuses = event.source.selectedOptions.selected.map(

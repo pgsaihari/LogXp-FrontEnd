@@ -1,7 +1,7 @@
 <div class="contents" (click)="handleTableClick($event)">
   <div class="container">
     <div class="filter-row">
-      <h3 id="Heading">Attendance Overview</h3>
+      <h2 id="Heading">Attendance Overview</h2>
       <div class="left-filters">
         <input
           class="search-filter"
@@ -22,11 +22,11 @@
   inputId="icondisplay"
   placeholder="Select Date Range"
   selectionMode="range"
+  [readonlyInput]="false"
   [dateFormat]="'dd-MM-yy'"
-  (onSelect)="filterByDate()"
+  (onSelect)="filterByDate()" 
 >
 </p-calendar>
-
 
         <button
           pButton
@@ -44,6 +44,7 @@
           class="p-button-rounded-rectangle p-button-secondary"
           (click)="downloadData()"
         ></button>
+        <button pButton type="button" (click)="clearDateRange()" class="p-button-secondary" icon="pi pi-filter-slash"></button>
 
         <p-overlayPanel #filterPanel>
           <div class="filters">
@@ -73,8 +74,8 @@
                 (selectionChange)="applyBatchFilter($event)"
                 (click)="$event.stopPropagation()"
               >
-                <mat-list-option *ngFor="let batch of batches" [value]="batch">
-                  {{ batch }}
+                <mat-list-option *ngFor="let batch of batches" [value]="batch.batchName">
+                  {{ batch.batchName }}
                 </mat-list-option>
               </mat-selection-list>
             </div>
