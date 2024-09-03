@@ -1,6 +1,6 @@
 body {
     background-color: red;
-    margin: 0; /* Ensure there's no default margin on the body */
+    margin: 0;
     display: flex;
     justify-content: center; /* Center the main content horizontally */
 }
@@ -15,8 +15,8 @@ body {
 .main-container {
     padding: 5px 20px;
     max-width: 1140px;
-    width: 100%; /* Make sure the container takes full width available */
-    box-sizing: border-box; /* Ensure padding is included in width calculation */
+    width: 100%; /* Ensure the container takes full width available */
+    box-sizing: border-box; /* Include padding in the width calculation */
 }
 
 /* Responsive adjustments */
@@ -36,5 +36,86 @@ body {
     .main-container {
         max-width: 100vw;
         padding: 10px; /* Adjust padding for smaller screens */
+    }
+}
+
+/* Floating Button */
+.floating-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px; /* Position in the bottom right corner */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: white; /* Button background color */
+    color: black; /* Text color */
+    border: 4px solid transparent; /* Transparent border to allow for the animation */
+    border-radius: 30px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: box-shadow 0.3s ease; /* Transition for hover effect */
+    animation: pulse 2s infinite, border-animation 3s infinite linear; /* Pulse and border animations */
+    background-clip: padding-box;
+    background-origin: border-box;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0px 4px 8px rgba(255, 0, 0, 0.5); /* Red glow */
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0px 6px 12px rgba(255, 0, 0, 0.7); /* Intense red glow */
+    }
+}
+
+/* Complex Border Animation */
+@keyframes border-animation {
+    0% {
+        border-color: red transparent transparent transparent;
+        border-width: 4px 4px 4px 4px;
+    }
+    25% {
+        border-color: red red transparent transparent;
+        border-width: 6px 4px 4px 6px;
+    }
+    50% {
+        border-color: transparent red red transparent;
+        border-width: 4px 6px 6px 4px;
+    }
+    75% {
+        border-color: transparent transparent red red;
+        border-width: 4px 4px 6px 6px;
+    }
+    100% {
+        border-color: red transparent transparent red;
+        border-width: 4px 4px 4px 4px;
+    }
+}
+
+.floating-btn:hover {
+    box-shadow: 0px 4px 12px rgba(255, 0, 0, 0.8); /* Red glow on hover */
+    animation: none; /* Stops pulse animation on hover */
+}
+
+/* Responsive adjustments for the floating button */
+@media (max-width: 768px) {
+    .floating-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .floating-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        bottom: 15px;
+        right: 15px;
     }
 }

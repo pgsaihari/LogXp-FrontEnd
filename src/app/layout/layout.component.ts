@@ -19,6 +19,7 @@ import {
 } from '@azure/msal-browser';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../core/services/auth.service';
+import { RealTimePopUpComponent } from "../ui/real-time-pop-up/real-time-pop-up.component";
 
 @Component({
   selector: 'app-layout',
@@ -30,7 +31,8 @@ import { AuthService } from '../core/services/auth.service';
     LoginComponent,
     ToastModule,
     NgIf,
-  ],
+    RealTimePopUpComponent
+],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css'],
   providers: [MessageService],
@@ -53,6 +55,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
    * Initially set to false.
    */
   isLogged: boolean = false;
+  showPopup = false;
 
   /**
    * Constructor for LayoutComponent. It initializes services for MSAL and routing,
