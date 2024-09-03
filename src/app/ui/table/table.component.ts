@@ -104,8 +104,8 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getLatestDate();
-    this.fetchBatches(); // Fetch batches
     this.getTraineeAttendanceLogs(); // Fetch data from the API
+    this.fetchBatches(); // Fetch batches
     this.renderer.listen('document', 'click', (event: Event) => {
       // Check if the click is outside both the table component and the side profile
       const isInsideTable = this.elementRef.nativeElement.contains(event.target);
@@ -131,8 +131,6 @@ export class TableComponent implements OnInit {
     this.batchService.getBatches().subscribe({
       next: (batches: Batch[]) => {
         this.batches = batches;
-        // Optionally initialize selectedBatches with IDs or another identifier
-        this.selectedBatches = this.batches.map(batch => batch.batchName); // Adjust based on your logic
       },
       error: (error) => {
         console.error('Error fetching batches:', error);
@@ -202,13 +200,21 @@ export class TableComponent implements OnInit {
     if (this.selectedDateRange && this.selectedDateRange.length === 2) {
       const startDateString = this.datePipe.transform(this.selectedDateRange[0], 'yyyy-MM-dd') || '';
       const endDateString = this.datePipe.transform(this.selectedDateRange[1], 'yyyy-MM-dd') || '';
+
+
+      const selectedBatchIds = this.selectedBatches.map(batchId => parseInt(batchId, 10)); // Convert strings to numbers
+
+      const selectedBatchNames = selectedBatchIds.map(batchId => {
+        const batch = this.batches.find(b => b.batchId === batchId);
+        return batch ? batch.batchName : '';
+      }).filter(name => name);
   
       this.traineeAttendancelogService
         .getFilteredTraineeAttendanceLogs(
           this.selectedStatuses, // Pass the selected statuses
           startDateString,
           endDateString,
-          this.selectedBatches // Pass the selected batches
+          selectedBatchNames // Pass the selected batches
         )
         .subscribe({
           next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
@@ -230,13 +236,20 @@ export class TableComponent implements OnInit {
     }  else {
       // No date range selected, use the selected date (latest date) to filter the data
       const formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
+
+      const selectedBatchIds = this.selectedBatches.map(batchId => parseInt(batchId, 10)); // Convert strings to numbers
+
+      const selectedBatchNames = selectedBatchIds.map(batchId => {
+        const batch = this.batches.find(b => b.batchId === batchId);
+        return batch ? batch.batchName : '';
+      }).filter(name => name);
   
       this.traineeAttendancelogService
         .getFilteredTraineeAttendanceLogs(
           this.selectedStatuses, // Pass the selected statuses
           formattedDate,
           formattedDate,
-          this.selectedBatches // Pass the selected batches
+          selectedBatchNames // Pass the selected batches
         )
         .subscribe({
           next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
