@@ -1,0 +1,69 @@
+<div class="popup">
+    <div class="popup-content">
+      <!-- Close Icon -->
+      <button class="close-btn" (click)="close()">
+        &#10005;
+      </button>
+  
+      <!-- Toggle Buttons -->
+      <div class="toggle-buttons">
+        <button 
+          (click)="toggleTable(true)" 
+          [class.active]="showLateArrivals"
+        >
+          Late Arrivals
+        </button>
+        <button 
+          (click)="toggleTable(false)" 
+          [class.active]="!showLateArrivals"
+        >
+          All Trainees
+        </button>
+      </div>
+  
+      <!-- Late Arrivals Table -->
+      <div class="table-container" *ngIf="showLateArrivals">
+        <h3>Today's Late Arrivals</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Trainee Code</th>
+              <th>Name</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let arrival of lateArrivals">
+              <td>{{ arrival.traineeCode }}</td>
+              <td>{{ arrival.name }}</td>
+              <td>{{ arrival.location }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- All Trainees Table -->
+      <div class="table-container" *ngIf="!showLateArrivals">
+        <h3>All Trainees</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Trainee Code</th>
+              <th>Name</th>
+              <th>Action</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let trainee of trainees">
+              <td>{{ trainee.traineeCode }}</td>
+              <td>{{ trainee.name }}</td>
+              <td>{{ trainee.action }}</td>
+              <td>{{ trainee.location }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  

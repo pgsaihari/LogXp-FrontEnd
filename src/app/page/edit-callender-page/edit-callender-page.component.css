@@ -103,7 +103,12 @@
 }
 
 ::ng-deep .p-tabmenu {
-  width: min-content;
+  width: 100%;
+}
+
+::ng-deep .p-tabmenu {
+  display: flex;
+  justify-content: space-around;
 }
 
 ::ng-deep .p-card {
