@@ -17,64 +17,63 @@ import { Batch } from '../../core/model/batch.model';
     templateUrl: './current-date.component.html',
     styleUrl: './current-date.component.css'
   })
-  export class CurrentDateComponent implements OnInit{
+  export class CurrentDateComponent implements OnInit {
     @Output() batchSelected = new EventEmitter<Batch>();
-
-    batches: Batch[] = []; // Array to hold the list of batches
-    selectedBatch!: Batch; // Store the selected batch
-    currentTime!: Date;
-    currentDate!: Date;
-    latestLogDate!: Date
-    timeIcon: string = '';
-    timeOfDay: string = '';
-    error: any;
-    showCalendar: boolean = false; // Control calendar visibility
-    selectedDate!: Date // Store selected date
+  
+    batches: Batch[] = [];
+    selectedBatch!: Batch;
+    placeholder: string = '';
+    latestLogDate!: Date;
+    selectedDate!: Date;
     maxDate!: Date;
-    constructor(private api: TraineeAttendancelogService, private elementRef: ElementRef,private batchService: BatchService)
-     {
-     }
-
+    showCalendar: boolean = false;
+  
+    constructor(
+      private api: TraineeAttendancelogService,
+      private elementRef: ElementRef,
+      private batchService: BatchService
+    ) {}
+  
     ngOnInit() {
-       this.getLatestDate();
-       this.loadBatches();
-    
+      this.getLatestDate();
+      this.loadBatches();
     }
-
+  
     loadBatches() {
-      this.batchService.getBatches().subscribe(batches => this.batches = batches);
+      this.batchService.getBatches().subscribe(batches => {
+        this.batches = batches;
+        if (batches.length) {
+          this.placeholder = batches[0].batchName;
+          this.selectedBatch = batches[0];
+          this.batchSelected.emit(this.selectedBatch);
+        }
+      });
     }
-
+  
     getLatestDate() {
-      this.api.getWidgetCount().subscribe((data) => {
+      this.api.getWidgetCount().subscribe(data => {
         if (data.latestDate) {
           this.latestLogDate = new Date(data.latestDate);
           this.selectedDate = new Date(this.latestLogDate);
-          this.maxDate = new Date(this.latestLogDate);
-  
-          // Set the selected date in the service
+          this.maxDate = this.latestLogDate;
           this.api.setSelectedDate(this.selectedDate);
         }
       });
     }
-
+  
     toggleCalendar() {
       this.showCalendar = !this.showCalendar;
-      console.log('Show Calendar:', this.showCalendar); // Verify the state
     }
-    
-    onDateSelect(event: any) {
+  
+    onDateSelect(event: Date) {
       this.selectedDate = event;
       this.api.setSelectedDate(this.selectedDate);
-      this.showCalendar = false; // Hide the calendar after selecting a date
-      console.log('Selected Date:', this.selectedDate);
-      this.latestLogDate = this.selectedDate
-      // Call onDateChange after selecting the date
+      this.showCalendar = false;
+      this.latestLogDate = this.selectedDate;
       this.onDateChange(this.selectedDate);
     }
-
+  
     onDateChange(date: Date) {
-      this.selectedDate = date;
       const formattedDate = {
         day: date.getDate(),
         month: date.getMonth() + 1,
@@ -82,17 +81,22 @@ import { Batch } from '../../core/model/batch.model';
       };
       this.api.updateSelectedDate(formattedDate);
     }
-
+  
     onBatchSelect() {
-      console.log('Selected Batch:', this.selectedBatch);
       this.batchSelected.emit(this.selectedBatch);
-      // Implement any other logic you want to execute when a batch is selected.
+      if (this.selectedBatch) {
+        this.placeholder = this.selectedBatch.batchName;
+      }
     }
-    
+  
     @HostListener('document:click', ['$event'])
     onClickOutside(event: MouseEvent) {
-      if (!this.elementRef.nativeElement.contains(event.target)) {
+      const clickedInside = this.elementRef.nativeElement.contains(event.target);
+      const clickedDropdown = (event.target as HTMLElement).closest('.dropdown-button');
+      
+      if (!clickedInside || clickedDropdown) {
         this.showCalendar = false;
       }
     }
+    
   }

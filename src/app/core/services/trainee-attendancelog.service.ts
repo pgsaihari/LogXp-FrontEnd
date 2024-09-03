@@ -25,18 +25,19 @@ export class TraineeAttendancelogService {
     year: new Date().getFullYear()
   });
 
-  private selectedDateSource = new BehaviorSubject<Date | null>(null);
+  // Initialize selectedDateSource with the current date to avoid null values.
+  private selectedDateSource = new BehaviorSubject<Date>(new Date());
   selectedDate$ = this.selectedDateSource.asObservable();
 
-  private selectedBatchSubject = new BehaviorSubject<Batch | null>(null);
-  selectedBatch$ = this.selectedBatchSubject.asObservable();
+  // private selectedBatchSubject = new BehaviorSubject<Batch | null>(null);
+  // selectedBatch$ = this.selectedBatchSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
 
-  setSelectedBatch(batch: Batch) {
-    this.selectedBatchSubject.next(batch);
-  }
+  // setSelectedBatch(batch: Batch) {
+  //   this.selectedBatchSubject.next(batch);
+  // }
   
   /**
    * Retrieves all trainee attendance logs.
@@ -109,8 +110,6 @@ export class TraineeAttendancelogService {
     return this.http.get<{ logs: TraineeAttendanceLogs[], count: number, message: string }>(url);
 }
 
-
-
    /**
    * Retrieves the latest attendance date.
    * @returns {Observable<{ latestDate: string }>} - An observable containing the latest attendance date.
@@ -118,8 +117,6 @@ export class TraineeAttendancelogService {
    getLatestDate(): Observable<{ latestDate: string }> {
     return this.http.get<{ latestDate: string }>(`${this.apiUrl}/latestAttendanceSummary`);
   }
-
-
 
   // Function to update status and remark of a trainee
   updateTraineeLog(id: number, updatedLog: CurrentTraineeLog): Observable<PatchResponse> {
