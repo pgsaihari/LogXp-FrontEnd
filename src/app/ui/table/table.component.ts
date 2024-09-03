@@ -104,11 +104,8 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
     this.getLatestDate();
-    this.getTraineeAttendanceLogs(); // Fetch data from the API
     this.fetchBatches(); // Fetch batches
-  
-   
-
+    this.getTraineeAttendanceLogs(); // Fetch data from the API
     this.renderer.listen('document', 'click', (event: Event) => {
       // Check if the click is outside both the table component and the side profile
       const isInsideTable = this.elementRef.nativeElement.contains(event.target);
@@ -283,7 +280,6 @@ export class TableComponent implements OnInit {
 }
 
 
-
   downloadData() {
     // Convert the filteredTrainees data into a worksheet
     const worksheet = XLSX.utils.json_to_sheet(
@@ -333,7 +329,7 @@ export class TableComponent implements OnInit {
 
   getCheckinTimeClass(time: string, status: string): string {
     if (status === 'On Leave') {
-      return ''; // No special class for absent
+      return 'time-on-leave'; // No special class for absent
     }
     if (!time) return '';
     // Extract the time part (08:58:18) from the datetime string
@@ -342,12 +338,12 @@ export class TableComponent implements OnInit {
     const hours = parseInt(timePart.slice(0, 2), 10);
     const minutes = parseInt(timePart.slice(3, 5), 10);
 
-    if (hours === 0 && minutes === 0) {
-      return 'time-on-leave'; // Red for 00:00
-    } else if (hours < 9 || (hours === 9 && minutes < 6)) {
+  if (status == 'Present') {
       return 'time-on-time'; // Green for less than 9:00
-    } else {
+    } else if (status =='Late Arrival') {
       return 'time-late'; // Yellow for later than 9:00
+    }else{
+      return 'time-late';
     }
   }
 
