@@ -74,7 +74,7 @@
     </div>
 
     <p-footer>
-        <button pButton label="Save" (click)="saveBatch()" class="p-button-primary batchs"></button>
+        <p-button label="Save" (click)="saveBatch()" class="p-button-primary batchs button-container"></p-button>
     </p-footer>
 </p-dialog>
 
@@ -98,8 +98,8 @@
       </div>
     </div>
   
-    <p-footer>
-      <button pButton label="Save" (click)="saveArrivalTime()" class="p-button-primary batchs"></button>
+    <p-footer  class="button-container">
+      <p-button label="Save" (click)="saveArrivalTime()" class="p-button-primary batchs"></p-button>
     </p-footer>
 </p-dialog>
   
@@ -269,7 +269,7 @@
         <p-button 
             label="Save" 
             styleClass="p-button-success"
-            class="addsave" 
+            class="button-container"
             [text]="true"
             (onClick)="saveTrainee()">
         </p-button>

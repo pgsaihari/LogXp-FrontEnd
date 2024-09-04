@@ -27,6 +27,8 @@ import { OfficeEntryTime } from '../../core/interfaces/daily-attendance-of-month
 import moment from 'moment';
 import { Calendar, CalendarModule } from 'primeng/calendar';
 import { OfficeEntryService } from '../../core/services/office-entry.service';
+import { UserService } from '../../core/services/user.service';
+import { User } from '../../core/model/user.model';
 @Component({
   selector: 'app-user-table',
   standalone: true,
@@ -77,6 +79,7 @@ export class UserTableComponent implements OnInit {
   error: any;
   constructor(
     private traineeService: TraineeServiceService,
+     private userService: UserService,
     private batchService: BatchService,  // Inject BatchService
     private messageService: MessageService,
     private officeEntryService : OfficeEntryService
@@ -232,9 +235,21 @@ export class UserTableComponent implements OnInit {
       this.submitted = true;
       return;
     }
-    console.log('Trainee data before update:', this.trainee);
-    this.traineeService.updateTrainee(this.trainee.employeeCode, this.trainee).subscribe({
+  
+    // Map Trainee object to User object
+    const user: User = {
+      userId: this.trainee.employeeCode!,
+      name: this.trainee.name!,
+      email: this.trainee.email || '',
+      isActive: this.trainee.isActive || false,
+      batchId: this.trainee.batchId || 0,
+      role: 'trainee' // Assuming the role is always 'trainee'
+    };
+  
+    console.log('User data before update:', user);
+    this.userService.updateUser(user.userId, user).subscribe({
       next: () => {
+        // Update trainee list with the updated user details
         this.updateTraineeList(this.trainee);
         this.showMessage('success', 'Successful', `Details of ${this.trainee.name} updated`);
         this.hideDialog();
@@ -242,6 +257,7 @@ export class UserTableComponent implements OnInit {
       error: (err) => this.showError('Failed to update trainee', err),
     });
   }
+  
 
   /**
    * Set the active status for all trainees in the selected batch.
