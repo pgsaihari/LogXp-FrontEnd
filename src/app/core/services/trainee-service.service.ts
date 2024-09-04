@@ -8,7 +8,7 @@ import { Trainee } from '../model/trainee.model';
 })
 export class TraineeServiceService {
 
-  private apiUrl = 'https://localhost:7074/api/LogXP/trainee';  // Replace with your actual API URL
+  private apiUrl = 'https://localhost:7074/api/logXp/Trainee';  // Replace with your actual API URL
 
   constructor(private http: HttpClient) { }
 
@@ -36,9 +36,9 @@ export class TraineeServiceService {
   }
 
   // Function to add multiple trainees
-   addTrainees(trainees: Trainee[]): Observable<void> {
+   addTrainees(trainees: Trainee[]): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<void>(this.apiUrl, trainees, { headers });
+    return this.http.post<any>(this.apiUrl, trainees, { headers });
   }
   // Function to update an existing trainee
   updateTrainee(employeeCode: string, trainee: Trainee): Observable<Trainee> {

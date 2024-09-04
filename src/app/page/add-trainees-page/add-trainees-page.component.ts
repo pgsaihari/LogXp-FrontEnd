@@ -1,36 +1,33 @@
 import { Component } from '@angular/core';
-import { TopHeaderComponent } from "../../shared/top-header/top-header.component";
-import { FormComponent } from '../../ui/form/form.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import { TraineeServiceService } from '../../core/services/trainee-service.service';
-import { Trainee } from '../../core/model/trainee.model';
+import { UserService } from '../../core/services/user.service';
+import { User } from '../../core/model/user.model';
 import { NgClass } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-
 import { NgxSpinnerComponent } from 'ngx-spinner';
 import { TooltipModule } from 'primeng/tooltip';
-
-
-
+import { FormComponent } from "../../ui/form/form.component";
 
 @Component({
   selector: 'app-add-trainees-page',
   standalone: true,
-
-  imports: [ FormComponent, ToastModule,NgClass,DialogModule, NgxSpinnerComponent,TooltipModule],
+  imports: [ToastModule, NgClass, DialogModule, NgxSpinnerComponent, TooltipModule, FormComponent],
   templateUrl: './add-trainees-page.component.html',
   styleUrls: ['./add-trainees-page.component.css'],
   providers: [MessageService]
 })
 export class AddTraineesPageComponent {
   displayPopup: boolean = false;
-  constructor(private messageService: MessageService, private traineeService: TraineeServiceService) {}
+
+  constructor(private messageService: MessageService, private userService: UserService) {}
+
   showPopup() {
     this.displayPopup = true;
   }
+
   triggerFileInput() {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput.click();
@@ -60,35 +57,35 @@ export class AddTraineesPageComponent {
   
     const rows: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
   
-    // Skip the header row and map each row to a Trainee object
-    const trainees: Trainee[] = rows.slice(1).map((row: any[], index: number) => {
-      // Perform validation and provide default values or handle errors
-      const employeeCode = row[0]?.toString().trim();
+    // Skip the header row and map each row to a User object
+    const users: User[] = rows.slice(1).map((row: any[], index: number) => {
+      const userId = row[0]?.toString().trim();
       const name = row[1]?.toString().trim();
       const email = row[2]?.toString().trim();
       const isActive = row[3]?.toString().toLowerCase() === 'true';
       const batchId = Number(row[4]) || 0;
   
-      if (!employeeCode || !name || !email || batchId === 0) {
+      if (!userId || !name || !email || batchId === 0) {
         console.error(`Row ${index + 2} contains invalid data:`, row);
         return null;
       }
-  
+
       return {
-        employeeCode,
+        userId,
         name,
         email,
         isActive,
         batchId,
+        role: 'trainee' // Assign the role as 'trainee'
       };
-    }).filter(trainee => trainee !== null);
+    }).filter(user => user !== null);
   
-    if (trainees.length === 0) {
+    if (users.length === 0) {
       this.showError(new Error('No valid data found in Excel sheet.'));
       return;
     }
   
-    this.traineeService.addTrainees(trainees).subscribe({
+    this.userService.addUsers(users).subscribe({
       next: () => this.showSuccess(),
       error: (error) => this.showError(error)
     });
@@ -96,29 +93,24 @@ export class AddTraineesPageComponent {
   
 
   showSuccess() {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel sheet uploaded and trainees added successfully!' });
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel sheet uploaded and users added successfully!' });
   }
 
   showError(error: any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: `Failed to upload trainees: ${error.message}` });
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: `Failed to upload users: ${error.message}` });
   }
-    // Function to download Excel template
-    downloadTemplate() {
-      // Define the header row
-      const header = [
-        ['Employee Code', 'Name', 'Email', 'Is Active (true/false)', 'Batch ID']
-      ];
+
+  downloadTemplate() {
+    const header = [
+      ['User ID', 'Name', 'Email', 'Is Active (true/false)', 'Batch ID']
+    ];
   
-      // Create a new workbook and add the header to the first sheet
-      const worksheet = XLSX.utils.aoa_to_sheet(header);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Trainee Template');
+    const worksheet = XLSX.utils.aoa_to_sheet(header);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'User Template');
   
-      // Convert the workbook to a binary array
-      const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  
-      // Save the file
-      const blob = new Blob([wbout], { type: 'application/octet-stream' });
-      saveAs(blob, 'Trainee_Template.xlsx');
-    }
+    const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([wbout], { type: 'application/octet-stream' });
+    saveAs(blob, 'User_Template.xlsx');
+  }
 }
