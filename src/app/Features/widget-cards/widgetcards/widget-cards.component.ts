@@ -4,11 +4,13 @@
   import { FormsModule } from '@angular/forms';
   import { MessageService } from 'primeng/api';
   import { RouterLink, RouterOutlet } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { count, Subscription } from 'rxjs';
 import { TraineeAttendancelogService } from '../../../core/services/trainee-attendancelog.service';
 import { Batch } from '../../../core/model/batch.model';
 import { WidgetAttendance } from '../../../core/interfaces/widget-attendance';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CalendarModel } from '../../../core/model/calendar.model';
+import { CalendarServiceService } from '../../../core/services/calendar-service.service';
   // import { AttendanceLogsService } from '../../../core/services/attendance-logs.service';
 
 
@@ -29,6 +31,9 @@ import { HttpErrorResponse } from '@angular/common/http';
     lateArrivals = 0;
     earlyDepartures = 0;
     activeCardIndex = -1;
+    holidays: CalendarModel[] = [];
+    totalWorkingDays:number = 28;
+    selectedGlobalDate:Date = new Date();
   
     selectedDate = { day: 0, month: 0, year: 0 };
     private dateSubscription!: Subscription;
@@ -36,7 +41,8 @@ import { HttpErrorResponse } from '@angular/common/http';
     constructor(
       private traineeService: TraineeServiceService,
       private messageService: MessageService,
-      private traineeAttendanceLogs: TraineeAttendancelogService
+      private traineeAttendanceLogs: TraineeAttendancelogService,
+      private calendarServiceService:CalendarServiceService
     ) {}
   
     ngOnInit(): void {
@@ -47,7 +53,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   
     ngOnChanges(changes: SimpleChanges): void {
       if (changes['selectedBatch'] && this.selectedBatch) {
-        console.log('Batch received in WidgetCardsComponent:', this.selectedBatch);
+        // console.log('Batch received in WidgetCardsComponent:', this.selectedBatch);
         this.fetchCounts(); // Fetch counts whenever the batch changes
       }
     }
@@ -71,10 +77,10 @@ import { HttpErrorResponse } from '@angular/common/http';
             month: date.getMonth() + 1,
             year: date.getFullYear(),
           };
-          console.log('Date selected:', this.selectedDate);
+          // console.log('Date selected:', this.selectedDate);
           this.fetchCounts();
         } else {
-          console.log('Invalid date received:', date);
+          // console.log('Invalid date received:', date);
         }
       });
     }
@@ -106,7 +112,8 @@ import { HttpErrorResponse } from '@angular/common/http';
   
     private fetchCounts(): void {
       const { day, month, year } = this.selectedDate;
-  
+      this.selectedGlobalDate = new Date(year, month-1, day);
+
       this.traineeAttendanceLogs.onTimeLogs(day, month, year).subscribe({
         next: (data) => this.onTimeNum = this.getFilteredCount(data.earlyArrivals),
         error: (error) => this.handleFetchError(error),
@@ -126,6 +133,8 @@ import { HttpErrorResponse } from '@angular/common/http';
         next: (data) => this.earlyDepartures = this.getFilteredCount(data.earlyDepartures),
         error: (error) => this.handleFetchError(error),
       });
+
+      this.countTotalWorkingDays();
     }
   
     private getFilteredCount(logs: WidgetAttendance[]): number {
@@ -137,5 +146,36 @@ import { HttpErrorResponse } from '@angular/common/http';
     private handleFetchError(error: HttpErrorResponse): void {
       const errorMessage = error.error?.message || 'An unknown error occurred';
       this.messageService.add({ severity: 'error', summary: errorMessage, detail: 'LogXp' });
+    }
+
+    countTotalWorkingDays(){
+      let holidayCount:number = 0;
+      this.calendarServiceService.getHolidaysOfAYear(new Date().getFullYear())
+      .subscribe(data => {
+        this.holidays = data;
+        this.holidays.forEach((holiday)=>{
+          const holidayDate = new Date(holiday.holidayDate)
+          if(holidayDate.getMonth() == this.selectedGlobalDate.getMonth()){
+            holidayCount++;
+          }
+        });
+        const totalDaysOfMonth:number = new Date(this.selectedGlobalDate.getFullYear(), this.selectedGlobalDate.getMonth()+1, 0).getDate();
+        const totalSundays:number = this.countSundaysOfMonth(this.selectedGlobalDate.getMonth(), this.selectedGlobalDate.getFullYear());        
+        this.totalWorkingDays = totalDaysOfMonth - totalSundays - holidayCount;
+      }); 
+    }
+
+    countSundaysOfMonth(month: number, year: number): number{
+      let count = 0;
+      const firstDay = new Date(year, month, 1);
+      // Get the last day of the month
+      const lastDay = new Date(year, month+1, 0);
+      // Iterate through each day of the month
+      for (let date = firstDay; date <= lastDay; date.setDate(date.getDate() + 1)) {
+        if (date.getDay() === 0) { // 0 represents Sunday
+          count++;
+        }
+      }
+      return count;
     }
   }
