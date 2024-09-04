@@ -131,3 +131,13 @@ width: 11rem;
 ::ng-deep.p-tag.p-tag-success{
   background-color: darkgreen;
 }
+::ng-deep .button-container .p-button {
+  color: white;
+  /* padding: 5px 10px; */
+  background-color: var(--primary-color);
+  border: none;
+}
+
+::ng-deep .batchs[_ngcontent-ng-c505155954], .batchs[_ngcontent-ng-c3494905467]{
+  border: none !important
+}
