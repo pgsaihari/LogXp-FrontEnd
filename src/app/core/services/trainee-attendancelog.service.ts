@@ -7,6 +7,7 @@ import { AbsenceAndLate, CurrentTraineeLog, PatchResponse } from '../interfaces/
 import { AbsenteeLog, EarlyArrivalLogs, EarlyDepartureLog, LateArrivalsLog, UserWidgetSummary, WidgetSummary } from '../interfaces/widget-attendance';
 import { environment } from '../../../environments/environment';
 import { Batch } from '../model/batch.model';
+import { Currentuser } from '../interfaces/currentuser';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ import { Batch } from '../model/batch.model';
 export class TraineeAttendancelogService {
 
   private apiUrl = environment.apiUrl+`/traineeAttendanceLogs`;
+  private currentUser!: string;
 
   // BehaviorSubject to keep track of the selected date
   private selectedDateSubject = new BehaviorSubject<{ day: number, month: number, year: number }>({
@@ -182,7 +184,7 @@ export class TraineeAttendancelogService {
     return this.http.get<WidgetSummary>(url)
   }
 
-  getUserWidgetCount(traineeCode:number): Observable<UserWidgetSummary>{
+  getUserWidgetCount(traineeCode:string | null): Observable<UserWidgetSummary>{
     const url = `${this.apiUrl}/GetAttendanceCountOfTrainee?traineeCode=${traineeCode}`;
     return this.http.get<UserWidgetSummary>(url)
   }
@@ -198,6 +200,14 @@ export class TraineeAttendancelogService {
 
   setSelectedDate(date: Date) {
     this.selectedDateSource.next(date);
+  }
+
+  setCurrentUser(user: string): void {
+    this.currentUser = user;
+  }
+
+  getCurrentUser(): string {
+    return this.currentUser;
   }
 
 }  
