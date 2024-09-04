@@ -26,6 +26,7 @@ import { OfficeEntryTime } from '../../core/interfaces/daily-attendance-of-month
 
 import moment from 'moment';
 import { Calendar, CalendarModule } from 'primeng/calendar';
+import { OfficeEntryService } from '../../core/services/office-entry.service';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/model/user.model';
 @Component({
@@ -81,7 +82,7 @@ export class UserTableComponent implements OnInit {
      private userService: UserService,
     private batchService: BatchService,  // Inject BatchService
     private messageService: MessageService,
-    private traineeAttendancelogService: TraineeAttendancelogService
+    private officeEntryService : OfficeEntryService
   ) {}
   onSelectionChange(event: any) {
     if (this.selectedTrainees.length === this.trainees.length && this.trainees.length > 0) {
@@ -351,7 +352,7 @@ export class UserTableComponent implements OnInit {
   }
 
   openTimeSetterDialog(){
-    this.traineeAttendancelogService.getOfficeEntryTime()
+    this.officeEntryService.getOfficeEntryTime()
     .pipe(
       catchError(error => {
         this.error = error.message;
@@ -380,7 +381,7 @@ export class UserTableComponent implements OnInit {
       }
       this.timeSetterVisible = false;
 
-      this.traineeAttendancelogService.setOfficeEntryTime(newArrivalTime)
+      this.officeEntryService.setOfficeEntryTime(newArrivalTime)
       .pipe(
         catchError(error => {
           this.error = error.message;

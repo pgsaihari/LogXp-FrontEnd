@@ -74,7 +74,7 @@
                 (selectionChange)="applyBatchFilter($event)"
                 (click)="$event.stopPropagation()"
               >
-                <mat-list-option *ngFor="let batch of batches" [value]="batch.batchName">
+                <mat-list-option *ngFor="let batch of batches" [value]="batch.batchId">
                   {{ batch.batchName }}
                 </mat-list-option>
               </mat-selection-list>
@@ -165,7 +165,7 @@
    
         <div class="empty-state-container" *ngIf="filteredTrainees.length === 0">
         <i class="fas fa-exclamation-circle not-found-icon"></i>
-        <p>No data found for the Selected Dates</p>
+        <p>No data found</p>
         </div>
        
     </div>
