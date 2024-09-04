@@ -256,11 +256,14 @@ p-table th {
   flex-direction: column; /* Stack filters vertically */
   gap: 10px; /* Space between filter sections */
   padding: 10px;
+  position: relative;
+  max-width: 100%;
 }
 
 .filter-section {
   display: flex;
   flex-direction: column;
+  margin-bottom: 16px;
 }
 
 .filter-section label {
@@ -278,10 +281,9 @@ mat-selection-list {
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 5px;
-  max-height: 200px; /* Adjust as needed */
-  overflow-y: auto;
-  margin-top: 10px;
+  width: 250px;
+  max-height: 250px; /* Adjust as needed */
+  margin-top: 5px;
 }
 
 mat-list-option {

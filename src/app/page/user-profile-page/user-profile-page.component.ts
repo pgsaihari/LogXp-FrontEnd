@@ -21,6 +21,7 @@ import { CommonModule } from '@angular/common';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { AuthService } from '../../core/services/auth.service';
+import { Currentuser } from '../../core/interfaces/currentuser';
 // import { WidgetCardsComponent } from "../../Features/widget-cards/widget-cards.component";
 
 
@@ -58,7 +59,8 @@ export class UserProfilePageComponent implements OnInit {
         this.traineeCode = currentUser.userId; // Assuming userId is the trainee's employee code
 
         if (this.traineeCode) {
-            this.loadTraineeLogs(this.traineeCode);
+          this.traineeAttendancelogService.setCurrentUser(this.traineeCode);
+          this.loadTraineeLogs(this.traineeCode);
         }
     } else {
         console.error('No logged-in user found.');

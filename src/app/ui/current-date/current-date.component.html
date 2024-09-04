@@ -22,6 +22,6 @@
   <!-- Calendar Popup -->
   <div *ngIf="showCalendar" class="calendar-popup">
     <p-calendar [(ngModel)]="selectedDate" [maxDate]="maxDate" (onSelect)="onDateSelect($event)" [showButtonBar]="false"
-      [inline]="true"></p-calendar>
+      [inline]="true" [readonlyInput]="true" [disabledDays]="[0]"></p-calendar>
   </div>
 </div>
