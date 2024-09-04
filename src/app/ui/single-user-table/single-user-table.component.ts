@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostListener, ElementRef } from '@angular/core';
+import { CalendarModule } from 'primeng/calendar';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -34,7 +35,9 @@ import { TooltipModule } from 'primeng/tooltip';
     CardModule,
     DialogModule,
     ToastModule,
-    RippleModule,TooltipModule
+    RippleModule,
+    TooltipModule,
+    CalendarModule
   ],
   templateUrl: './single-user-table.component.html',
   styleUrls: ['./single-user-table.component.css'],
@@ -42,7 +45,11 @@ import { TooltipModule } from 'primeng/tooltip';
 export class SingleUserTableComponent {
   visible: boolean = false;
   @Input() traineelogs: TraineeAttendanceLogs[] = [];
+  filteredTraineeLogs: TraineeAttendanceLogs[] = []; // To store the filtered logs
   traineeId!: number;
+  yesterday: Date = new Date();
+  selectedDate: any | undefined; // Property to store the selected date
+  showCalendar: boolean = false;
 
   currentTraineeLog: CurrentTraineeLog = {
     status: '',
@@ -52,14 +59,48 @@ export class SingleUserTableComponent {
   statusOptions: { label: string; value: string }[] = [
     { label: 'Late Arrival', value: 'Late Arrival' },
     { label: 'Early Departure', value: 'Early Departure' },
-    { label: 'On Leave', value: 'On Leave' }
+    { label: 'On Leave', value: 'On Leave' },
+    { label: 'Present', value: 'Present' },
   ];
 
   constructor(
     private traineeAttendancelogService: TraineeAttendancelogService,
     private messageService: MessageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private elementRef: ElementRef
   ) {}
+
+  toggleCalendar() {
+    this.showCalendar = !this.showCalendar;
+    console.log('Show Calendar:', this.showCalendar);
+  }
+
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.filteredTraineeLogs = this.traineelogs;
+    }, 1000);
+  }
+  
+  @HostListener('document:click', ['$event'])
+  handleOutsideClick(event: MouseEvent) {
+    if (!this.elementRef.nativeElement.contains(event.target) && this.showCalendar) {
+      this.showCalendar = false;
+    }
+  }
+  
+  filterByDate(selectedDate: Date | null): void {
+    this.showCalendar = false;
+    this.selectedDate = selectedDate;
+
+    if (this.selectedDate) {
+      this.filteredTraineeLogs = this.traineelogs.filter(log =>
+        new Date(log.date).toDateString() === this.selectedDate!.toDateString()
+      );
+    } else {
+      // If no date is selected, reset to show all logs
+      this.filteredTraineeLogs = [...this.traineelogs];
+    }
+  }
 
   showDialog(traineelog: TraineeAttendanceLogs) {
     this.visible = true;
@@ -81,6 +122,7 @@ export class SingleUserTableComponent {
       remark: this.currentTraineeLog.remark,
     };
 
+    
     this.traineeAttendancelogService
       .updateTraineeLog(Number(this.traineeId), updatedLog)
       .pipe(
@@ -93,6 +135,7 @@ export class SingleUserTableComponent {
             log.id === this.traineeId ? { ...log, ...updatedLog } : log
           );
 
+          this.filteredTraineeLogs = this.traineelogs; // Reset filtered logs after update
           this.cdr.markForCheck(); // Manually trigger change detection
         }),
         catchError((error) => {

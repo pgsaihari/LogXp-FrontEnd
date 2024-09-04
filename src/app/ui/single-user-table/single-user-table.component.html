@@ -1,110 +1,143 @@
 <div class="card">
-    <div class="p-d-flex p-ai-center p-jc-between">
-      <p-table
-        [value]="traineelogs"
-        [scrollable]="true"
-        scrollHeight="350px"
-        [responsiveLayout]="'scroll'"
-        class="name-log-status"
-      >
-        <ng-template pTemplate="header">
-          <tr class="table-heading-fields">
-            <th>DATE</th>
-            <th>LOG DETAILS</th>
-            <th>STATUS</th>
-          </tr>
-        </ng-template>
-  
-        <ng-template pTemplate="body" let-traineelog>
-          <tr class="check-and-status">
-            <td>{{ traineelog.date | date: 'dd-MM-yyyy' }}</td>
-            <td class="check-in-out">
-              <span id="check-in">check-in:</span>
-              <span>{{
-                traineelog.loginTime | date : "hh:mm a"
-              }}</span>
-              <span id="check-out">check-out:</span>
-              <span>{{
-                traineelog.logoutTime | date : "hh:mm a"
-              }}<br /></span>
-            </td>
-            <td>
-              <span
-                [ngClass]="getStatusClass(traineelog.status)"
-                (click)="showDialog(traineelog)"
-                class="trainee-status"
-              >
-                <b>{{ traineelog.status }}</b>
-                <!-- Add * if remarks exist -->
-                <span
-                *ngIf="traineelog.remark"
-                class="remark-asterisk"
-               
-              ><i class="fa-solid fa-circle-info"  pTooltip="{{ traineelog.remark }}"
-              tooltipPosition="top" tooltipZIndex="3000"></i></span>
-              </span>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
-  </div>
-  
-  <p-dialog
-    [(visible)]="visible"
-    [style]="{ width: '450px', height: '60vh' }"
-    header="Edit Profile"
-    [modal]="true"
-    styleClass="p-fluid trainee-dialog"
-    [contentStyle]="{
-      'max-height': 'calc(100% - 50px)',
-      'overflow': 'auto'
-    }"
-  >
-    <!-- Adjust max-height to allow proper scroll -->
-  
-    <ng-template pTemplate="header">
-      <div class="header-container">
-        <span>Update your status and remarks</span>
-      </div>
-    </ng-template>
-  
-    <ng-template pTemplate="content">
-      <div class="field">
-        <label for="status" class="font-semibold w-6rem">Status:</label>
-        <p-dropdown
-          id="status"
-          [options]="statusOptions"
-          class="flex-auto"
-          [(ngModel)]="currentTraineeLog.status"
-          autocomplete="off"
-          required
-        ></p-dropdown>
-      </div>
-      <div class="field">
-        <label for="remarks" class="font-semibold w-6rem">Remarks:</label>
-        <input
-          id="remarks"
-          type="text"
-          class="flex-auto"
-          [(ngModel)]="currentTraineeLog.remark"
-          autocomplete="off"
-          pInputText
-        />
-      </div>
-    </ng-template>
-  
-    <ng-template pTemplate="footer">
-      <p-button
-        label="Save"
-        (onClick)="onSubmit()"
-        type="button"
-        severity="success"
-        [text]="true"
-        [disabled]="!isFormValid"
-        styleClass="p-button-success"
-        class="save-button"
+  <div class="p-d-flex p-ai-center p-jc-between">
+    
+    <div class="flex-auto calendar-container">
+      <div class = "filter-group">
+        <button pButton label="Date" icon="pi pi-calendar" iconPos="right" class="calendar-button" (click)="toggleCalendar()"></button>
+        <p-button
+        label="Reset"
+        (onClick)="filterByDate(null)"
+        icon="pi pi-refresh"
+        styleClass="p-button-secondary"
+        class="reset-button"
       />
-    </ng-template>
-  </p-dialog>
-  
+      </div>
+    </div>
+
+    <div *ngIf="showCalendar" class="calendar-popup">
+      <p-calendar 
+      id="datepick"
+      placeholder="Select Date"
+      [iconDisplay]="'input'"
+      [maxDate]="yesterday"
+      inputId="icondisplay"
+      [dateFormat]="'dd-MM-yy'"
+      (onSelect)="filterByDate($event)"
+      [(ngModel)]="selectedDate"
+      [showButtonBar]="false" 
+      [inline]="true"
+      >
+      </p-calendar>
+    </div>
+    
+    <p-table
+      [value]="filteredTraineeLogs"
+      sortField="date" 
+      [sortOrder]="-1"
+      [scrollable]="true"
+      scrollHeight="350px"
+      [responsiveLayout]="'scroll'"
+      class="name-log-status"
+    >
+      <ng-template pTemplate="header">
+        <tr class="table-heading-fields">
+          <th pSortableColumn="date">
+            DATE <p-sortIcon field="date" />
+          </th>
+          <th>LOG DETAILS</th>
+          <th>STATUS</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-traineelog>
+        <tr class="check-and-status">
+          <td>{{ traineelog.date | date: 'dd-MM-yyyy' }}</td>
+          <td class="check-in-out">
+            <span id="check-in">check-in:</span>
+            <span>{{
+              traineelog.loginTime | date : "hh:mm a"
+            }}</span>
+            <span id="check-out">check-out:</span>
+            <span>{{
+              traineelog.logoutTime | date : "hh:mm a"
+            }}<br /></span>
+          </td>
+          <td>
+            <span
+              [ngClass]="getStatusClass(traineelog.status)"
+              (click)="showDialog(traineelog)"
+              class="trainee-status"
+            >
+              <b>{{ traineelog.status }}</b>
+              <!-- Add * if remarks exist -->
+              <span
+              *ngIf="traineelog.remark"
+              class="remark-asterisk"
+             
+            ><i class="fa-solid fa-circle-info"  pTooltip="{{ traineelog.remark }}"
+            tooltipPosition="top" tooltipZIndex="3000"></i></span>
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="visible"
+  [style]="{ width: '450px', height: '60vh' }"
+  header="Edit Profile"
+  [modal]="true"
+  styleClass="p-fluid trainee-dialog"
+  [contentStyle]="{
+    'max-height': 'calc(100% - 50px)',
+    'overflow': 'auto'
+  }"
+>
+  <!-- Adjust max-height to allow proper scroll -->
+
+  <ng-template pTemplate="header">
+    <div class="header-container">
+      <span>Update your status and remarks</span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="content">
+    <div class="field">
+      <label for="status" class="font-semibold w-6rem">Status:</label>
+      <p-dropdown
+        id="status"
+        [options]="statusOptions"
+        class="flex-auto"
+        [(ngModel)]="currentTraineeLog.status"
+        autocomplete="off"
+        required
+      ></p-dropdown>
+    </div>
+    <div class="field">
+      <label for="remarks" class="font-semibold w-6rem">Remarks:</label>
+      <input
+        id="remarks"
+        type="text"
+        class="flex-auto"
+        [(ngModel)]="currentTraineeLog.remark"
+        autocomplete="off"
+        pInputText
+      />
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Save"
+      (onClick)="onSubmit()"
+      type="button"
+      severity="success"
+      [text]="true"
+      [disabled]="!isFormValid"
+      styleClass="p-button-success"
+      class="save-button"
+    />
+  </ng-template>
+</p-dialog>

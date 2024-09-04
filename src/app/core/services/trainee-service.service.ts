@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Trainee } from '../model/trainee.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TraineeServiceService {
 
-  private apiUrl = 'https://localhost:7074/api/LogXP/trainee';  // Replace with your actual API URL
-
+  private apiUrl = environment.apiUrl+`/trainee`; // Replace with your actual API endpoint
   constructor(private http: HttpClient) { }
 
   // Function to get all trainees
