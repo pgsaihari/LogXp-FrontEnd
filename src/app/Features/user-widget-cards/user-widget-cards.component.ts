@@ -17,6 +17,7 @@ export class UserWidgetCardsComponent implements OnInit {
   lateArrivals!: number;
   onTimeNum!: number;
   traineeCode!: number;
+  currentUser!: string;
 
   constructor(
     private attendanceLogsService: TraineeAttendancelogService,
@@ -24,15 +25,18 @@ export class UserWidgetCardsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.currentUser = this.attendanceLogsService.getCurrentUser();
+    console.log('Current User:', this.currentUser);
     this.route.params.subscribe(params => {
-      this.traineeCode = +params['traineeCode']; // Convert to number using '+' operator
-      this.fetchCounts();
+      this.currentUser = params['id']; 
+      console.log(this.currentUser)
+      this.fetchCounts(this.currentUser);
     });
   }
   
 
-  private fetchCounts() {
-    const id = this.traineeCode;
+  private fetchCounts(currentUser : string) {
+    const id = currentUser;
     this.attendanceLogsService.getUserWidgetCount(id).subscribe(count => {
       this.absent = count['absentDaysCount'];
       this.lateArrivals = count['lateArrivalDaysCount'];
