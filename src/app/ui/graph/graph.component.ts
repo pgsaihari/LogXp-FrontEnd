@@ -91,12 +91,15 @@ export class GraphComponent  {
       let convertToDate = new Date(<any>item.day);
       result.push(convertToDate.getDate() + " " + this.monthNames[convertToDate.getMonth()])
     });
-    // if (result.length < 8){
-    //   const nullsToAdd = 8 - result.length;
-    //   for (let i = 0; i < nullsToAdd; i++) {
-    //     result.push(null);
-    //   }
-    // }    
+    if (result.length < 8){
+      const nullsToAdd = 8 - result.length;
+      for (let i = 1; i <= nullsToAdd; i++) {
+        const date = (this.graphDataMonth ?? new Date()).getDate();
+        const month = (this.graphDataMonth ?? new Date()).getMonth();
+        result.push(`${date + i} ${this.monthNames[month]}`);
+      }
+    }  
+    console.log("label",result);
     return result;
   }
   /**

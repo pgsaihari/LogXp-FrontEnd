@@ -200,14 +200,4 @@ export class TraineeAttendancelogService {
     this.selectedDateSource.next(date);
   }
 
-  getOfficeEntryTime():Observable<OfficeEntryTime>{
-    const url = `${this.apiUrl}/getOfficeEntryTime`;
-    return this.http.get<OfficeEntryTime>(url);
-  }
-
-  
-  setOfficeEntryTime(officeEntryTime:OfficeEntryTime):Observable<any>{
-    const url = `${this.apiUrl}/setOfficeEntryTime`;
-    return this.http.post<any>(url, officeEntryTime);
-  }
 }  
