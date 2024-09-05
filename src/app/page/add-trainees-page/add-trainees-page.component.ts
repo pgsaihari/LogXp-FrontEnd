@@ -74,7 +74,7 @@ export class AddTraineesPageComponent {
         userId,
         name,
         email,
-        isActive,
+        isActive:true,
         batchId,
         role: 'trainee' // Assign the role as 'trainee'
       };
@@ -89,6 +89,7 @@ export class AddTraineesPageComponent {
       next: () => this.showSuccess(),
       error: (error) => this.showError(error)
     });
+    this.displayPopup=false
   }
   
 
