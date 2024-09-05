@@ -33,12 +33,17 @@ import { Batch } from '../../core/model/batch.model';
       private elementRef: ElementRef,
       private batchService: BatchService
     ) {}
-  
+    
+     /**
+     * Initializes the component, fetching the latest attendance date and batch list.
+     */
     ngOnInit() {
       this.getLatestDate();
       this.loadBatches();
     }
-  
+     /**
+     * Loads the list of batches from the batch service and sets the first batch as the selected one.
+     */
     loadBatches() {
       this.batchService.getBatches().subscribe(batches => {
         this.batches = batches;
@@ -50,6 +55,9 @@ import { Batch } from '../../core/model/batch.model';
       });
     }
   
+     /**
+     * Fetches the latest log date from the attendance API and sets the calendar date.
+     */
     getLatestDate() {
       this.api.getWidgetCount().subscribe(data => {
         if (data.latestDate) {
@@ -61,10 +69,18 @@ import { Batch } from '../../core/model/batch.model';
       });
     }
   
+     /**
+     * Toggles the visibility of the calendar.
+     */
     toggleCalendar() {
       this.showCalendar = !this.showCalendar;
     }
   
+    /**
+     * Handles date selection from the calendar, setting the selected date and hiding the calendar.
+     *
+     * @param event The selected date.
+     */
     onDateSelect(event: Date) {
       this.selectedDate = event;
       this.api.setSelectedDate(this.selectedDate);
@@ -73,6 +89,11 @@ import { Batch } from '../../core/model/batch.model';
       this.onDateChange(this.selectedDate);
     }
   
+    /**
+     * Updates the selected date in the attendance API in day/month/year format.
+     *
+     * @param date The newly selected date.
+     */
     onDateChange(date: Date) {
       const formattedDate = {
         day: date.getDate(),
@@ -81,7 +102,10 @@ import { Batch } from '../../core/model/batch.model';
       };
       this.api.updateSelectedDate(formattedDate);
     }
-  
+
+    /**
+     * Emits the selected batch when the another batch from dropdown is selected.
+     */
     onBatchSelect() {
       this.batchSelected.emit(this.selectedBatch);
       if (this.selectedBatch) {
@@ -89,6 +113,11 @@ import { Batch } from '../../core/model/batch.model';
       }
     }
   
+    /**
+     * Listens for clicks outside the component to close the calendar.
+     *
+     * @param event The mouse event triggered by clicking outside the component.
+     */
     @HostListener('document:click', ['$event'])
     onClickOutside(event: MouseEvent) {
       const clickedInside = this.elementRef.nativeElement.contains(event.target);
