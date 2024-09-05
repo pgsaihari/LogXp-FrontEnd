@@ -85,7 +85,7 @@
 <button pButton label="Set Arrival Time" icon="pi pi-clock" class="p-button-success" style="width: 200px;"
 (click)="openTimeSetterDialog()"></button>
 <!-- Set arival time Dialog -->
-<p-dialog header="Set the allowed arrival time for trainees" [(visible)]="timeSetterVisible"  [modal]="true" [closable]="true" [style]="{width: '30vw',height:'400px'}">  
+<p-dialog header="Set Arrival Time" [(visible)]="timeSetterVisible"  [modal]="true" [closable]="true" [style]="{width: '30vw',height:'400px'}">  
     <div>
         <p>Current Arrival Time : {{curArrivalTime | date:'h:mm a' }}</p>
     </div>
