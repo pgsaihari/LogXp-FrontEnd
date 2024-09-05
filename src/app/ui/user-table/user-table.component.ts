@@ -269,7 +269,7 @@ export class UserTableComponent implements OnInit {
       return;
     }
 
-    this.updateUsers(
+    this.updateTrainees(
       this.trainees.filter((t) => t.batchId === this.selectedBatchId),
       isActive,
       `Trainees in batch ${this.selectedBatchId} updated successfully`
@@ -286,7 +286,7 @@ export class UserTableComponent implements OnInit {
       this.showMessage('warn', 'Warning', 'No trainees selected');
       return;
     }
-    this.updateUsers(this.selectedTrainees, isActive, `Selected trainees updated successfully`);
+    this.updateTrainees(this.selectedTrainees, isActive, `Selected trainees updated successfully`);
     this.isSetStatusDialogVisible = false;
   }
 
@@ -306,25 +306,16 @@ export class UserTableComponent implements OnInit {
    * @param {boolean} isActive - The active status to set.
    * @param {string} successMessage - The message to show on successful update.
    */
-  private updateUsers(trainees: Trainee[], isActive: boolean, successMessage: string) {
+  private updateTrainees(trainees: Trainee[], isActive: boolean, successMessage: string) {
     // Track the number of successful updates
     let updatesCompleted = 0;
     const totalUpdates = trainees.length;
 
     trainees.forEach((trainee) => {
-        // Map the Trainee object to a User object
-        const updatedUser: User = {
-            userId: trainee.employeeCode!,
-            name: trainee.name|| "" ,
-            email: trainee.email||"",
-            isActive: isActive,
-            batchId: trainee.batchId||0,
-            role:  'trainee', // Ensure role is set to 'trainee' if not provided
-        };
-
-        this.userService.updateUser(updatedUser.userId, updatedUser).subscribe({
+        const updatedTrainee = { ...trainee, isActive };
+        this.traineeService.updateTrainee(updatedTrainee.employeeCode!, updatedTrainee).subscribe({
             next: () => {
-                this.updateTraineeList(updatedUser);  // This should update the display list accordingly
+                this.updateTraineeList(updatedTrainee);
                 updatesCompleted++;
 
                 // Check if all updates are completed
@@ -332,13 +323,13 @@ export class UserTableComponent implements OnInit {
                     this.showMessage('success', 'Successful', successMessage);
                 }
             },
-            error: (err) => this.showError('Failed to update users', err),
+            error: (err) => this.showError('Failed to update trainees', err),
         });
     });
 
     // In case there are no trainees to update
     if (totalUpdates === 0) {
-        this.showMessage('warn', 'Warning', 'No users to update');
+        this.showMessage('warn', 'Warning', 'No trainees to update');
     }
     this.isSetStatusDialogVisible = false;
 }
