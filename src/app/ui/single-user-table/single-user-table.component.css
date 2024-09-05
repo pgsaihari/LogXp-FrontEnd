@@ -3,7 +3,6 @@
     padding: 0.2rem;
     width: 100%;
     max-width: 400px;  /* Smaller max width for dashboard */
-    overflow: hidden;  /* Prevent the card from overflowing */
 }
 .check-in-out{
     display: flex;
@@ -53,6 +52,7 @@
 
 /* Scrollable table body */
 .p-table .p-datatable-tbody {
+    /* min-height: 700px; */
     max-height: 700px;  /* Increased height for table body to show more data */
     overflow-y: scroll;  /* Enable vertical scrolling */
 }
@@ -199,7 +199,7 @@
     font-size: 1rem;
     border-radius: 6px;
     outline-color: transparent;
-} 
+}
 
 ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
     margin: 0;
@@ -290,3 +290,48 @@
     margin-left: 2px;
   }
   
+/* CSS for calendar inside dialog form */
+::ng-deep .p-datepicker table td {
+    padding: 0;
+} 
+::ng-deep .p-datepicker .p-datepicker-header {
+    padding: 0;
+    margin: 0;
+}
+::ng-deep .p-datepicker .p-datepicker-buttonbar {
+    padding: 0;
+}
+
+::ng-deep .p-datepicker {
+    z-index: 1050 !important; /* Adjust the z-index value as needed */
+}
+
+.calendar-container{
+    display: flex;
+    flex-direction: row;
+    /* gap: 25%; */
+    justify-content: space-around;
+}
+
+::ng-deep .reset-button .p-button {
+    color: white;
+    padding: 5px 10px;
+    background-color: var(--primary-color);
+}
+
+.filter-group{
+    display: flex;
+    gap: 10px;
+}
+
+.calendar-popup {
+    position: absolute;
+    z-index: 1000;
+}
+
+.calendar-button {
+    padding: 5px 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}

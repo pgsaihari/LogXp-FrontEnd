@@ -99,7 +99,6 @@ export class GraphComponent  {
         result.push(`${date + i} ${this.monthNames[month]}`);
       }
     }  
-    console.log("label",result);
     return result;
   }
   /**

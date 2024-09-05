@@ -36,14 +36,14 @@
 <button pButton label="Add Batch" icon="pi pi-plus" class="p-button-success" style="width: 150px;"
 (click)="openBatchDialog()"></button>
 
-<p-dialog header="Add New Batch" [(visible)]="batchDialog" [modal]="true" [closable]="true" [style]="{width: '50vw'}">
-    <div class="p-fluid">
-        <div class="p-field">
+<p-dialog header="Add New Batch" [(visible)]="batchDialog" [modal]="true" [closable]="true" [style]="{width: '50vw', height: '60vh'}">
+    <div class="p-fluid" style="overflow-y: auto; max-height: 100%;">
+        <div class="p-field"  style="width: 80%; margin: 0 auto;">
             <label for="batchName">Batch Name</label>
             <input id="batchName" type="text" pInputText [(ngModel)]="newBatch.batchName" />
         </div>
 
-        <div class="p-field">
+        <div class="p-field"  class="p-field" style="width: 80%; margin: 0 auto;">
             <label for="yearRange">Year Range</label>
             <div class="year-range-picker">
                 <p-calendar 
@@ -55,6 +55,7 @@
                     yearRange="2000:2050"
                     (onSelect)="updateYearRange()" 
                     [showIcon]="true"
+                    appendTo="body"
                     placeholder="year">
                 </p-calendar>
                 <span> - </span>
@@ -67,6 +68,7 @@
                     yearRange="2000:2050"
                     (onSelect)="updateYearRange()" 
                     [showIcon]="true"
+                    appendTo="body"
                     placeholder="year">
                 </p-calendar>
             </div>
@@ -74,9 +76,10 @@
     </div>
 
     <p-footer>
-        <button pButton label="Save" (click)="saveBatch()" class="p-button-primary batchs"></button>
+        <p-button label="Save" (click)="saveBatch()" class="p-button-primary batchs button-container"></p-button>
     </p-footer>
 </p-dialog>
+
 
 <!-- set arrival time button -->
 <button pButton label="Set Arrival Time" icon="pi pi-clock" class="p-button-success" style="width: 200px;"
@@ -98,8 +101,8 @@
       </div>
     </div>
   
-    <p-footer>
-      <button pButton label="Save" (click)="saveArrivalTime()" class="p-button-primary batchs"></button>
+    <p-footer  class="button-container">
+      <p-button label="Save" (click)="saveArrivalTime()" class="p-button-primary batchs"></p-button>
     </p-footer>
 </p-dialog>
   
@@ -269,7 +272,7 @@
         <p-button 
             label="Save" 
             styleClass="p-button-success"
-            class="addsave" 
+            class="button-container"
             [text]="true"
             (onClick)="saveTrainee()">
         </p-button>

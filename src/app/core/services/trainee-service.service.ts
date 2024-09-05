@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Trainee } from '../model/trainee.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TraineeServiceService {
 
-  private apiUrl = 'https://localhost:7074/api/LogXP/trainee';  // Replace with your actual API URL
-
+  private apiUrl = environment.apiUrl+`/trainee`; // Replace with your actual API endpoint
   constructor(private http: HttpClient) { }
 
   // Function to get all trainees
@@ -36,9 +36,9 @@ export class TraineeServiceService {
   }
 
   // Function to add multiple trainees
-   addTrainees(trainees: Trainee[]): Observable<void> {
+   addTrainees(trainees: Trainee[]): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<void>(this.apiUrl, trainees, { headers });
+    return this.http.post<any>(this.apiUrl, trainees, { headers });
   }
   // Function to update an existing trainee
   updateTrainee(employeeCode: string, trainee: Trainee): Observable<Trainee> {
