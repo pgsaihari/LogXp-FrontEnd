@@ -1,144 +1,198 @@
-/* Popup */
+/* Popup styles */
 .popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Black shade with transparency */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000; /* Ensure it appears on top of other content */
-    padding: 10px; /* Add padding to allow some space around the popup */
-    
-  }
-  
-  .popup-content {
-    position: relative; /* Added to allow absolute positioning of close icon */
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 600px; /* Maximum width for the popup */
-    max-height: 90vh; /* Maximum height for the popup */
-    box-sizing: border-box; /* Include padding in the width */
-    text-align: center;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 1001; /* Ensure content appears above the background */
-    overflow-y: auto; /* Enable vertical scrolling if content overflows */
-  }
-  
-  /* Close Icon */
-  .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  
-  .close-btn i {
-    color: #db0000;
-  }
-  
-  /* Toggle Buttons */
-  .toggle-buttons {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .toggle-buttons button {
-    background-color: #f2f2f2;
-    border: 1px solid #ddd;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-right: 10px;
-    border-radius: 4px;
-  }
-  
-  .toggle-buttons button.active {
-    background-color: #db0000;
-    color: white;
-  }
-  
-  .toggle-buttons button:last-child {
-    margin-right: 0;
-  }
-  
-  /* Table container with scrolling */
-  .table-container {
-    max-height: calc(5 * 40px); /* Adjust height based on row height (40px per row) */
-    overflow-y: auto;
-    margin-bottom: 20px;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  table, th, td {
-    border: 1px solid #ddd;
-  }
-  
-  th, td {
-    padding: 8px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .popup-content {
-      padding: 15px; /* Reduce padding on smaller screens */
-      max-width: 90%; /* Make the popup wider relative to the screen */
-      max-height: 80vh; /* Adjust max height for smaller screens */
-    }
-  
-    th, td {
-      font-size: 14px; /* Reduce font size for smaller screens */
-    }
-  
-    .table-container {
-      max-height: calc(5 * 35px); /* Adjust height based on row height (35px per row) for smaller screens */
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .popup-content {
-      padding: 10px; /* Further reduce padding on very small screens */
-      max-width: 100%; /* Make the popup full width */
-      max-height: 80vh; /* Further adjust max height for very small screens */
-    }
-  
-    th, td {
-      font-size: 12px; /* Further reduce font size */
-    }
-  
-    .table-container {
-      max-height: calc(5 * 30px); /* Adjust height based on row height (30px per row) for very small screens */
-    }
-  }
-  .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background-color: transparent;
-    border: none;
-    font-size: 1.5rem;
-    color: #333;
-    cursor: pointer;
-    z-index: 2000; /* Ensure the close button is always visible */
-    padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.popup-content {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 80%;
+  height: auto; /* Remove fixed height */
+  box-sizing: border-box;
+  text-align: center;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  padding: 0;
 }
 
 .close-btn:hover {
-    color: #ff0000; /* Red color on hover to indicate action */
+  color: #ff0000;
+}
+
+/* Title, Filter, and Pagination in the same row */
+.title-pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.filter-container label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+.filter-button {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white; /* Set the background to white */
+  color: #333; /* Set the text color to dark */
+  cursor: pointer;
+  font-size: 14px; /* Adjust the font size for readability */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add smooth transition */
+}
+
+.filter-button:focus {
+  outline: none;
+  border-color: var(--primary-color); /* Change the border color on focus */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add subtle shadow on focus */
+}
+
+.filter-button:hover {
+  background-color: #f9f9f9; /* Slightly change background color on hover */
+}
+
+.asterisk-note {
+  font-size: 12px;
+  color: #666; /* Light gray color */
+  margin-top: 20px; /* Space from the table */
+  text-align: center;
+}
+
+
+/* Pagination container */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination-container button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination-container span {
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+/* Table container */
+.table-container {
+  flex: 1;
+  max-height: none; /* Remove the fixed height */
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Ensure table columns take equal space */
+}
+
+thead th {
+  position: sticky; /* Make the header fixed */
+  top: 0;
+  background-color: #ffffff;
+  z-index: 2; /* Ensure the header stays on top */
+}
+
+/* Removed border from table, th, and td */
+table, th, td {
+  border: none; /* Remove all borders */
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+tbody {
+  max-height: 300px; /* Limit the height of the table body */
+  display: block; /* Separate tbody from thead to enable scrolling */
+  overflow-y: auto; /* Enable scrolling for the table body */
+}
+
+thead, tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed; /* Ensure header and body columns align */
+}
+
+tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Style for 'Came Inside' - light green */
+.came-inside {
+  color: #32CD32; /* Light Green */
+  font-weight: bold; /* Bold for emphasis */
+}
+
+/* Style for 'Went Outside' - light red */
+.went-outside {
+  color: #d73b20; /* Light Red */
+  font-weight: bold; /* Bold for emphasis */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .popup-content {
+      padding: 15px;
+      max-width: 90%;
+  }
+
+  th, td {
+      font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-content {
+      padding: 10px;
+      max-width: 100%;
+  }
+
+  th, td {
+      font-size: 12px;
+  }
 }
