@@ -1,6 +1,6 @@
 <div class="widget-cards-container">
     <div class="widget-cards">
-      <app-widget-card routerLink="/search" [card_number]="totalTrainees" card_header="Total Trainees" header_icon="fa-solid fa-users icon"></app-widget-card>
+      <app-widget-card routerLink="/search" [card_number]="totalTrainees" card_header="Total ILP Trainees" header_icon="fa-solid fa-users icon"></app-widget-card>
       <app-widget-card (onBtnClick)="clickWidget($event, 1)" [card_number]="onTimeNum" card_header="On Time" header_icon="fa-solid fa-user-check" [isActive]="activeCardIndex === 1"></app-widget-card>
       <app-widget-card (onBtnClick)="clickWidget($event, 2)" [card_number]="absentees" card_header="Absent" header_icon="fa-solid fa-ban" [isActive]="activeCardIndex === 2"></app-widget-card>
       <app-widget-card (onBtnClick)="clickWidget($event, 3)" [card_number]="lateArrivals" card_header="Late Arrivals" header_icon="fa-solid fa-user-clock" [isActive]="activeCardIndex === 3"></app-widget-card>

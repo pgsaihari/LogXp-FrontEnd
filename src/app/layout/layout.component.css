@@ -57,24 +57,29 @@ body {
     cursor: pointer;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     transition: box-shadow 0.3s ease; /* Transition for hover effect */
-    animation: pulse 2s infinite, border-animation 3s infinite linear; /* Pulse and border animations */
+    animation: pulse 3s infinite, border-animation 3s infinite linear; /* Pulse and border animations */
     background-clip: padding-box;
     background-origin: border-box;
 }
 
 /* Pulse Animation */
-@keyframes pulse {
+
+ @keyframes pulse {
     0%, 100% {
         transform: scale(1);
-        box-shadow: 0px 4px 8px rgba(255, 0, 0, 0.5); /* Red glow */
+        box-shadow: 0px 4px 8px rgba(255, 0, 0, 0.5);
     }
     50% {
         transform: scale(1.1);
-        box-shadow: 0px 6px 12px rgba(255, 0, 0, 0.7); /* Intense red glow */
+        box-shadow: 0px 6px 12px rgba(255, 0, 0, 0.7); 
     }
-}
+} 
+
+
+
 
 /* Complex Border Animation */
+
 @keyframes border-animation {
     0% {
         border-color: red transparent transparent transparent;
