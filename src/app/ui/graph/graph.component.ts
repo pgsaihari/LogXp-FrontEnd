@@ -191,7 +191,7 @@ export class GraphComponent  {
         y: {
           title: {
             display: true,
-            text: 'Attendance %' 
+            text: 'No. of trainees' 
           },
           ticks: {
             color: textColorSecondary

@@ -46,7 +46,7 @@
             <td [ngClass]="{
               'came-inside': trainee.direction === '1',
               'went-outside': trainee.direction === '2'
-            }" [innerHTML]="trainee.direction === '1' ? '<i class=\'fa-solid fa-person-walking\'></i> In' : trainee.direction === '2' ? '<i class=\'fa-solid fa-person-walking\'></i> Outside' : ''">
+            }" [innerHTML]="trainee.direction === '1' ? '<i class=\'fa-solid fa-person-walking\'></i> In' : trainee.direction === '2' ? '<i class=\'fa-solid fa-person-walking\'></i> Out' : ''">
             </td>
             <td>{{ trainee.place }}</td>
             <td>{{ trainee.logDateTime | date:'shortTime' }}</td>
