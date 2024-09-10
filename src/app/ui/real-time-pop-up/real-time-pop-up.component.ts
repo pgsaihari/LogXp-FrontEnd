@@ -5,13 +5,13 @@ import {
   LateArrival,
 } from '../../core/services/attendance-log.service';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-
+import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-real-time-pop-up',
   standalone: true,
-  imports: [NgFor, NgIf, DatePipe, FormsModule,NgClass],
+  imports: [NgFor, NgIf, DatePipe, FormsModule, NgClass],
   templateUrl: './real-time-pop-up.component.html',
   styleUrls: ['./real-time-pop-up.component.css'],
 })
@@ -23,6 +23,7 @@ export class RealTimePopUpComponent implements OnInit {
   filteredTrainees: AttendanceLog[] = [];
 
   selectedBatchTrainees = ''; // Holds the selected batch filter for Trainees
+  searchTerm = ''; // Holds the search input value
 
   paginatedTrainees: AttendanceLog[] = [];
 
@@ -50,13 +51,13 @@ export class RealTimePopUpComponent implements OnInit {
   }
 
   filterTrainees() {
-    if (this.selectedBatchTrainees) {
-      this.filteredTrainees = this.trainees.filter(
-        (trainee) => trainee.batchName === this.selectedBatchTrainees
-      );
-    } else {
-      this.filteredTrainees = this.trainees;
-    }
+    // Filter by batch and search term
+    this.filteredTrainees = this.trainees.filter(
+      (trainee) =>
+        (!this.selectedBatchTrainees || trainee.batchName === this.selectedBatchTrainees) &&
+        (!this.searchTerm || trainee.employeeName.toLowerCase().includes(this.searchTerm.toLowerCase()))
+    );
+
     this.pageTrainees = 1; // Reset to the first page whenever filtering changes
     this.updatePagination();
   }
