@@ -51,7 +51,7 @@ import { CalendarServiceService } from '../../../core/services/calendar-service.
     ngOnInit(): void {
       this.fetchLatestDateAndCounts();
       this.subscribeToDateUpdates();  // Subscribe after fetching the latest date
-      this.fetchTotalTrainees();
+
     }
 /**
  * Handles changes to the `selectedBatch` input. When the selected batch changes, 
@@ -63,6 +63,7 @@ import { CalendarServiceService } from '../../../core/services/calendar-service.
       if (changes['selectedBatch'] && this.selectedBatch) {
         // console.log('Batch received in WidgetCardsComponent:', this.selectedBatch);
         this.fetchCounts(); // Fetch counts whenever the batch changes
+        this.fetchTotalTrainees();
       }
     }
 /**
@@ -132,7 +133,7 @@ import { CalendarServiceService } from '../../../core/services/calendar-service.
  * Updates the `totalTrainees` property with the response data.
  */
     private fetchTotalTrainees(): void {
-      this.traineeService.getTraineesCount().subscribe({
+      this.traineeService.getTraineesCount(this.selectedBatch.batchId).subscribe({
         next: response => (this.totalTrainees = response),
         error: error => this.messageService.add({ severity: 'error', summary: error.error.message, detail: 'LogXp' }),
       });
