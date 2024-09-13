@@ -44,31 +44,52 @@ import { CalendarServiceService } from '../../../core/services/calendar-service.
       private traineeAttendanceLogs: TraineeAttendancelogService,
       private calendarServiceService:CalendarServiceService
     ) {}
-  
+/**
+ * Initializes the component and sets up initial data fetching.
+ * It fetches the latest date and attendance counts, subscribes to date changes, and retrieves the total number of trainees.
+ */
     ngOnInit(): void {
       this.fetchLatestDateAndCounts();
       this.subscribeToDateUpdates();  // Subscribe after fetching the latest date
-      this.fetchTotalTrainees();
+
     }
-  
+/**
+ * Handles changes to the `selectedBatch` input. When the selected batch changes, 
+ * it triggers fetching of updated attendance counts specific to the new batch.
+ *
+ * @param changes Contains the changes to input properties, including the new selected batch.
+ */
     ngOnChanges(changes: SimpleChanges): void {
       if (changes['selectedBatch'] && this.selectedBatch) {
         // console.log('Batch received in WidgetCardsComponent:', this.selectedBatch);
         this.fetchCounts(); // Fetch counts whenever the batch changes
+        this.fetchTotalTrainees();
       }
     }
-  
+/**
+ * Cleans up resources when the component is destroyed. Specifically, it unsubscribes
+ * from the date subscription to prevent memory leaks.
+ */
     ngOnDestroy(): void {
       if (this.dateSubscription) {
         this.dateSubscription.unsubscribe();
       }
     }
-  
+/**
+ * Handles the selection of a widget card by emitting the selected widget's data
+ * and updating the active card index.
+ *
+ * @param data The data related to the selected widget, including its header.
+ * @param index The index of the selected widget card.
+ */
     clickWidget(data: { header: string }, index: number) {
       this.activeCardIndex = index;
       this.widgetSelected.emit(data);
     }
-  
+/**
+ * Subscribes to date updates from the `TraineeAttendancelogService`. Whenever the selected date changes,
+ * it updates the `selectedDate` property and fetches the updated attendance counts.
+ */
     private subscribeToDateUpdates(): void {
       this.dateSubscription = this.traineeAttendanceLogs.selectedDate$.subscribe(date => {
         if (date) {
@@ -85,6 +106,10 @@ import { CalendarServiceService } from '../../../core/services/calendar-service.
       });
     }
 
+/**
+ * Fetches the latest available date for attendance logs and updates the selected date.
+ * Once the date is retrieved, it also triggers fetching of attendance counts for that date.
+ */
     private fetchLatestDateAndCounts(): void {
       this.traineeAttendanceLogs.getLatestDate().subscribe({
         next: (response: { latestDate: string }) => {
@@ -103,13 +128,21 @@ import { CalendarServiceService } from '../../../core/services/calendar-service.
       });
     }
   
+/**
+ * Retrieves the total number of trainees by calling the `TraineeServiceService`.
+ * Updates the `totalTrainees` property with the response data.
+ */
     private fetchTotalTrainees(): void {
-      this.traineeService.getTraineesCount().subscribe({
+      this.traineeService.getTraineesCount(this.selectedBatch.batchId).subscribe({
         next: response => (this.totalTrainees = response),
         error: error => this.messageService.add({ severity: 'error', summary: error.error.message, detail: 'LogXp' }),
       });
     }
-  
+
+/**
+ * Fetches attendance counts for on-time arrivals, late arrivals, absentees, and early departures.
+ * Uses the `selectedDate` to filter data for the selected day, month, and year.
+ */
     private fetchCounts(): void {
       const { day, month, year } = this.selectedDate;
       this.selectedGlobalDate = new Date(year, month-1, day);
@@ -137,12 +170,24 @@ import { CalendarServiceService } from '../../../core/services/calendar-service.
       this.countTotalWorkingDays();
     }
   
+/**
+ * Filters the attendance logs to include only those relevant to the selected batch.
+ * If a batch is selected, it returns the count of logs that match the batch; otherwise, it returns the full count.
+ *
+ * @param logs The attendance logs to filter based on the selected batch.
+ * @returns The number of logs that match the selected batch.
+ */
     private getFilteredCount(logs: WidgetAttendance[]): number {
       return this.selectedBatch
         ? logs.filter(log => log.batch === this.selectedBatch.batchName).length
         : logs.length;
     }
-
+/**
+ * Handles errors encountered during data fetching by displaying an error message
+ * using the `MessageService`.
+ *
+ * @param error The HTTP error response containing error details.
+ */
     private handleFetchError(error: HttpErrorResponse): void {
       const errorMessage = error.error?.message || 'An unknown error occurred';
       this.messageService.add({ severity: 'error', summary: errorMessage, detail: 'LogXp' });

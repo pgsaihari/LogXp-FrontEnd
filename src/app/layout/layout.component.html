@@ -7,7 +7,7 @@
   </div>
 
   <!-- Floating Button -->
-  <button class="floating-btn" (click)="showPopup = true">
+  <button *ngIf="role=='admin'" class="floating-btn" (click)="showPopup = true">
     LIVE SWIPE INFO
   </button>
 

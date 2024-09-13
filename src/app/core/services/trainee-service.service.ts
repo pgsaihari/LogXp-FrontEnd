@@ -20,8 +20,9 @@ export class TraineeServiceService {
     }
 
   // Function to get count of active trainees
-  getTraineesCount(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/active-count`);
+  getTraineesCount(batchId: number): Observable<number> {
+    const url = `${this.apiUrl}/active-count?batchId=${batchId}`;
+    return this.http.get<number>(url);
   }
 
   // Function to get a trainee by employeeCode
