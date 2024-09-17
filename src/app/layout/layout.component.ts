@@ -42,7 +42,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
    * Stores the role of the user, currently hardcoded as 'admin'.
    * Future implementation can dynamically set this value based on user information.
    */
-  role: string = 'admin'; // Hardcoded role for now
+  // Hardcoded role for now
 
   /**
    * Subject used for unsubscribing from observables when the component is destroyed
@@ -56,7 +56,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
    */
   isLogged: boolean = false;
   showPopup = false;
-
+  role:string | null="";
   /**
    * Constructor for LayoutComponent. It initializes services for MSAL and routing,
    * and handles the redirect observable to capture tokens after login.
@@ -81,6 +81,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
    * Handles initialization logic such as checking login status and setting the active account.
    */
   ngOnInit(): void {
+    this.role=this.authService.getCurrentUserRole();
     try {
       // Handle redirect observable and potential token
       this.msalService
