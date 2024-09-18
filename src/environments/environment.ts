@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
 
-    apiUrl: 'http://172.16.4.89:9021/api/logXP'
+    apiUrl: 'http://localhost:7074/api/logXP'
 
 };
 // sadasdasdasdasfasdA
