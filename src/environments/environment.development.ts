@@ -1,6 +1,4 @@
 export const environment = {
-    production: true,
-
-    apiUrl: '/api/logXP'
-
+    production: false,
+    apiUrl: 'api/LogXP'
 };
