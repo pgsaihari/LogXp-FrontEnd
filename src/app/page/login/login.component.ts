@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log("hii")
     const accounts = this.msalService.instance.getAllAccounts();
     if (accounts.length > 0) {
       this.router.navigate(['/home']); // Redirect to home page if already logged in
