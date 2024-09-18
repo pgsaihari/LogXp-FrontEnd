@@ -53,8 +53,8 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     auth: {
       clientId: authConfig.msalConfig.auth.clientId,
       authority: authConfig.msalConfig.auth.authority,
-      redirectUri: '/',
-      postLogoutRedirectUri: '/',
+      redirectUri: 'https://log-xp-front-end-git-master-pgsaiharis-projects.vercel.app/',
+      postLogoutRedirectUri: 'https://log-xp-front-end-git-master-pgsaiharis-projects.vercel.app/',
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,
@@ -89,7 +89,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     authRequest: {
       scopes: [...authConfig.apiConfig.scopes],
     },
-    loginFailedRoute: '/login',
+    loginFailedRoute: 'https://log-xp-front-end-git-master-pgsaiharis-projects.vercel.app/login',
   };
 }
 
