@@ -1,36 +1,35 @@
+/* Popup styles */
 .popup {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Black shade with transparency */
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; /* Ensure it appears on top of other content */
-  padding: 10px; /* Add padding to allow some space around the popup */
+  z-index: 1000;
+  padding: 10px;
 }
 
 .popup-content {
-  position: relative; /* Added to allow absolute positioning of close icon */
+  position: relative;
   background: white;
   padding: 20px;
   border-radius: 8px;
   width: 100%;
-  max-width: 80%; /* Increased maximum width for the popup */
-  height: 90vh; /* Set height to 90% of the viewport height */
-  max-height: 90vh; /* Set maximum height to 90% of the viewport height */
-  box-sizing: border-box; /* Include padding in the width */
+  max-width: 80%;
+  height: auto; /* Remove fixed height */
+  box-sizing: border-box;
   text-align: center;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1001; /* Ensure content appears above the background */
-  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  z-index: 1001;
   display: flex;
-  flex-direction: column; /* Allow flexible layout to manage child heights */
+  flex-direction: column;
 }
 
-/* Close Icon */
+/* Close Button */
 .close-btn {
   position: absolute;
   top: 10px;
@@ -40,54 +39,106 @@
   font-size: 1.5rem;
   color: #333;
   cursor: pointer;
-  z-index: 2000; /* Ensure the close button is always visible */
   padding: 0;
 }
 
 .close-btn:hover {
-  color: #ff0000; /* Red color on hover to indicate action */
+  color: #ff0000;
 }
 
-/* Toggle Buttons */
-.toggle-buttons {
+/* Title, Filter, and Pagination in the same row */
+.title-pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.filter-container label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+.filter-button {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white; /* Set the background to white */
+  color: #333; /* Set the text color to dark */
+  cursor: pointer;
+  font-size: 14px; /* Adjust the font size for readability */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add smooth transition */
+}
+
+.filter-button:focus {
+  outline: none;
+  border-color: var(--primary-color); /* Change the border color on focus */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add subtle shadow on focus */
+}
+
+.filter-button:hover {
+  background-color: #f9f9f9; /* Slightly change background color on hover */
+}
+
+.asterisk-note {
+  font-size: 12px;
+  color: #666; /* Light gray color */
+  margin-top: 20px; /* Space from the table */
+  text-align: center;
+}
+
+
+/* Pagination container */
+.pagination-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  align-items: center;
 }
 
-.toggle-buttons button {
-  background-color: #f2f2f2;
-  border: 1px solid #ddd;
-  padding: 10px 20px;
+.pagination-container button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin: 0 5px;
   cursor: pointer;
-  margin-right: 10px;
   border-radius: 4px;
 }
 
-.toggle-buttons button.active {
-  background-color: #db0000;
-  color: white;
+.pagination-container span {
+  margin: 0 10px;
+  font-weight: bold;
 }
 
-.toggle-buttons button:last-child {
-  margin-right: 0;
-}
-
-/* Table container with maximum height like the popup */
+/* Table container */
 .table-container {
-  flex: 1; /* Let the table container grow to take available space */
-  max-height: 100%; /* Maximum height of the table container relative to the popup */
-  overflow-y: auto; /* Enable vertical scrolling */
+  flex: 1;
+  max-height: none; /* Remove the fixed height */
   margin-bottom: 20px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* Ensure table columns take equal space */
 }
 
+thead th {
+  position: sticky; /* Make the header fixed */
+  top: 0;
+  background-color: #ffffff;
+  z-index: 2; /* Ensure the header stays on top */
+}
+
+/* Removed border from table, th, and td */
 table, th, td {
-  border: 1px solid #ddd;
+  border: none; /* Remove all borders */
 }
 
 th, td {
@@ -95,61 +146,53 @@ th, td {
   text-align: left;
 }
 
-th {
-  background-color: #f2f2f2;
+tbody {
+  max-height: 300px; /* Limit the height of the table body */
+  display: block; /* Separate tbody from thead to enable scrolling */
+  overflow-y: auto; /* Enable scrolling for the table body */
+}
+
+thead, tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed; /* Ensure header and body columns align */
+}
+
+tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Style for 'Came Inside' - light green */
+.came-inside {
+  color: #0d7a0d; /* Light Green */
+  font-weight: bold; /* Bold for emphasis */
+}
+
+/* Style for 'Went Outside' - light red */
+.went-outside {
+  color: #d73b20; /* Light Red */
+  font-weight: bold; /* Bold for emphasis */
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .popup-content {
-      padding: 15px; /* Reduce padding on smaller screens */
-      max-width: 90%; /* Make the popup wider relative to the screen */
-      height: 80vh; /* Adjust height for smaller screens */
-      max-height: 80vh; /* Adjust max height for smaller screens */
+      padding: 15px;
+      max-width: 90%;
   }
 
   th, td {
-      font-size: 14px; /* Reduce font size for smaller screens */
+      font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
   .popup-content {
-      padding: 10px; /* Further reduce padding on very small screens */
-      max-width: 100%; /* Make the popup full width */
-      height: 80vh; /* Further adjust height for very small screens */
-      max-height: 80vh; /* Further adjust max height for very small screens */
+      padding: 10px;
+      max-width: 100%;
   }
 
   th, td {
-      font-size: 12px; /* Further reduce font size */
+      font-size: 12px;
   }
-}
-/* Style for the filter button */
-.filter-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.filter-container label {
-  margin-right: 10px;
-  font-weight: bold;
-}
-
-.filter-button {
-  padding: 5px 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  background-color: #f2f2f2;
-  cursor: pointer;
-}
-
-.filter-button:focus {
-  outline: none;
-  border-color: #db0000;
-}
-
-.filter-button:hover {
-  background-color: #e0e0e0;
 }

@@ -47,9 +47,8 @@ export class TableComponent implements OnInit {
   isSideProfileVisible?: boolean | undefined = false;
   selectedDate: Date | undefined;
   searchQuery: string = '';
-  selectedStartDate: any;
-  selectedEndDate: any;
-
+  selectedStartDate: Date | null =  null;
+  selectedEndDate: Date | null =  null;
   constructor(
     private traineeAttendancelogService: TraineeAttendancelogService,
     private batchService: BatchService,
@@ -57,10 +56,8 @@ export class TableComponent implements OnInit {
     private elementRef: ElementRef, private renderer: Renderer2
   ) {}
 
-  selectedItem: any;
-  suggestions: any[] = [];
   todayDate: string | undefined;
-  selectedOptions: any[] = [];
+  selectedOptions: string[] = [];
   yesterday: Date = new Date();
   selectedDateRange: Date[] = [];
 
@@ -106,9 +103,6 @@ export class TableComponent implements OnInit {
     this.getLatestDate();
     this.getTraineeAttendanceLogs(); // Fetch data from the API
     this.fetchBatches(); // Fetch batches
-  
-   
-
     this.renderer.listen('document', 'click', (event: Event) => {
       // Check if the click is outside both the table component and the side profile
       const isInsideTable = this.elementRef.nativeElement.contains(event.target);
@@ -134,8 +128,6 @@ export class TableComponent implements OnInit {
     this.batchService.getBatches().subscribe({
       next: (batches: Batch[]) => {
         this.batches = batches;
-        // Optionally initialize selectedBatches with IDs or another identifier
-        this.selectedBatches = this.batches.map(batch => batch.batchName); // Adjust based on your logic
       },
       error: (error) => {
         console.error('Error fetching batches:', error);
@@ -203,64 +195,59 @@ export class TableComponent implements OnInit {
   
   filterByDate(): void {
     if (this.selectedDateRange && this.selectedDateRange.length === 2) {
-      const startDateString = this.datePipe.transform(this.selectedDateRange[0], 'yyyy-MM-dd') || '';
-      const endDateString = this.datePipe.transform(this.selectedDateRange[1], 'yyyy-MM-dd') || '';
-  
-      this.traineeAttendancelogService
-        .getFilteredTraineeAttendanceLogs(
-          this.selectedStatuses, // Pass the selected statuses
-          startDateString,
-          endDateString,
-          this.selectedBatches // Pass the selected batches
-        )
-        .subscribe({
-          next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
-            if (response && Array.isArray(response.logs)) {
-              this.originalTraineeLogs = response.logs; // Save the filtered data
-              this.filteredTrainees = [...this.originalTraineeLogs]; // Initialize filtered data
-            } else {
-              console.error('API did not return an array:', response);
-              this.originalTraineeLogs = [];
-              this.filteredTrainees = [];
-            }
-          },
-          error: (error) => {
-            console.error('Error fetching filtered trainee logs:', error);
-            this.originalTraineeLogs = [];
-            this.filteredTrainees = [];
-          },
-        });
-    }  else {
-      // No date range selected, use the selected date (latest date) to filter the data
-      const formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
-  
-      this.traineeAttendancelogService
-        .getFilteredTraineeAttendanceLogs(
-          this.selectedStatuses, // Pass the selected statuses
-          formattedDate,
-          formattedDate,
-          this.selectedBatches // Pass the selected batches
-        )
-        .subscribe({
-          next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
-            if (response && Array.isArray(response.logs)) {
-              this.originalTraineeLogs = response.logs; // Save the filtered data
-              this.filteredTrainees = [...this.originalTraineeLogs]; // Initialize filtered data
-            } else {
-              console.error('API did not return an array:', response);
-              this.originalTraineeLogs = [];
-              this.filteredTrainees = [];
-            }
-          },
-          error: (error) => {
-            console.error('Error fetching filtered trainee logs:', error);
-            this.originalTraineeLogs = [];
-            this.filteredTrainees = [];
-          },
-        });
+      this.filterByDateRange();
+    } else {
+      this.filterBySelectedDate();
     }
   }
-
+  
+  // Separate methods for each filtering scenario
+  filterByDateRange(): void {
+    const startDateString = this.datePipe.transform(this.selectedDateRange[0], 'yyyy-MM-dd') || '';
+    const endDateString = this.datePipe.transform(this.selectedDateRange[1], 'yyyy-MM-dd') || '';
+    const selectedBatchNames = this.getSelectedBatchNames();
+  
+    this.fetchFilteredLogs(startDateString, endDateString, selectedBatchNames);
+  }
+  
+  filterBySelectedDate(): void {
+    const formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
+    const selectedBatchNames = this.getSelectedBatchNames();
+  
+    this.fetchFilteredLogs(formattedDate, formattedDate, selectedBatchNames);
+  }
+  
+  // Utility method for batch name retrieval
+  getSelectedBatchNames(): string[] {
+    return this.selectedBatches.map(batchId => {
+      const batch = this.batches.find(b => b.batchId === parseInt(batchId, 10));
+      return batch ? batch.batchName : '';
+    }).filter(name => name);
+  }
+  
+  // method for fetching logs
+  fetchFilteredLogs(startDate: string, endDate: string, batchNames: string[]): void {
+    this.traineeAttendancelogService
+      .getFilteredTraineeAttendanceLogs(this.selectedStatuses, startDate, endDate, batchNames)
+      .subscribe({
+        next: (response: { logs: TraineeAttendanceLogs[]; count: number; message: string }) => {
+          if (response && Array.isArray(response.logs)) {
+            this.originalTraineeLogs = response.logs;
+            this.filteredTrainees = [...this.originalTraineeLogs];
+          } else {
+            console.error('API did not return an array:', response);
+            this.originalTraineeLogs = [];
+            this.filteredTrainees = [];
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching filtered trainee logs:', error);
+          this.originalTraineeLogs = [];
+          this.filteredTrainees = [];
+        },
+      });
+  }
+  
   applyStatusFilter(event: MatSelectionListChange) {
     // Update selected statuses based on the selected options
     this.selectedStatuses = event.source.selectedOptions.selected.map(
@@ -283,22 +270,15 @@ export class TableComponent implements OnInit {
 }
 
 
-
   downloadData() {
     // Convert the filteredTrainees data into a worksheet
     const worksheet = XLSX.utils.json_to_sheet(
       this.filteredTrainees.map((trainee) => ({
-        Date: this.formatDate(trainee.date ?? ''), // Format the date
-        Name: trainee.name ?? 'N/A', // Default to 'N/A' if name is undefined
-        Status: trainee.status ?? 'N/A', // Default to 'N/A' if status is undefined
-        'Check-in Time': this.getDisplayTime(
-          trainee.checkin ?? '',
-          trainee.status ?? ''
-        ), // Format check-in time
-        'Check-out Time': this.getDisplayTime(
-          trainee.checkout ?? '',
-          trainee.status ?? ''
-        ), // Format check-out time
+        Date: this.formatDate(trainee.date ?? ''),  // Format the date
+        Name: trainee.name ?? 'N/A', 
+        Status: trainee.status ?? 'N/A',
+        'Check-in Time': this.formatTime(trainee.checkin ?? ''),
+        'Check-out Time': this.formatTime(trainee.checkout ?? ''),
         'Work Hours': trainee.workhours ?? '0', // Use default '0' if work hours are undefined
       }))
     );
@@ -333,7 +313,7 @@ export class TableComponent implements OnInit {
 
   getCheckinTimeClass(time: string, status: string): string {
     if (status === 'On Leave') {
-      return ''; // No special class for absent
+      return 'time-on-leave'; // No special class for absent
     }
     if (!time) return '';
     // Extract the time part (08:58:18) from the datetime string
@@ -342,12 +322,12 @@ export class TableComponent implements OnInit {
     const hours = parseInt(timePart.slice(0, 2), 10);
     const minutes = parseInt(timePart.slice(3, 5), 10);
 
-    if (hours === 0 && minutes === 0) {
-      return 'time-on-leave'; // Red for 00:00
-    } else if (hours < 9 || (hours === 9 && minutes < 6)) {
+  if (status == 'Present') {
       return 'time-on-time'; // Green for less than 9:00
-    } else {
+    } else if (status =='Late Arrival') {
       return 'time-late'; // Yellow for later than 9:00
+    }else{
+      return 'time-late';
     }
   }
 

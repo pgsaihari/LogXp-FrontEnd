@@ -1,21 +1,40 @@
+  .tables .profiletable .card {
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    width: 100%; /* Ensure the table uses the full width of its container */
+  }
+
+  :host ::ng-deep .card p-table {
+    width : 500px;/* Make sure the table fits its container */
+    table-layout: fixed; /* Fixes the layout to prevent unwanted overflow */
+  }
+
+  :host ::ng-deep .card p-table th, 
+  :host ::ng-deep .card p-table td {
+    width: 7em; /* Adjust this value as needed */
+    overflow: hidden; /* Prevent content overflow in cells */
+  }
+
  .page {
     padding: 20px;
     width: 100%;
   } 
   .tables{
-    display: flex;
-   gap: 5%;
-   padding-right: 9%;
+   display: flex;
+   gap: 2%;
    
+  
+   overflow: hidden;
   }
   .profiletable{
-    width: 75%;
+    padding-left: 10px;
+    width: 100%;
     height: 75%;
     
   }
   .card{
     border: 3px solid white;
     border-radius: 5px;
+    overflow: hidden;
   }
   .holidayContainer{
     background-color: var(--background-color);
@@ -226,4 +245,15 @@
       padding-right: 5px;
     }
   }
- 
+  ::ng-deep .p-datatable .p-datatable-thead >tr >th
+  {
+    font-size: small;
+     padding: 10px 10px; 
+    font-weight: bold;
+  }
+  ::ng-deep .p-datatable .p-datatable-tbody > tr > td
+  {
+    padding: 20px 20px; 
+    font-size: small;
+    font-weight: bold;
+  }

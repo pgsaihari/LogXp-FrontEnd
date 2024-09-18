@@ -1,16 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TopHeaderComponent } from "../../shared/top-header/top-header.component";
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
-import { WidgetCardComponent } from "../../ui/widget-card/widget-card.component";
-// import { WidgetCardsComponent } from "../../Features/widget-cards/widget-cards.component";
-import { CalendarModule } from 'primeng/calendar';
-import { CallenderComponent } from '../../ui/callender/callender.component';
-import { FormComponent } from '../../ui/form/form.component';
-import { WidgetTableComponent } from "../../ui/widget-table/widget-table.component";
-import { UserTableComponent } from "../../ui/user-table/user-table.component";
 import { SingleUserTableComponent } from "../../ui/single-user-table/single-user-table.component";
-import { SideUserProfileComponent } from "../../Features/side-user-profile/side-user-profile.component";
 import { UserWidgetCardsComponent } from "../../Features/user-widget-cards/user-widget-cards.component";
 import { NgxSpinnerComponent } from 'ngx-spinner';
 import { CalendarModel } from '../../core/model/calendar.model';
@@ -21,6 +10,8 @@ import { CommonModule } from '@angular/common';
 import { TraineeAttendanceLogs } from '../../core/model/traineeAttendanceLogs.model';
 import { TraineeAttendancelogService } from '../../core/services/trainee-attendancelog.service';
 import { AuthService } from '../../core/services/auth.service';
+import { catchError, finalize, throwError } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 // import { WidgetCardsComponent } from "../../Features/widget-cards/widget-cards.component";
 
 
@@ -47,35 +38,59 @@ export class UserProfilePageComponent implements OnInit {
 
   totalFullHolidays: number = 0;
   totalHalfHolidays: number = 0;
+  logsCount!: number;
+  currentUser!: string;
 
   constructor(private messageService: MessageService, private api:CalendarServiceService,  private traineeAttendancelogService: TraineeAttendancelogService,
-    private authService: AuthService ) { }
+    private authService: AuthService,   
+    private route: ActivatedRoute  ) { }
   
   ngOnInit() {
     const currentUser = this.authService.getCurrentUser();
+     this.route.params.subscribe(params => {
+      this.currentUser = params['id']; 
+      console.log(this.currentUser)
+      this.getLogsByEmployeeCode(this.currentUser);
+    });
+    console.log(this.traineeLogs);
+    this.loadCompanyHoliday();
 
     if (currentUser) {
         this.traineeCode = currentUser.userId; // Assuming userId is the trainee's employee code
 
         if (this.traineeCode) {
-            this.loadTraineeLogs(this.traineeCode);
+          this.traineeAttendancelogService.setCurrentUser(this.traineeCode);
+          this.loadTraineeLogs(this.traineeCode);
         }
     } else {
         console.error('No logged-in user found.');
     }
    
    
-      this.items = [
-          { label: 'Trainee Control', icon: 'pi pi-user-edit', command: () => this.onTraineeClick() },
-          { label: 'Calendar', icon: 'pi pi-calendar-plus', command: () => this.onCalendarClick() },
-          { label: 'Batch Control', icon: 'pi pi-users', command: () => this.onBatchClick() }
-          
-      ];
-      this.activeItem = this.items[0];
-      this.loadCompanyHoliday();
-      
+   
   }
 
+  getLogsByEmployeeCode(employeeCode: string): void {
+    this.traineeAttendancelogService.getLogsByEmployeeCode(employeeCode).pipe(
+     
+      catchError((error) => {
+        console.error('Error fetching trainee details:', error);
+       
+        return throwError(()=>new Error(error)); 
+      }),
+      finalize(() => {
+        console.log('Fetch trainee operation complete');
+        
+      })
+    ).subscribe(
+      (data) => {
+        this.traineeLogs = data.logs;
+        this.logsCount = data.count;
+        console.log('Trainee logs:', data);
+      },
+      
+  );
+  }
   loadTraineeLogs(traineeCode: string) {
     this.traineeAttendancelogService.getLogsByEmployeeCode(traineeCode).subscribe(
         (data) => {
@@ -109,7 +124,7 @@ export class UserProfilePageComponent implements OnInit {
 
 
 
-  downloadAttendanceReport() {
+    downloadAttendanceReport() {
 
       const reportData = {
           // ... report data

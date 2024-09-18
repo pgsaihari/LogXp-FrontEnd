@@ -1,72 +1,52 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-import { AttendanceLog, AttendanceLogService, LateArrival } from '../../core/services/attendance-log.service';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { NgxPaginationModule } from 'ngx-pagination';
+import {
+  AttendanceLog,
+  AttendanceLogService,
+  LateArrival,
+} from '../../core/services/attendance-log.service';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-real-time-pop-up',
   standalone: true,
-  imports: [NgFor, NgIf, DatePipe, NgxPaginationModule,FormsModule],
+  imports: [NgFor, NgIf, DatePipe, FormsModule,NgClass],
   templateUrl: './real-time-pop-up.component.html',
-  styleUrls: ['./real-time-pop-up.component.css']
+  styleUrls: ['./real-time-pop-up.component.css'],
 })
 export class RealTimePopUpComponent implements OnInit {
   @Output() closePopup = new EventEmitter<void>();
   showLateArrivals = true;
-  lateArrivals: LateArrival[] = [];
-  filteredLateArrivals: LateArrival[] = [];
+
   trainees: AttendanceLog[] = [];
   filteredTrainees: AttendanceLog[] = [];
-  selectedBatchLateArrivals = ''; // Holds the selected batch filter for Late Arrivals
+
   selectedBatchTrainees = ''; // Holds the selected batch filter for Trainees
-  pageLateArrivals = 1; // Current page for pagination in Late Arrivals table
-  pageTrainees = 1; // Current page for pagination in Trainees table
+
+  paginatedTrainees: AttendanceLog[] = [];
+
+  pageTrainees = 1; // Current page
+  itemsPerPage = 10; // Number of trainees per page
+  totalPages = 1; // Total number of pages
 
   constructor(private attendanceLogService: AttendanceLogService) {}
 
   ngOnInit(): void {
-    this.fetchLateArrivals();
     this.fetchTrainees();
-  }
-
-  fetchLateArrivals() {
-    this.attendanceLogService.getLateArrivals().subscribe(
-      (data) => {
-        this.lateArrivals = data;
-        this.filteredLateArrivals = data; // Initialize filteredLateArrivals with full data set
-      },
-      (error) => {
-        console.error('Error fetching late arrivals', error);
-      }
-    );
   }
 
   fetchTrainees() {
     this.attendanceLogService.getTodayLogs().subscribe(
       (data) => {
         this.trainees = data;
-        this.filteredTrainees = data; // Initialize filteredTrainees with full data set
+        this.filteredTrainees = data;
+        this.updatePagination();
       },
       (error) => {
         console.error('Error fetching trainees logs', error);
       }
     );
-  }
-
-  toggleTable(showLateArrivals: boolean) {
-    this.showLateArrivals = showLateArrivals;
-  }
-
-  filterLateArrivals() {
-    if (this.selectedBatchLateArrivals) {
-      this.filteredLateArrivals = this.lateArrivals.filter(
-        (arrival) => arrival.batchName === this.selectedBatchLateArrivals
-      );
-    } else {
-      this.filteredLateArrivals = this.lateArrivals; // Show all if no batch selected
-    }
-    this.pageLateArrivals = 1; // Reset to the first page whenever filtering changes
   }
 
   filterTrainees() {
@@ -75,9 +55,34 @@ export class RealTimePopUpComponent implements OnInit {
         (trainee) => trainee.batchName === this.selectedBatchTrainees
       );
     } else {
-      this.filteredTrainees = this.trainees; // Show all if no batch selected
+      this.filteredTrainees = this.trainees;
     }
     this.pageTrainees = 1; // Reset to the first page whenever filtering changes
+    this.updatePagination();
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(
+      this.filteredTrainees.length / this.itemsPerPage
+    );
+    this.paginatedTrainees = this.filteredTrainees.slice(
+      (this.pageTrainees - 1) * this.itemsPerPage,
+      this.pageTrainees * this.itemsPerPage
+    );
+  }
+
+  previousPage() {
+    if (this.pageTrainees > 1) {
+      this.pageTrainees--;
+      this.updatePagination();
+    }
+  }
+
+  nextPage() {
+    if (this.pageTrainees < this.totalPages) {
+      this.pageTrainees++;
+      this.updatePagination();
+    }
   }
 
   close() {
