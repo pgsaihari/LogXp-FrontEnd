@@ -13,6 +13,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "file-saver"
+            ],
             "outputPath": "dist/front-end",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -39,6 +42,7 @@
               "budgets": [
                 {
                   "type": "initial",
+
                   "maximumWarning": "4MB",
                   "maximumError": "4MB"
                 },
@@ -46,6 +50,7 @@
                   "type": "anyComponentStyle",
                   "maximumWarning": "4MB",
                   "maximumError": "4MB"
+
                 }
               ],
               "outputHashing": "all"
