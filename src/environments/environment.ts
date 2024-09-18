@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: '/api/proxy' // Point to the Vercel API route in production
+    apiUrl: 'http://172.16.4.89:9021/api/logXP' // Point to the Vercel API route in production
   };
   
