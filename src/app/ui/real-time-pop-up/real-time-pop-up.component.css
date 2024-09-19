@@ -51,6 +51,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
   margin-bottom: 15px;
   flex-wrap: wrap;
 }
@@ -65,6 +66,7 @@
   margin-right: 10px;
   font-weight: bold;
 }
+
 .filter-button {
   padding: 5px 10px;
   border-radius: 4px;
@@ -86,34 +88,23 @@
   background-color: #f9f9f9; /* Slightly change background color on hover */
 }
 
+/* Dropdown styles */
+.view-type-selector {
+  padding: 5px 10px;
+  border: none; /* Removed the border */
+  background-color: white;
+  color: var(--primary-color); /* Set the text color to primary */
+  font-size: 21px; /* Increase the font size */
+  cursor: pointer;
+  font-weight: bolder;
+}
+
+/* Asterisk Note */
 .asterisk-note {
   font-size: 12px;
   color: #666; /* Light gray color */
   margin-top: 20px; /* Space from the table */
   text-align: center;
-}
-
-
-/* Pagination container */
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.pagination-container button {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  margin: 0 5px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.pagination-container span {
-  margin: 0 10px;
-  font-weight: bold;
 }
 
 /* Table container */
@@ -173,26 +164,35 @@ tbody tr:hover {
   color: #d73b20; /* Light Red */
   font-weight: bold; /* Bold for emphasis */
 }
+/* no data image */
+.no-data-image {
+  width: 150px;  /* Set a specific width to reduce the size */
+  height: auto;  /* Maintain aspect ratio */
+  margin: 20px auto;  /* Center the image horizontally */
+  display: block;  /* Ensure the image stays centered */
+}
+
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .popup-content {
-      padding: 15px;
-      max-width: 90%;
+    padding: 15px;
+    max-width: 90%;
   }
 
   th, td {
-      font-size: 14px;
+    font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
   .popup-content {
-      padding: 10px;
-      max-width: 100%;
+    padding: 10px;
+    max-width: 100%;
   }
 
   th, td {
-      font-size: 12px;
+    font-size: 12px;
   }
 }

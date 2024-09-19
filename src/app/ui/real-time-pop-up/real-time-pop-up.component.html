@@ -1,15 +1,25 @@
 <div class="popup">
   <div class="popup-content">
-    <!-- Close Icon -->
     <button class="close-btn" (click)="close()">&#10005;</button>
 
-    <!-- Title, Filters, and Pagination in a single row -->
+    <!-- Title, Dropdown, Search, and Filters in the same row -->
     <div class="title-pagination-container">
-      <!-- Title -->
-      <h3 style="color: var(--primary-color);">Live Swipe Actions</h3>
+      <!-- Dropdown for selecting Live Swipe Actions or Late Arrivals -->
+      <div class="filter-container">
+        <select id="viewTypeSelector" [(ngModel)]="viewType" class="view-type-selector">
+          <option value="live">Live Swipe Actions</option>
+          <option value="late">Late Arrivals</option>
+        </select>
+      </div>
+
+      <!-- Search Trainee -->
+       
+   
+      
 
       <!-- Filter for Live Swipe Actions -->
       <div class="filter-container">
+        <input type="text" class="real-search-trainee" pInputText placeholder="Search trainee" [(ngModel)]="searchTerm" (ngModelChange)="filterTrainees()" />
         <label for="traineeFilter">Filter by Batch:</label>
         <select id="traineeFilter" [(ngModel)]="selectedBatchTrainees" (ngModelChange)="filterTrainees()" class="filter-button">
           <option value="">All Batches</option>
@@ -17,44 +27,67 @@
           <option value="2">Batch 3</option>
         </select>
       </div>
+    </div>
 
-      <!-- Pagination Controls for Live Swipe Actions -->
-      <div class="pagination-container">
-        <button (click)="previousPage()" [disabled]="pageTrainees === 1">Previous</button>
-        <span>Page {{ pageTrainees }} of {{ totalPages }}</span>
-        <button (click)="nextPage()" [disabled]="pageTrainees === totalPages">Next</button>
+    <!-- Live Swipe Table -->
+    <div *ngIf="viewType === 'live'">
+      <div class="table-container">
+        <table *ngIf="filteredTrainees.length > 0; else noDataTemplate">
+          <thead>
+            <tr>
+              <th>Trainee Name</th>
+              <th>Movement</th>
+              <th>Location</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let trainee of filteredTrainees">
+              <td>{{ trainee.employeeName }}</td>
+              <td [ngClass]="{ 'came-inside': trainee.direction === '1', 'went-outside': trainee.direction === '2' }"
+                [innerHTML]="trainee.direction === '1' ? '<i class=\'fa-solid fa-person-walking\'></i> In' : trainee.direction === '2' ? '<i class=\'fa-solid fa-person-walking\'></i> Out' : ''">
+              </td>
+              <td>{{ trainee.place }}</td>
+              <td>{{ trainee.logDateTime | date: 'shortTime' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #noDataTemplate>
+          <div class="no-data-message"><p>No data right now</p></div>
+        </ng-template>
       </div>
     </div>
 
-    <!-- Table for displaying swipe actions -->
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Trainee Name</th>
-            <th>Movement</th>
-            <th>Location</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let trainee of paginatedTrainees">
-            <td>{{ trainee.employeeName }}</td>
-            <!-- Use [innerHTML] to render FontAwesome icons -->
-            <td [ngClass]="{
-              'came-inside': trainee.direction === '1',
-              'went-outside': trainee.direction === '2'
-            }" [innerHTML]="trainee.direction === '1' ? '<i class=\'fa-solid fa-person-walking\'></i> In' : trainee.direction === '2' ? '<i class=\'fa-solid fa-person-walking\'></i> Out' : ''">
-            </td>
-            <td>{{ trainee.place }}</td>
-            <td>{{ trainee.logDateTime | date:'shortTime' }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Late Arrivals Table -->
+    <div *ngIf="viewType === 'late'">
+      <div class="table-container">
+        <table *ngIf="filteredLateArrivals.length > 0; else noDataTemplate">
+          <thead>
+            <tr>
+              <th>Trainee Name</th>
+              <th>Arrival Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let lateArrival of filteredLateArrivals">
+              <td>{{ lateArrival.employeeName }}</td>
+              <!-- <td>{{ lateArrival.arrivalTime | date: 'shortTime' }}</td>
+              <td>{{ lateArrival.status }}</td> -->
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #noDataTemplate>
+          <div class="no-data-message">
+            <img src="assets\nodata.gif" alt="No data available" class="no-data-image">
+            <p class="asterisk-note"  *ngIf="viewType === 'late'">That a great achievement for logXp</p>
+          </div>
+        </ng-template>
+        
+      </div>
     </div>
 
-    <!-- Asterisk and Note at the bottom -->
-    <p class="asterisk-note">* It shows the latest 100  logs</p>
-
+    <p class="asterisk-note"  *ngIf="viewType === 'live'">* It shows the todays logs</p>
+    <p class="asterisk-note"  *ngIf="viewType === 'late'">* It shows todays late arrivals</p>
   </div>
 </div>
