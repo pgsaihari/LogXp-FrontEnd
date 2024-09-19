@@ -3,18 +3,18 @@
     <img src="assets/logXp.png" alt="Experion Logo">
   </div>
   
-  <div class="user-info" (click)="toggleDropdown()"  pTooltip="Click to Logout" tooltipPosition="bottom">
+  <div class="user-info" (click)="toggleDropdown()"  >
     <div class="user-details">
-      <span class="user-name">{{currentUser?.name}}</span>
-      <span class="user-email">{{currentUser?.role}}</span>
+      <span class="user-name">Admin</span>
+      <span class="user-email">L&D Team</span>
     </div>
     <img class="user-avatar" src="assets/Avatar.png" alt="User Avatar">
     
     <!-- Dropdown menu -->
-    <div class="dropdown-menu" *ngIf="dropdownVisible">
+    <!-- <div class="dropdown-menu" *ngIf="dropdownVisible">
       <ul>
         <li (click)="logout()"> <i class="fas fa-sign-out-alt"></i>   Logout</li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </div>
