@@ -13,14 +13,14 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [MsalGuard],
+    // canActivate: [MsalGuard],
     children: [
       {
         path: 'home',
         loadComponent: () =>
           import('./page/home/home.component').then((m) => m.HomeComponent),
-        canActivate: [RoleGuard],
-        data: { expectedRole: 'admin' },
+       // canActivate: [RoleGuard],
+        // data: { expectedRole: 'admin' },
       },
       {
         path: 'search',
@@ -28,8 +28,8 @@ export const routes: Routes = [
           import('./page/search-trainee-page/search-trainee-page.component').then(
             (m) => m.SearchTraineePageComponent
           ),
-        canActivate: [RoleGuard],
-        data: { expectedRole: 'admin' },
+        //canActivate: [RoleGuard],
+        // data: { expectedRole: 'admin' },
       },
       {
         path: 'add-trainee',
@@ -37,8 +37,8 @@ export const routes: Routes = [
           import('./page/add-trainees-page/add-trainees-page.component').then(
             (m) => m.AddTraineesPageComponent
           ),
-        canActivate: [RoleGuard],
-        data: { expectedRole: 'admin' },
+       // canActivate: [RoleGuard],
+        // data: { expectedRole: 'admin' },
       },
       {
         path: 'edit-callender',
@@ -46,8 +46,8 @@ export const routes: Routes = [
           import('./page/edit-callender-page/edit-callender-page.component').then(
             (m) => m.EditCallenderPageComponent
           ),
-        canActivate: [RoleGuard],
-        data: { expectedRole: 'admin' },
+       // canActivate: [RoleGuard],
+        // data: { expectedRole: 'admin' },
       },
       {
         path: 'user-profile/:id',
@@ -55,8 +55,8 @@ export const routes: Routes = [
           import('./page/user-profile-page/user-profile-page.component').then(
             (m) => m.UserProfilePageComponent
           ),
-        canActivate: [RoleGuard],
-        data: { expectedRole: 'trainee' },
+       // canActivate: [RoleGuard],
+        // data: { expectedRole: 'trainee' },
       },
       {
         path: 'unauthorized',
