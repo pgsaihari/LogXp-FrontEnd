@@ -1,8 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
-import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
-import { filter } from 'rxjs';
-import { AuthenticationResult, EventMessage, EventType } from '@azure/msal-browser';
+import { Component, OnInit } from '@angular/core';
 import { TooltipModule } from 'primeng/tooltip';
 import { AuthService } from '../../core/services/auth.service';
 import { Currentuser } from '../../core/interfaces/currentuser';
@@ -10,22 +7,20 @@ import { Currentuser } from '../../core/interfaces/currentuser';
 @Component({
   selector: 'app-top-header',
   templateUrl: './top-header.component.html',
-  imports:[NgIf,TooltipModule],
-  standalone:true,
-  styleUrls: ['./top-header.component.css']
+  imports: [NgIf, TooltipModule],
+  standalone: true,
+  styleUrls: ['./top-header.component.css'],
 })
 export class TopHeaderComponent implements OnInit {
-  currentUser:Currentuser |null ={
-    userId:"string",
-    name:"string",
-    email:"string",
-    role:"string"
-  }
+  currentUser: Currentuser | null = {
+    userId: 'string',
+    name: 'string',
+    email: 'string',
+    role: 'string',
+  };
   userAvatar: string = 'assets/avatar.png'; // Default avatar image
 
-  constructor(public authService:AuthService,
-  private msalService:MsalService,
-  ) {}
+  constructor(public authService: AuthService) {}
 
   ngOnInit(): void {
     this.getName();
@@ -38,21 +33,18 @@ export class TopHeaderComponent implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('msal.account.keys');
+    // Clear any stored tokens or user session details
+    localStorage.removeItem('authToken');
     sessionStorage.removeItem('logintoken');
-    
-    this.msalService.instance.setActiveAccount(null);
-    
-    this.msalService.logoutRedirect({
-      postLogoutRedirectUri: '/login' // Automatically redirects to login page after logout
-    });
+
+    // Redirect to the login page after logging out
+    window.location.href = '/login';
     
     localStorage.clear();
     sessionStorage.clear();
   }
 
-  getName(){
-   this.currentUser= this.authService.getCurrentUser()
+  getName() {
+    this.currentUser = this.authService.getCurrentUser();
   }
- 
 }

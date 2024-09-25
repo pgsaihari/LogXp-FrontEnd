@@ -7,12 +7,14 @@
   </div>
 
   <!-- Floating Button -->
-  <button *ngIf="role=='admin'" class="floating-btn" (click)="showPopup = true">
+
+  <button class="floating-btn" (click)="showPopup = true">
     LIVE SWIPE INFO
   </button>
 
   <!-- Popup Component -->
   <app-real-time-pop-up  *ngIf="showPopup" (closePopup)="showPopup = false"></app-real-time-pop-up>
+
 </div>
 
 <!-- changes -->

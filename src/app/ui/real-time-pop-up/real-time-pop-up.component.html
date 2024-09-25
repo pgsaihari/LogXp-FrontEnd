@@ -23,8 +23,8 @@
         <label for="traineeFilter">Filter by Batch:</label>
         <select id="traineeFilter" [(ngModel)]="selectedBatchTrainees" (ngModelChange)="filterTrainees()" class="filter-button">
           <option value="">All Batches</option>
-          <option value="1">Batch 4</option>
-          <option value="2">Batch 3</option>
+          <option value="1">Batch 5</option>
+          <!-- <option value="2">Batch 3</option> -->
         </select>
       </div>
     </div>
@@ -58,34 +58,7 @@
       </div>
     </div>
 
-    <!-- Late Arrivals Table -->
-    <div *ngIf="viewType === 'late'">
-      <div class="table-container">
-        <table *ngIf="filteredLateArrivals.length > 0; else noDataTemplate">
-          <thead>
-            <tr>
-              <th>Trainee Name</th>
-              <th>Arrival Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let lateArrival of filteredLateArrivals">
-              <td>{{ lateArrival.employeeName }}</td>
-              <!-- <td>{{ lateArrival.arrivalTime | date: 'shortTime' }}</td>
-              <td>{{ lateArrival.status }}</td> -->
-            </tr>
-          </tbody>
-        </table>
-        <ng-template #noDataTemplate>
-          <div class="no-data-message">
-            <img src="assets\nodata.gif" alt="No data available" class="no-data-image">
-            <p class="asterisk-note"  *ngIf="viewType === 'late'">That a great achievement for logXp</p>
-          </div>
-        </ng-template>
-        
-      </div>
-    </div>
+   
 
     <p class="asterisk-note"  *ngIf="viewType === 'live'">* It shows the todays logs</p>
     <p class="asterisk-note"  *ngIf="viewType === 'late'">* It shows todays late arrivals</p>
