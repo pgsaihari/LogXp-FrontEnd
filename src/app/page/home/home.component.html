@@ -7,7 +7,7 @@
     <div class="graph-container">
       <ng-template #homeTemplate>
         <div *ngIf="tableHeader === 'Working Days'">
-          <app-graph></app-graph>
+          <app-graph [selectedBatch]="selectedBatch"></app-graph>
         </div>
         <div *ngIf="isVisible && tableHeader !== 'Working Days'">
           <app-widget-table [selectedBatch]="selectedBatch" [tableHeader]="tableHeader" [toggleField]="toggleField"></app-widget-table>

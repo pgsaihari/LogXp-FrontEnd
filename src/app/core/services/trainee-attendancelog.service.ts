@@ -55,8 +55,8 @@ export class TraineeAttendancelogService {
    * @param {number} year - The year for which attendance logs are being retrieved.
    * @returns {Observable<DailyAttendanceOfMonth[]>} - An observable containing the daily attendance logs for the specified month and year.
    */
-  getAttendanceOfAMonth(month: number, year: number): Observable<DailyAttendanceOfMonth[]> {
-    return this.http.get<DailyAttendanceOfMonth[]>(`${this.apiUrl}/GetAttendanceOfAMonth?month=${month}&year=${year}`);
+  getAttendanceOfAMonth(month: number, year: number, batch:string): Observable<DailyAttendanceOfMonth[]> {
+    return this.http.get<DailyAttendanceOfMonth[]>(`${this.apiUrl}/GetAttendanceOfAMonth?month=${month}&year=${year}&batch=${batch}`);
   }
 
   /**
