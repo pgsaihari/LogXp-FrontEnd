@@ -33,7 +33,7 @@
     </li>
     <li
       *ngIf="role === 'admin'"
-      [routerLink]="['/edit-callender']"
+      [routerLink]="['/settings']"
       [class.active]="activeIndex === 3"
       (click)="setActive(3)"
       pTooltip="Settings"

@@ -1,5 +1,5 @@
 <div class="card-container" [class.active]="isActive"
- [ngClass]="{'red-text': card_header === 'Absent' || card_header === 'Half-Day Leave' || card_header === 'Late Arrivals' || card_header === 'Early Departures', 'green-text': card_header === 'On Time'}"  (click)="onClick()">
+ [ngClass]="{'red-text': card_header === 'Absent' || card_header === 'Half-Day Leave' || card_header === 'Late Arrivals' || card_header === 'Early Departures', 'green-text': card_header === 'Met Work Hours'}"  (click)="onClick()">
     <p-card class="card">
         <div class="icon">
             <i [class]="header_icon"></i>

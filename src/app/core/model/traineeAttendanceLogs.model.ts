@@ -5,9 +5,9 @@ export interface TraineeAttendanceLogs {
         date: string;
         status: string;
         batch: string;
-        checkin?: string;
-        checkout?: string;
-        workhours?: string;
-        remark?:string;
+        loginTime?: string;
+        logoutTime?: string;
+        totalWorkHour?: string;
+        remark?:string;       
 }
 

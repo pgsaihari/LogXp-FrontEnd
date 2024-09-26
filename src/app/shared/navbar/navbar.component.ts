@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
       break;
       case "/add-trainee":this.setActive(2);
       break;
-      case "/edit-callender": this.setActive(3);
+      case "/settings": this.setActive(3);
       break;
       default: break;
     }
