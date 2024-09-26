@@ -26,9 +26,22 @@
           <option value="1">Batch 5</option>
           <!-- <option value="2">Batch 3</option> -->
         </select>
+
+
+        <label for="locationFilter">Filter by Location:</label>
+        <select id="locationFilter" [(ngModel)]="selectedLocation" (ngModelChange)="filterTrainees()" class="filter-button">
+          <option value="">All Locations</option>
+          <option value="Gayathri Front Door">Gayathri Front Door</option>
+          <option value="TVM-RC">TVM-RC</option>
+          <option value="Cochin-RC">Cochin RC</option>
+          <option value="TVM-BC">TVM-BC</option>
+
+        </select>
       </div>
     </div>
 
+
+    
     <!-- Live Swipe Table -->
     <div *ngIf="viewType === 'live'">
       <div class="table-container">

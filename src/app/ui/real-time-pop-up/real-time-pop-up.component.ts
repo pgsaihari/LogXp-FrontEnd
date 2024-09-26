@@ -12,17 +12,18 @@ import { AttendanceLogService, AttendanceLog, LateArrival } from '../../core/ser
 })
 export class RealTimePopUpComponent implements OnInit {
   @Output() closePopup = new EventEmitter<void>();
-  
+
   trainees: AttendanceLog[] = [];
   filteredTrainees: AttendanceLog[] = [];
   lateArrivals: LateArrival[] = [];
   filteredLateArrivals: LateArrival[] = [];
+  
+  selectedLocation = ''; // Selected location
+  selectedBatchTrainees = ''; // Selected batch for trainees
+  selectedBatchLateArrivals = ''; // Selected batch for late arrivals
+  searchTerm = ''; // Search term for filtering by trainee name
 
-  selectedBatchTrainees = ''; 
-  selectedBatchLateArrivals = ''; 
-  searchTerm = ''; 
-
-  viewType = 'live'; // To hold the selected value of the dropdown
+  viewType = 'live'; // Default view mode is 'live'
 
   constructor(private attendanceLogService: AttendanceLogService) {}
 
@@ -32,45 +33,59 @@ export class RealTimePopUpComponent implements OnInit {
   }
 
   fetchTrainees() {
-    this.attendanceLogService.getTodayLogs().subscribe(
-      (data) => {
+    this.attendanceLogService.getTodayLogs().subscribe({
+      next: (data) => {
         this.trainees = data;
-        this.filteredTrainees = data;
+        this.filterTrainees(); // Apply filtering after fetching
       },
-      (error) => {
-        console.error('Error fetching trainees logs', error);
+      error: (error) => {
+        console.error('Error fetching trainee logs', error);
       }
-    );
+    });
   }
 
   fetchLateArrivals() {
-    this.attendanceLogService.getLateArrivals().subscribe(
-      (data) => {
+    this.attendanceLogService.getLateArrivals().subscribe({
+      next: (data) => {
         this.lateArrivals = data;
-        this.filteredLateArrivals = data;
+        this.filterLateArrivals(); // Apply filtering after fetching
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching late arrivals logs', error);
       }
-    );
+    });
   }
 
+  // Function to filter trainees based on batch, location, and search term
   filterTrainees() {
-    this.filteredTrainees = this.trainees.filter(
-      (trainee) =>
-        (!this.selectedBatchTrainees || trainee.batchName === this.selectedBatchTrainees) &&
-        (!this.searchTerm || trainee.employeeName.toLowerCase().includes(this.searchTerm.toLowerCase()))
-    );
+    this.filteredTrainees = this.trainees.filter((trainee) => {
+      const matchesBatch = !this.selectedBatchTrainees || trainee.batchName === this.selectedBatchTrainees;
+      const matchesLocation = !this.selectedLocation || trainee.place === this.selectedLocation;
+      const matchesSearch = !this.searchTerm || trainee.employeeName.toLowerCase().includes(this.searchTerm.toLowerCase());
+      return matchesBatch && matchesLocation && matchesSearch;
+    });
   }
 
+  // Function to filter late arrivals based on batch, location, and search term
   filterLateArrivals() {
-    this.filteredLateArrivals = this.lateArrivals.filter(
-      (lateArrival) =>
-        (!this.selectedBatchLateArrivals || lateArrival.batchName === this.selectedBatchLateArrivals) &&
-        (!this.searchTerm || lateArrival.employeeName.toLowerCase().includes(this.searchTerm.toLowerCase()))
-    );
+    this.filteredLateArrivals = this.lateArrivals.filter((lateArrival) => {
+      const matchesBatch = !this.selectedBatchLateArrivals || lateArrival.batchName === this.selectedBatchLateArrivals;
+      const matchesLocation = !this.selectedLocation || lateArrival.place === this.selectedLocation;
+      const matchesSearch = !this.searchTerm || lateArrival.employeeName.toLowerCase().includes(this.searchTerm.toLowerCase());
+      return matchesBatch && matchesLocation && matchesSearch;
+    });
   }
 
+  // This method is triggered when the viewType is switched
+  onViewTypeChange() {
+    if (this.viewType === 'live') {
+      this.filterTrainees();
+    } else if (this.viewType === 'late') {
+      this.filterLateArrivals();
+    }
+  }
+
+  // Close the popup
   close() {
     this.closePopup.emit();
   }
