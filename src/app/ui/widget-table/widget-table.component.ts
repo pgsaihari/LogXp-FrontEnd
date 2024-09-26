@@ -19,7 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class WidgetTableComponent implements OnChanges {
   @Input() selectedBatch!: Batch;
-  @Input() tableHeader: string = 'On Time'; // Title of the table, determines the category like 'On Time', 'Late Arrivals', etc.
+  @Input() tableHeader: string = 'Met Work Hours'; // Title of the table, determines the category like 'On Time', 'Late Arrivals', etc.
   @Input() toggleField: string = 'Check-In'; // Column header that toggles based on the table category
 
   tableDate: Date = new Date(); // Date used for fetching logs
@@ -113,7 +113,7 @@ export class WidgetTableComponent implements OnChanges {
         }));
 
     return {
-      'On Time': () => this.attendanceService.onTimeLogs(day, month, year).pipe(map(response => filterByBatch(response.earlyArrivals))),
+      'Met Work Hours': () => this.attendanceService.onTimeLogs(day, month, year).pipe(map(response => filterByBatch(response.earlyArrivals))),
       'Late Arrivals': () => this.attendanceService.lateArrivalLogs(day, month, year).pipe(map(response => filterByBatch(response.lateArrivals))),
       'Absent': () => this.attendanceService.absenteeLogs(day, month, year).pipe(map(response => filterByBatch(response.absentees))),
       'Early Departures': () => this.attendanceService.earlyDeparturesLogs(day, month, year).pipe(map(response => filterByBatch(response.earlyDepartures)))

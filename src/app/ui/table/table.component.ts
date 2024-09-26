@@ -185,7 +185,7 @@ export class TableComponent implements OnInit {
       this.filteredTrainees = this.originalTraineeLogs.filter(
         (trainee) =>
           trainee.name &&
-          trainee.name.toLowerCase().includes(query.toLowerCase())
+          trainee.name.toLowerCase().startsWith(query.toLowerCase())
       );
     } else {
       // Reset to the date-filtered data if the query is empty
@@ -277,9 +277,9 @@ export class TableComponent implements OnInit {
         Date: this.formatDate(trainee.date ?? ''),  // Format the date
         Name: trainee.name ?? 'N/A', 
         Status: trainee.status ?? 'N/A',
-        'Check-in Time': this.formatTime(trainee.checkin ?? ''),
-        'Check-out Time': this.formatTime(trainee.checkout ?? ''),
-        'Work Hours': trainee.workhours ?? '0', // Use default '0' if work hours are undefined
+        'Check-in Time': trainee.loginTime ? this.formatTime(trainee.loginTime) : 'N/A',  
+        'Check-out Time': trainee.logoutTime ? this.formatTime(trainee.logoutTime) : 'N/A',
+        'Work Hours': trainee.totalWorkHour ?? '0',
       }))
     );
 

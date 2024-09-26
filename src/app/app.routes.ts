@@ -41,7 +41,7 @@ export const routes: Routes = [
         // data: { expectedRole: 'admin' },
       },
       {
-        path: 'edit-callender',
+        path: 'settings',
         loadComponent: () =>
           import('./page/edit-callender-page/edit-callender-page.component').then(
             (m) => m.EditCallenderPageComponent
