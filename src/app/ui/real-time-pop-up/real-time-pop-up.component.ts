@@ -56,22 +56,22 @@ export class RealTimePopUpComponent implements OnInit {
     });
   }
 
-  // Function to filter trainees based on batch, location, and search term
+  // Optimized function to filter trainees based on batch, location, and search term
   filterTrainees() {
     this.filteredTrainees = this.trainees.filter((trainee) => {
       const matchesBatch = !this.selectedBatchTrainees || trainee.batchName === this.selectedBatchTrainees;
       const matchesLocation = !this.selectedLocation || trainee.place === this.selectedLocation;
-      const matchesSearch = !this.searchTerm || trainee.employeeName.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchesSearch = !this.searchTerm || trainee.employeeName.toLowerCase().startsWith(this.searchTerm.toLowerCase());
       return matchesBatch && matchesLocation && matchesSearch;
     });
   }
 
-  // Function to filter late arrivals based on batch, location, and search term
+  // Optimized function to filter late arrivals based on batch, location, and search term
   filterLateArrivals() {
     this.filteredLateArrivals = this.lateArrivals.filter((lateArrival) => {
       const matchesBatch = !this.selectedBatchLateArrivals || lateArrival.batchName === this.selectedBatchLateArrivals;
       const matchesLocation = !this.selectedLocation || lateArrival.place === this.selectedLocation;
-      const matchesSearch = !this.searchTerm || lateArrival.employeeName.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchesSearch = !this.searchTerm || lateArrival.employeeName.toLowerCase().startsWith(this.searchTerm.toLowerCase());
       return matchesBatch && matchesLocation && matchesSearch;
     });
   }
