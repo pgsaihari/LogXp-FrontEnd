@@ -19,14 +19,42 @@
 
       <!-- Filter for Live Swipe Actions -->
       <div class="filter-container">
-        <input type="text" class="real-search-trainee" pInputText placeholder="Search trainee" [(ngModel)]="searchTerm" (ngModelChange)="filterTrainees()" />
+        <input 
+          type="text" 
+          class="real-search-trainee" 
+          placeholder="Search trainee" 
+          [(ngModel)]="searchTerm" 
+          (ngModelChange)="filterTrainees()" 
+        />
         <label for="traineeFilter">Filter by Batch:</label>
-        <select id="traineeFilter" [(ngModel)]="selectedBatchTrainees" (ngModelChange)="filterTrainees()" class="filter-button">
+        <select 
+          id="traineeFilter" 
+          [(ngModel)]="selectedBatchTrainees" 
+          (ngModelChange)="filterTrainees()" 
+          class="filter-button"
+        >
           <option value="">All Batches</option>
+          <option value="2">Batch 4</option> 
           <option value="1">Batch 5</option>
-          <!-- <option value="2">Batch 3</option> -->
+        </select>
+      
+        <label for="locationFilter">Filter by Location:</label>
+        <select 
+          id="locationFilter" 
+          [(ngModel)]="selectedLocation" 
+          (ngModelChange)="filterTrainees()" 
+          class="filter-button"
+        >
+          <option value="">All Locations</option>
+          <option value="Gayathri Front Door">Gayathri Front Door</option>
+          <option value="TVM-RC">TVM-RC</option>
+          <option value="Cochin-RC">Cochin RC</option>
+          <option value="TVM-BC">TVM-BC</option>
         </select>
       </div>
+      
+      
+
     </div>
 
     <!-- Live Swipe Table -->
