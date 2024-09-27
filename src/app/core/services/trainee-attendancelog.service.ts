@@ -210,4 +210,12 @@ export class TraineeAttendancelogService {
     return this.currentUser;
   }
 
+  //for live update pop up state management
+  private popupStateSource = new BehaviorSubject<boolean>(false); // initial state is false
+  popupState$ = this.popupStateSource.asObservable(); // observable to subscribe to
+
+  // Method to update the state
+  setPopupState(isShown: boolean) {
+    this.popupStateSource.next(isShown);
+  }
 }  

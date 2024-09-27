@@ -38,7 +38,7 @@ export class GraphComponent  {
   latestSummary!:WidgetSummary | never[];
 
   ngOnInit() {
-    this.getLatestDate();// function to get the lates date on which attendance logs are stored    
+    // this.getLatestDate();// function to get the lates date on which attendance logs are stored    
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedBatch'] && this.selectedBatch) {
