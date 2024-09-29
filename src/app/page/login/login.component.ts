@@ -1,77 +1,64 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgxSpinnerComponent } from 'ngx-spinner';
+import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner'; // Import the spinner service
 import { AuthService } from '../../core/services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgxSpinnerComponent],
+  imports: [NgxSpinnerComponent,FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  email: string = '';
+  password: string = '';
+  errorMessage: string = '';
+
   constructor(
     private router: Router,
-    public authService: AuthService
+    public authService: AuthService,
+    private spinner: NgxSpinnerService // Inject the spinner service
   ) {}
 
-  // ngOnInit(): void {
-  //   console.log("hii");
-  //   // Custom authentication logic to check if the user is already logged in
-  //   const token = localStorage.getItem('authToken');
-  //   if (token) {
-  //     this.router.navigate(['/home']); // Redirect to home page if already logged in
-  //   }
-  // }
+  ngOnInit(): void {
+    // Check if user is already logged in
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      this.router.navigate(['/home']); // Redirect to home page if already logged in
+    }
+  }
 
-  // trainerLogin() {
-  //   alert('Trainer logged in');
-  //   sessionStorage.setItem('logintoken', 'trainer');
-  //   this.router.navigate(['/home']);
-  // }
+  // Method to handle the login functionality
+  login(): void {
+    // Show spinner while logging in
+    this.spinner.show();
 
-  // // adminLogin() {
-  // //   this.customLogin('admin');
-  // //   sessionStorage.setItem('logintoken', 'admin');
-  // //   this.router.navigate(['/home']);
-  // // }
+    if (!this.email || !this.password) {
+      this.errorMessage = "Email and password are required.";
+      this.spinner.hide();
+      return;
+    }
 
-  // traineeLogin() {
-  //   alert('Trainee logged in');
-  //   sessionStorage.setItem('logintoken', 'user');
-  //   this.router.navigate(['/home']);
-  // }
+    this.authService.login(this.email, this.password).subscribe({
+      next: (response) => {
+        console.log('Login successful:', response);
 
-  // // customLogin(role: string) {
-  // //   // Custom login logic for admin
-  // //   this.authService.login(role).subscribe({
-  // //     next: (response) => {
-  // //       console.log('Login successful:', response);
-
-  // //       // Store token in local storage
-  // //       localStorage.setItem('authToken', response.token);
-
-  // //       // Fetch user role from the response
-  // //       this.authService.getUserRole(response.token).subscribe({
-  // //         next: (userRoleData) => {
-  // //           console.log('User Role Data:', userRoleData);
-
-  // //           this.authService.setCurrentUser(userRoleData); // Set the current user
-
-  // //           const user = this.authService.getCurrentUser();
-  // //           if (user?.role === 'trainee') {
-  // //             this.router.navigate([`/user-profile/${user.userId}`]);
-  // //           } else if (user?.role === 'admin') {
-  // //             this.router.navigate(['/home']);
-  // //           }
-  // //         },
-  // //         error: (error) => {
-  // //           console.error('Error fetching user role:', error);
-  // //         }
-  // //       });
-  // //     },
-      
-  // //   });
-  // // }
+        // Redirect based on user role
+        const user = this.authService.getCurrentUser();
+        if (user?.role === 'trainee') {
+          this.router.navigate([`/user-profile/${user.userId}`]);
+        } else if (user?.role === 'admin') {
+          this.router.navigate(['/home']);
+        }
+        this.spinner.hide(); // Hide spinner on successful login
+      },
+      error: (error) => {
+        console.error('Login failed:', error);
+        this.errorMessage = 'Invalid email or password. Please try again.';
+        this.spinner.hide(); // Hide spinner on error
+      },
+    });
+  }
 }

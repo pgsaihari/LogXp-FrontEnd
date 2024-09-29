@@ -25,7 +25,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     
-   this.role=this.authService.getCurrentUserRole()
+   this.role="admin"
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.updateNavbar(event.urlAfterRedirects);

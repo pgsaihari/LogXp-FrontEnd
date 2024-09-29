@@ -6,6 +6,7 @@ import { UnauthorizedComponent } from './page/unauthorized/unauthorized.componen
 import { NotFoundComponent } from './page/not-found/not-found.component';
 import { LoginComponent } from './page/login/login.component';
 import { TestPageComponent } from './page/test-page/test-page.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -13,14 +14,14 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    // canActivate: [MsalGuard],
+     canActivate: [AuthGuard],
     children: [
       {
         path: 'home',
         loadComponent: () =>
           import('./page/home/home.component').then((m) => m.HomeComponent),
-       // canActivate: [RoleGuard],
-        // data: { expectedRole: 'admin' },
+        canActivate: [RoleGuard],
+        data: { expectedRole: 'admin' },
       },
       {
         path: 'search',
@@ -28,8 +29,8 @@ export const routes: Routes = [
           import('./page/search-trainee-page/search-trainee-page.component').then(
             (m) => m.SearchTraineePageComponent
           ),
-        //canActivate: [RoleGuard],
-        // data: { expectedRole: 'admin' },
+         canActivate: [RoleGuard],
+        data: { expectedRole: 'admin' },
       },
       {
         path: 'add-trainee',
@@ -37,8 +38,8 @@ export const routes: Routes = [
           import('./page/add-trainees-page/add-trainees-page.component').then(
             (m) => m.AddTraineesPageComponent
           ),
-       // canActivate: [RoleGuard],
-        // data: { expectedRole: 'admin' },
+       canActivate: [RoleGuard],
+       data: { expectedRole: 'admin' },
       },
       {
         path: 'edit-callender',
@@ -46,8 +47,8 @@ export const routes: Routes = [
           import('./page/edit-callender-page/edit-callender-page.component').then(
             (m) => m.EditCallenderPageComponent
           ),
-       // canActivate: [RoleGuard],
-        // data: { expectedRole: 'admin' },
+        canActivate: [RoleGuard],
+        data: { expectedRole: 'admin' },
       },
       {
         path: 'user-profile/:id',
@@ -55,12 +56,12 @@ export const routes: Routes = [
           import('./page/user-profile-page/user-profile-page.component').then(
             (m) => m.UserProfilePageComponent
           ),
-       // canActivate: [RoleGuard],
-        // data: { expectedRole: 'trainee' },
+        canActivate: [RoleGuard],
+        data: { expectedRole: 'trainee' },
       },
       {
         path: 'unauthorized',
-        component: UnauthorizedComponent, // Display if user is unauthorized
+        component: UnauthorizedComponent, 
       },
       {path:'test',component:TestPageComponent},
       { path: '**', component: NotFoundComponent },

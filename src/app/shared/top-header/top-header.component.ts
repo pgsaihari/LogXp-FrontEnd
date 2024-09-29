@@ -32,16 +32,10 @@ export class TopHeaderComponent implements OnInit {
     this.dropdownVisible = !this.dropdownVisible;
   }
 
+  // Updated logout method to use AuthService
   logout() {
-    // Clear any stored tokens or user session details
-    localStorage.removeItem('authToken');
-    sessionStorage.removeItem('logintoken');
-
-    // Redirect to the login page after logging out
-    window.location.href = '/login';
-    
-    localStorage.clear();
-    sessionStorage.clear();
+    this.authService.logout(); // Call the logout function from AuthService
+    window.location.href = '/login'; // Redirect to the login page after logging out
   }
 
   getName() {

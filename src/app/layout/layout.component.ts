@@ -27,23 +27,9 @@ import { RealTimePopUpComponent } from "../ui/real-time-pop-up/real-time-pop-up.
   providers: [MessageService],
 })
 export class LayoutComponent implements OnInit, OnDestroy {
-  /**
-   * Stores the role of the user, currently hardcoded as 'admin'.
-   * Future implementation can dynamically set this value based on user information.
-   */
-  role: string = 'admin'; // Hardcoded role for now
-
-  /**
-   * Subject used for unsubscribing from observables when the component is destroyed
-   * to avoid memory leaks.
-   */
+  role: string = ''; // Will be set based on the user's role
   private readonly _destroying$ = new Subject<void>();
-
-  /**
-   * Boolean indicating whether the user is logged in.
-   * Initially set to false.
-   */
-  isLogged: boolean = true;
+  isLogged: boolean = false; // Initially set to false
   showPopup = false;
 
   constructor(
@@ -53,37 +39,30 @@ export class LayoutComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // try {
-    //   // Custom logic to check if user is logged in and handle user roles
-    //   const token = localStorage.getItem('authToken');
-    //   if (token) {
-    //     this.isLogged = true;
-    //     this.authService.getUserRole(token).subscribe({
-    //       next: (userRoleData) => {
-    //         console.log('User Role Data:', userRoleData);
-    //         this.authService.setCurrentUser(userRoleData);
+    try {
+      // Check if user is logged in using AuthService
+      const currentUser = this.authService.getCurrentUser();
+      console.log(currentUser);
+      if (currentUser) {
+        this.isLogged = true;
+        this.role = currentUser.role;
 
-    //         const user = this.authService.getCurrentUser();
-    //         if (user?.role === 'trainee') {
-    //           this.router.navigate([`/user-profile/${user.userId}`]);
-    //         } else if (user?.role === 'admin') {
-    //           this.router.navigate(['/home']);
-    //         }
-    //       },
-    //       error: (error) => {
-    //         console.error('Error fetching user role:', error);
-    //       },
-    //     });
-    //   }
-    // } catch (error) {
-    //   console.error('Error during initialization in ngOnInit:', error);
-    // }
+        // Redirect based on role
+        if (this.role === 'trainee') {
+          this.router.navigate([`/user-profile/${currentUser.userId}`]);
+        } else if (this.role === 'admin') {
+          this.router.navigate(['/home']);
+        }
+      } else {
+        this.isLogged = false;
+        this.router.navigate(['/login']); // Redirect to login if not logged in
+      }
+    } catch (error) {
+      console.error('Error during initialization in ngOnInit:', error);
+      this.router.navigate(['/login']); // Redirect to login in case of an error
+    }
   }
 
-  /**
-   * Lifecycle hook called when the component is destroyed.
-   * Unsubscribes from observables and completes the Subject to prevent memory leaks.
-   */
   ngOnDestroy(): void {
     try {
       this._destroying$.next(undefined);

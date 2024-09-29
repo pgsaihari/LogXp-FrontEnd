@@ -47,11 +47,11 @@ export const appConfig: ApplicationConfig = {
       multi: true,
     },
 
-    // Auth Interceptor for managing authentication
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: AuthInterceptor,
-    //   multi: true,
-    // },
+  //  Auth Interceptor for managing authentication
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
   ],
 };

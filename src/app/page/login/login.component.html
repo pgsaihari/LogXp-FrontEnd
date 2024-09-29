@@ -1,26 +1,47 @@
 <div class="container">
   <div class="translucent-box">
-    <!-- Header with Title and Subtitle -->
+    <!-- Header with Title -->
     <div class="header">
-      <h1 class="title"><i class="fa-solid fa-hourglass-end " ></i>Log<span style="color: #e13737 ;">XP</span></h1>
-    
+      <h1 class="title"><i class="fa-solid fa-hourglass-end"></i>Log<span style="color: #e13737;">XP</span></h1>
     </div>
 
-    <!-- Content Section with description and Microsoft Sign-in -->
+    <!-- Content Section with description and login form -->
     <div class="content">
       <p>Cultivating Future Leaders Through Precision and Presence.</p>
-      <button class="microsoft-signin-btn" >
-        <i class="fa-brands fa-windows fa-beat" style="color: #e13737; --fa-animation-duration: 2s;"></i>
-        Sign in with Microsoft
-      </button>
+      
+      <!-- Login Form -->
+      <form (ngSubmit)="login()" class="login-form">
+        <input 
+          type="email" 
+          [(ngModel)]="email" 
+          name="email" 
+          placeholder="Email" 
+          class="input-field" 
+          required 
+        />
+        <input 
+          type="password" 
+          [(ngModel)]="password" 
+          name="password" 
+          placeholder="Password" 
+          class="input-field" 
+          required 
+        />
+        <button type="submit" class="login-btn">
+          <i class="fa-solid fa-right-to-bracket"></i> Login
+        </button>
+      </form>
+      
+      <!-- Display error message if login fails -->
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
     </div>
   </div>
 
   <!-- Footer with Experion Technologies Logo -->
   <div class="footer">
     <img src="assets/Exp.png" alt="Experion Technologies Logo" class="logo" />
-    <!-- <p>&copy; 2024 LogXP</p> -->
   </div>
 </div>
-<!-- spinner, uses the interceptor to work -->
+
+<!-- Spinner, uses the interceptor to work -->
 <ngx-spinner [bdColor]="'rgba(0, 0, 0, 0.8)'"></ngx-spinner>
