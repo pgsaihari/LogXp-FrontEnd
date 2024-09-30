@@ -89,6 +89,65 @@
     background-color: rgba(0, 0, 0, 0.05); /* Subtle hover effect */
   }
   
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1002;
+  }
+  
+  .popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .popup-content h2 {
+    margin-bottom: 20px;
+  }
+  
+  .popup-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .popup-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  
+  .popup-buttons button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #db0000;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .popup-buttons button:hover {
+    background-color: #b80000;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+
   /* Keyframes for the fade-in animation */
   @keyframes fadeIn {
     0% {

@@ -3,11 +3,13 @@ import { Router } from '@angular/router';
 import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner'; // Import the spinner service
 import { AuthService } from '../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgxSpinnerComponent,FormsModule],
+  imports: [NgxSpinnerComponent,FormsModule,NgIf],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
@@ -19,7 +21,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     public authService: AuthService,
-    private spinner: NgxSpinnerService // Inject the spinner service
+    private spinner: NgxSpinnerService ,// Inject the spinner service
+ 
+
   ) {}
 
   ngOnInit(): void {
@@ -57,6 +61,7 @@ export class LoginComponent implements OnInit {
       error: (error) => {
         console.error('Login failed:', error);
         this.errorMessage = 'Invalid email or password. Please try again.';
+        //this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load batches' });
         this.spinner.hide(); // Hide spinner on error
       },
     });

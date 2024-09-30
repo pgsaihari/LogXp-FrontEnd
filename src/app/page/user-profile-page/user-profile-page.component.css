@@ -181,7 +181,39 @@
     border-color: red;
     color: red;
   }
-  
+   
+ /* Define the red-background class */
+/* Red background with padding around text */
+.red-background {
+  color: #ea454c;
+  background-color: #ffe0e0; /* Light red background */
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px;
+  display: inline-block; /* Ensures the background wraps around the text */
+}
+
+/* Green background with padding around text */
+.green-background {
+  color: green;
+  background-color: #e0f7e9; /* Light green background */
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px;
+  display: inline-block; /* Ensures the background wraps around the text */
+}
+
+.yellow-background{
+  color: orange;
+  background-color: #fff4e0; /* Light orange background */
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px;
+  display: inline-block;
+}
+
+
+
   @media (min-width: 1024px) {
     .calendar-container{
       display: flex;

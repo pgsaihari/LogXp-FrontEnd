@@ -33,11 +33,22 @@
                 <td style="width: 170px;">{{ log.date | date:'d MMM, y' }}</td>
                 <td style="width: 150px;">{{ log.loginTime | date : "hh:mm a" }}</td>
                 <td style="width: 150px;">{{ log.logoutTime | date : "hh:mm a" }}</td>
-                <td style="width: 200px;">{{ log.status }}</td>
-                <td style="width: 120px;">{{ log.totalWorkHour +"hrs" }}</td>
-                <td style="width: 200px;">{{ log.remark && log.remark !== "null" ? log.remark : "no remarks" }}</td>
-            </tr>
+                <td style="width: 200px;">
+                  <span [ngClass]="{'yellow-background': log.status !== 'Present' && log.status!=='On Leave', 'green-background': log.status === 'Present','red-background': log.status === 'On Leave'}">
+                    {{ log.status }}
+                  </span>
+                </td>
+                <td style="width: 120px;">
+                  <span [ngClass]="{'red-background': parseFloat(log.totalWorkHour) < 8, 'green-background': parseFloat(log.totalWorkHour) >= 8}">
+                    {{ log.totalWorkHour + " hrs" }}
+                  </span>
+                  
+                  
+                </td>
+                <td style="width: 200px;">{{ log.remark && log.remark !== 'null' ? log.remark : 'no remarks' }}</td>
+              </tr>
             </ng-template>
+            
         </p-table>
     </div>
     

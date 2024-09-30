@@ -91,6 +91,9 @@ export class UserProfilePageComponent implements OnInit {
       
   );
   }
+  parseFloat(value: string): number {
+    return parseFloat(value);
+  }
   loadTraineeLogs(traineeCode: string) {
     this.traineeAttendancelogService.getLogsByEmployeeCode(traineeCode).subscribe(
         (data) => {

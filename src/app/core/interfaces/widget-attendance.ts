@@ -20,7 +20,8 @@ export interface UserWidgetSummary{
     absentDaysCount: number,
     lateArrivalDaysCount: number,
     onTimeDaysCount: number,
-    earlyDepartureDaysCount: number
+    earlyDepartureDaysCount: number,
+    lateArrivalAndEarlyDepartureCount:number
 }
 
 export interface EarlyArrivalLogs{
