@@ -3,7 +3,7 @@
     
     <div class="flex-auto calendar-container">
       <div class = "filter-group">
-        <button pButton label="Date" icon="pi pi-calendar" iconPos="right" class="calendar-button" (click)="toggleCalendar()"></button>
+        <button pButton label="Date Range" icon="pi pi-calendar" class="calendar-button" (click)="toggleCalendar()"></button>
         <p-button
         label="Reset"
         (onClick)="filterByDate(null)"
@@ -17,14 +17,15 @@
     <div *ngIf="showCalendar" class="calendar-popup">
       <p-calendar 
       id="datepick"
-      placeholder="Select Date"
+      placeholder="Select Date Range"
       [iconDisplay]="'input'"
       [maxDate]="yesterday"
       inputId="icondisplay"
       [dateFormat]="'dd-MM-yy'"
-      (onSelect)="filterByDate($event)"
-      [(ngModel)]="selectedDate"
-      [showButtonBar]="false" 
+      (onSelect)="filterByDate(selectedDates)"
+      [(ngModel)]="selectedDates"
+      [showButtonBar]="false"
+      selectionMode="range" 
       [inline]="true"
       >
       </p-calendar>

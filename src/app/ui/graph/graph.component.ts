@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ChartModule } from 'primeng/chart';
@@ -8,6 +8,7 @@ import { TraineeAttendancelogService } from '../../core/services/trainee-attenda
 import { DailyAttendanceOfMonth } from '../../core/interfaces/daily-attendance-of-month';
 import { catchError, of } from 'rxjs';
 import { WidgetSummary } from '../../core/interfaces/widget-attendance';
+import { Batch } from '../../core/model/batch.model';
 
  
 @Component({
@@ -20,6 +21,7 @@ import { WidgetSummary } from '../../core/interfaces/widget-attendance';
 export class GraphComponent  {
   constructor(private api: TraineeAttendancelogService) {}
   
+  @Input() selectedBatch!: Batch; // Input to receive the selected batch
   error: any;
   graphDataMonth: Date | undefined;
   numberOfWorkingDays: number = 25;
@@ -36,7 +38,12 @@ export class GraphComponent  {
   latestSummary!:WidgetSummary | never[];
 
   ngOnInit() {
-    this.getLatestDate();// function to get the lates date on which attendance logs are stored    
+    // this.getLatestDate();// function to get the lates date on which attendance logs are stored    
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedBatch'] && this.selectedBatch) {
+      this.getLatestDate();
+    }
   }
   /**
    * function to get the data containing number of absenties and the total number of traineers of a month.
@@ -45,7 +52,7 @@ export class GraphComponent  {
    * @param month 
    */
   getAttendanceData(day:number, month:number){
-    this.api.getAttendanceOfAMonth(day, month)
+    this.api.getAttendanceOfAMonth(day, month, this.selectedBatch.batchName)
     .pipe(
       catchError(error => {
         this.error = error.message;

@@ -1,90 +1,91 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-import {
-  AttendanceLog,
-  AttendanceLogService,
-  LateArrival,
-} from '../../core/services/attendance-log.service';
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-
+import { NgIf, NgFor, NgClass, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AttendanceLogService, AttendanceLog, LateArrival } from '../../core/services/attendance-log.service';
 
 @Component({
   selector: 'app-real-time-pop-up',
   standalone: true,
-  imports: [NgFor, NgIf, DatePipe, FormsModule,NgClass],
   templateUrl: './real-time-pop-up.component.html',
   styleUrls: ['./real-time-pop-up.component.css'],
+  imports: [NgIf, NgFor, NgClass, FormsModule, DatePipe],
 })
 export class RealTimePopUpComponent implements OnInit {
   @Output() closePopup = new EventEmitter<void>();
-  showLateArrivals = true;
 
   trainees: AttendanceLog[] = [];
   filteredTrainees: AttendanceLog[] = [];
+  lateArrivals: LateArrival[] = [];
+  filteredLateArrivals: LateArrival[] = [];
+  
+  selectedLocation = ''; // Selected location
+  selectedBatchTrainees = ''; // Selected batch for trainees
+  selectedBatchLateArrivals = ''; // Selected batch for late arrivals
+  searchTerm = ''; // Search term for filtering by trainee name
 
-  selectedBatchTrainees = ''; // Holds the selected batch filter for Trainees
-
-  paginatedTrainees: AttendanceLog[] = [];
-
-  pageTrainees = 1; // Current page
-  itemsPerPage = 10; // Number of trainees per page
-  totalPages = 1; // Total number of pages
+  viewType = 'live'; // Default view mode is 'live'
 
   constructor(private attendanceLogService: AttendanceLogService) {}
 
   ngOnInit(): void {
     this.fetchTrainees();
+    this.fetchLateArrivals();
   }
 
   fetchTrainees() {
-    this.attendanceLogService.getTodayLogs().subscribe(
-      (data) => {
+    this.attendanceLogService.getTodayLogs().subscribe({
+      next: (data) => {
         this.trainees = data;
-        this.filteredTrainees = data;
-        this.updatePagination();
+        this.filterTrainees(); // Apply filtering after fetching
       },
-      (error) => {
-        console.error('Error fetching trainees logs', error);
+      error: (error) => {
+        console.error('Error fetching trainee logs', error);
       }
-    );
+    });
   }
 
+  fetchLateArrivals() {
+    this.attendanceLogService.getLateArrivals().subscribe({
+      next: (data) => {
+        this.lateArrivals = data;
+        this.filterLateArrivals(); // Apply filtering after fetching
+      },
+      error: (error) => {
+        console.error('Error fetching late arrivals logs', error);
+      }
+    });
+  }
+
+  // Optimized function to filter trainees based on batch, location, and search term
   filterTrainees() {
-    if (this.selectedBatchTrainees) {
-      this.filteredTrainees = this.trainees.filter(
-        (trainee) => trainee.batchName === this.selectedBatchTrainees
-      );
-    } else {
-      this.filteredTrainees = this.trainees;
-    }
-    this.pageTrainees = 1; // Reset to the first page whenever filtering changes
-    this.updatePagination();
+    this.filteredTrainees = this.trainees.filter((trainee) => {
+      const matchesBatch = !this.selectedBatchTrainees || trainee.batchName === this.selectedBatchTrainees;
+      const matchesLocation = !this.selectedLocation || trainee.place === this.selectedLocation;
+      const matchesSearch = !this.searchTerm || trainee.employeeName.toLowerCase().startsWith(this.searchTerm.toLowerCase());
+      return matchesBatch && matchesLocation && matchesSearch;
+    });
   }
 
-  updatePagination() {
-    this.totalPages = Math.ceil(
-      this.filteredTrainees.length / this.itemsPerPage
-    );
-    this.paginatedTrainees = this.filteredTrainees.slice(
-      (this.pageTrainees - 1) * this.itemsPerPage,
-      this.pageTrainees * this.itemsPerPage
-    );
+  // Optimized function to filter late arrivals based on batch, location, and search term
+  filterLateArrivals() {
+    this.filteredLateArrivals = this.lateArrivals.filter((lateArrival) => {
+      const matchesBatch = !this.selectedBatchLateArrivals || lateArrival.batchName === this.selectedBatchLateArrivals;
+      const matchesLocation = !this.selectedLocation || lateArrival.place === this.selectedLocation;
+      const matchesSearch = !this.searchTerm || lateArrival.employeeName.toLowerCase().startsWith(this.searchTerm.toLowerCase());
+      return matchesBatch && matchesLocation && matchesSearch;
+    });
   }
 
-  previousPage() {
-    if (this.pageTrainees > 1) {
-      this.pageTrainees--;
-      this.updatePagination();
-    }
-  }
-
-  nextPage() {
-    if (this.pageTrainees < this.totalPages) {
-      this.pageTrainees++;
-      this.updatePagination();
+  // This method is triggered when the viewType is switched
+  onViewTypeChange() {
+    if (this.viewType === 'live') {
+      this.filterTrainees();
+    } else if (this.viewType === 'late') {
+      this.filterLateArrivals();
     }
   }
 
+  // Close the popup
   close() {
     this.closePopup.emit();
   }

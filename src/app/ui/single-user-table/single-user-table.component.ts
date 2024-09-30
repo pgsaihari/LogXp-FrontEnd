@@ -48,7 +48,7 @@ export class SingleUserTableComponent {
   filteredTraineeLogs: TraineeAttendanceLogs[] = []; // To store the filtered logs
   traineeId!: number;
   yesterday: Date = new Date();
-  selectedDate: any | undefined; // Property to store the selected date
+  selectedDates!: Date[] | Date | null;
   showCalendar: boolean = false;
 
   currentTraineeLog: CurrentTraineeLog = {
@@ -88,16 +88,41 @@ export class SingleUserTableComponent {
     }
   }
   
-  filterByDate(selectedDate: Date | null): void {
-    this.showCalendar = false;
-    this.selectedDate = selectedDate;
-
-    if (this.selectedDate) {
-      this.filteredTraineeLogs = this.traineelogs.filter(log =>
-        new Date(log.date).toDateString() === this.selectedDate!.toDateString()
-      );
+  filterByDate(selectedDates: Date[] | null | Date): void {
+  
+    // Handle single date selection
+    if (selectedDates instanceof Date) {
+      this.selectedDates = [selectedDates, selectedDates];
     } else {
-      // If no date is selected, reset to show all logs
+      this.selectedDates = selectedDates as Date[]; // Ensure it's treated as an array
+    }
+
+    // Handle case when no date is selected (i.e., null or empty array)
+    if (!this.selectedDates || this.selectedDates.length < 1 || !this.selectedDates[0] || !this.selectedDates[1]) {
+      this.filteredTraineeLogs = [...this.traineelogs]; // Reset to show all logs
+      return;
+    }
+  
+    // Proceed with the existing logic for filtering
+    if (this.selectedDates && this.selectedDates.length === 2) {
+      const [startDate, endDate] = this.selectedDates;
+      
+      // Handle case when both dates are the same
+      if (startDate.toDateString() === endDate.toDateString()) {
+        this.filteredTraineeLogs = this.traineelogs.filter(log =>
+          new Date(log.date).toDateString() === startDate.toDateString()
+        );
+      } else {
+        // Filter logs within the date range
+        this.filteredTraineeLogs = this.traineelogs.filter(log => {
+          const logDate = new Date(log.date);
+          return logDate >= startDate && logDate <= endDate;
+        });
+      }
+      this.showCalendar = false; // Close calendar after selection
+
+    } else {
+      // If no date range is selected or the range is incomplete, reset to show all logs
       this.filteredTraineeLogs = [...this.traineelogs];
     }
   }

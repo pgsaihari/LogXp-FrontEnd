@@ -9,6 +9,8 @@ import { Subject } from 'rxjs';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../core/services/auth.service';
 import { RealTimePopUpComponent } from "../ui/real-time-pop-up/real-time-pop-up.component";
+import { TraineeAttendanceLogs } from '../core/model/traineeAttendanceLogs.model';
+import { TraineeAttendancelogService } from '../core/services/trainee-attendancelog.service';
 
 @Component({
   selector: 'app-layout',
@@ -35,10 +37,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private renderer: Renderer2,
-    public authService: AuthService // Injecting AuthService
+    public authService: AuthService, // Injecting AuthService
+    private stateService: TraineeAttendancelogService
   ) {}
 
   ngOnInit(): void {
+
     try {
       // Check if user is logged in using AuthService
       const currentUser = this.authService.getCurrentUser();
@@ -46,6 +50,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
       if (currentUser) {
         this.isLogged = true;
         this.role = currentUser.role;
+
+    this.stateService.popupState$.subscribe(isShown => {
+      this.showPopup = isShown;
+    });
+    
 
         // Redirect based on role
         if (this.role === 'trainee') {
@@ -71,5 +80,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error during ngOnDestroy:', error);
     }
+  }
+
+ 
+
+  setState(){
+    this.showPopup = false;
+      this.stateService.setPopupState(this.showPopup);
+    
   }
 }

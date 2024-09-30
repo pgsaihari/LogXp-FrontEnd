@@ -33,12 +33,22 @@
     </li>
     <li
       *ngIf="role === 'admin'"
-      [routerLink]="['/edit-callender']"
+      [routerLink]="['/settings']"
       [class.active]="activeIndex === 3"
       (click)="setActive(3)"
       pTooltip="Settings"
     >
       <i class="fa-solid fa-gear"></i>
+    </li>
+    <li
+      *ngIf="role === 'admin'"
+      [routerLink]=""
+      [class.active]="activeIndex === 4"
+      (click)="setActive(4)"
+      (click)="showPopUp()"
+      pTooltip="Live Swipe Info"
+    >
+    <i class="fa-solid fa-id-badge"></i>
     </li>
     <hr />
   </ul>

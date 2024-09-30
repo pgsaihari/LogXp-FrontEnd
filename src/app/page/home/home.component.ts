@@ -44,7 +44,7 @@ export class HomeComponent {
     }
   
     // Conditionally update toggleField based on the clicked widget card's header
-    if (this.tableHeader === 'On Time' || this.tableHeader === 'Late Arrivals') {
+    if (this.tableHeader === 'Met Work Hours' || this.tableHeader === 'Late Arrivals') {
       this.toggleField = 'Check-In';
     } else if (this.tableHeader === 'Early Departures') {
       this.toggleField = 'Check-Out';
