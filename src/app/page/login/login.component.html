@@ -5,8 +5,8 @@
       <h1 class="title"><i class="fa-solid fa-hourglass-end"></i>Log<span style="color: #e13737;">XP</span></h1>
     </div>
 
-    <!-- Content Section with description and login form -->
-    <div class="content">
+    <!-- Content Section with description and login/forgot password forms -->
+    <div class="content" *ngIf="!isForgotPassword">
       <p>Cultivating Future Leaders Through Precision and Presence.</p>
       
       <!-- Login Form -->
@@ -34,6 +34,57 @@
       
       <!-- Display error message if login fails -->
       <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <a href="#" (click)="toggleForgotPassword($event)" class="forgot-password-link">Forgot Password?</a>
+    </div>
+
+    <!-- Forgot Password Flow -->
+    <div class="content" *ngIf="isForgotPassword">
+      <p *ngIf="!isOtpSent">Please enter your registered email to receive an OTP for resetting your password.</p>
+      <p *ngIf="isOtpSent">Enter the OTP sent to your email and your new password. The Otp is valid for 5 minutes</p>
+
+      <form *ngIf="!isOtpSent" (ngSubmit)="sendOtp()" class="forgot-password-form">
+        <input 
+          type="email" 
+          [(ngModel)]="forgotEmail" 
+          name="forgotEmail" 
+          placeholder="Email" 
+          class="input-field" 
+          required 
+        />
+        <button type="submit" class="login-btn">Send OTP</button>
+      </form>
+
+      <form *ngIf="isOtpSent" (ngSubmit)="resetPassword()" class="reset-password-form">
+        <input 
+          type="text" 
+          [(ngModel)]="otp" 
+          name="otp" 
+          placeholder="Enter OTP" 
+          class="input-field" 
+          required 
+        />
+        <input 
+          type="password" 
+          [(ngModel)]="newPassword" 
+          name="newPassword" 
+          placeholder="New Password" 
+          class="input-field" 
+          required 
+        />
+        <input 
+          type="password" 
+          [(ngModel)]="confirmPassword" 
+          name="confirmPassword" 
+          placeholder="Confirm Password" 
+          class="input-field" 
+          required 
+        />
+        <button type="submit" class="login-btn">Reset Password</button>
+      </form>
+
+      <!-- Error Message -->
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <a (click)="toggleForgotPassword($event)" class="forgot-password-link">Back to Login</a>
     </div>
   </div>
 
@@ -43,5 +94,5 @@
   </div>
 </div>
 
-<!-- Spinner, uses the interceptor to work -->
+<!-- Spinner -->
 <ngx-spinner [bdColor]="'rgba(0, 0, 0, 0.8)'"></ngx-spinner>

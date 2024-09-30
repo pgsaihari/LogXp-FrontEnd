@@ -84,6 +84,22 @@ export class AuthService {
     return this.http.post(url, {}).pipe(catchError(this.handleError));
   }
 
+  // Send OTP for forgot password
+  sendOtp(email: string): Observable<any> {
+    const url = `${this.apiUrl}/User/forgot-password?email=${encodeURIComponent(email)}`;
+    return this.http.post(url, { email }).pipe(catchError(this.handleError));
+  }
+
+  // Reset password using OTP
+  resetPassword(email: string, otp: string, newPassword: string, confirmPassword: string): Observable<any> {
+    // Construct the URL with query parameters
+    const url = `${this.apiUrl}/User/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}&newPassword=${encodeURIComponent(newPassword)}&confirmPassword=${encodeURIComponent(confirmPassword)}`;
+
+    // Send the POST request with an empty body as the parameters are now included in the URL
+    return this.http.post(url, {}).pipe(catchError(this.handleError));
+}
+
+
   // Method to fetch the user role from local storage or backend using JWT claims
   getUserRole(): string | null {
     return this.currentUser?.role || null;
