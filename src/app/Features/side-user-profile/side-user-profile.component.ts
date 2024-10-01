@@ -33,7 +33,7 @@ export class SideUserProfileComponent implements OnInit {
 
       //Getting batch name from batch id
       if (this.employeeCode) {
-        this.getBatches(); 
+        // this.getBatches(); 
         this.getTraineeDetails(this.employeeCode);
         this.getLogsByEmployeeCode(this.employeeCode);
         this.GetAttendanceCountOfTrainee(this.employeeCode);
@@ -50,6 +50,7 @@ export class SideUserProfileComponent implements OnInit {
   logsCount:number=0;
 
   batchId: number = 0;
+  batchIdForProfile?: number = 0;
   batches: Batch[] = [];
   batchName: string = '';
 
@@ -78,6 +79,7 @@ export class SideUserProfileComponent implements OnInit {
     ).subscribe((data) => {
       this.trainee = data.trainee;
       console.log('Trainee details:', this.trainee);
+      this.getBatches();
     });
     
   }
@@ -117,8 +119,16 @@ export class SideUserProfileComponent implements OnInit {
       })
     ).subscribe((data) => {
       this.batches = data;
-      console.log('Batches:', this.batches[0].batchName);
-      this.batchName = this.batches[0].batchName;
+      // console.log('Batch datas:', this.batches);
+      // console.log('Trainee id:', this.trainee.batchId);
+      this.batchIdForProfile = this.trainee.batchId;
+      const selectedBatch = this.batches.find(batch => batch.batchId === this.batchIdForProfile);
+      if (selectedBatch) {
+        // console.log('Batches:', selectedBatch.batchName);
+        this.batchName = selectedBatch.batchName;
+      } else {
+        console.error('Batch not found for batchId:', this.batchIdForProfile);
+      }
     });
   }
 
