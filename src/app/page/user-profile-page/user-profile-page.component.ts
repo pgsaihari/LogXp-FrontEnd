@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Renderer2 } from '@angular/core';
 import { SingleUserTableComponent } from "../../ui/single-user-table/single-user-table.component";
 import { UserWidgetCardsComponent } from "../../Features/user-widget-cards/user-widget-cards.component";
 import { NgxSpinnerComponent } from 'ngx-spinner';
@@ -12,15 +12,14 @@ import { TraineeAttendancelogService } from '../../core/services/trainee-attenda
 import { AuthService } from '../../core/services/auth.service';
 import { catchError, finalize, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-// import { WidgetCardsComponent } from "../../Features/widget-cards/widget-cards.component";
-
-
+import { CalendarModule } from 'primeng/calendar';
+import { FormsModule } from '@angular/forms'; 
 
 @Component({
   selector: 'app-user-profile-page',
   standalone: true,
 
-  imports: [TableModule,CommonModule,UserWidgetCardsComponent, NgxSpinnerComponent, SingleUserTableComponent],
+  imports: [TableModule,CommonModule,UserWidgetCardsComponent, NgxSpinnerComponent, SingleUserTableComponent, CalendarModule, FormsModule],
 
   templateUrl: './user-profile-page.component.html',
   styleUrl: './user-profile-page.component.css'
@@ -41,9 +40,16 @@ export class UserProfilePageComponent implements OnInit {
   logsCount!: number;
   currentUser!: string;
 
+  yesterday: Date = new Date();
+  selectedDates: Date[] = []; // Model for the selected date range
+  filteredAttendanceLogs: TraineeAttendanceLogs[] = []; // Filtered data
+  showCalendar: boolean = false;
+
   constructor(private messageService: MessageService, private api:CalendarServiceService,  private traineeAttendancelogService: TraineeAttendancelogService,
     private authService: AuthService,   
-    private route: ActivatedRoute  ) { }
+    private route: ActivatedRoute,
+    private renderer: Renderer2,
+    private el: ElementRef  ) { }
   
   ngOnInit() {
     const currentUser = this.authService.getCurrentUser();
@@ -65,9 +71,46 @@ export class UserProfilePageComponent implements OnInit {
     } else {
         console.error('No logged-in user found.');
     }
-   
-   
-   
+
+    this.renderer.listen('window', 'click', (event) => {
+      if (this.showCalendar && !this.el.nativeElement.contains(event.target)) {
+        this.showCalendar = false;
+      }
+    });
+
+  }
+
+  // Toggle calendar visibility
+  toggleCalendar() {
+    this.showCalendar = !this.showCalendar;
+  }
+
+  // Reset the table to the unfiltered state
+  onDateSelect(): void {
+    if (this.selectedDates && this.selectedDates.length === 2) {
+      const [startDate, endDate] = this.selectedDates;
+      this.filterByDate(startDate, endDate);
+    }
+  }
+
+  // Apply filter only when both start and end dates are selected
+  filterByDate(startDate: Date, endDate: Date): void {
+    if (startDate && endDate) {
+      this.showCalendar = false;
+      this.filteredAttendanceLogs = this.traineeLogs.filter(log => {
+        const logDate = new Date(log.date);
+        return logDate >= startDate && logDate <= endDate;
+      });
+    } else {
+      this.filteredAttendanceLogs = [...this.traineeLogs]; // No dates selected, show all logs
+    }
+  }
+
+  // Close calendar when reset button is clicked
+  resetTable(){
+    this.showCalendar = false;
+    this.selectedDates = [];
+    this.filteredAttendanceLogs = [...this.traineeLogs];
   }
 
   getLogsByEmployeeCode(employeeCode: string): void {
@@ -85,6 +128,7 @@ export class UserProfilePageComponent implements OnInit {
     ).subscribe(
       (data) => {
         this.traineeLogs = data.logs;
+        this.filteredAttendanceLogs = this.traineeLogs;
         this.logsCount = data.count;
         console.log('Trainee logs:', data);
       },
