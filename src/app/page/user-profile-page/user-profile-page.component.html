@@ -3,9 +3,44 @@
 <app-user-widget-cards></app-user-widget-cards>
 <div class="tables">
     <div class="profiletable" >
-      <h2 class="section-heading"> Daily Logs</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 class="section-heading-logs">Daily Logs</h2>
+        <!-- Date Range Filter -->
+        <div class="flex-auto calendar-container">
+          <div class = "filter-group">
+            <button pButton label="Date Range" icon="pi pi-calendar" class="calendar-button" (click)="toggleCalendar()"></button>
+            <p-button
+            severity="danger"
+            label="Reset"
+            icon="pi pi-refresh"
+            styleClass="p-button-secondary"
+            class="reset-button"
+            (onClick)="resetTable()"
+          />
+          </div>
+        </div> 
+      </div>
+
+      <!-- Date Range Calendar -->
+      <div *ngIf="showCalendar" class="calendar-popup">
+        <p-calendar 
+          id="datepick"
+          placeholder="Select Date Range"
+          [iconDisplay]="'input'"
+          [maxDate]="yesterday"
+          inputId="icondisplay"
+          [dateFormat]="'dd-MM-yy'"
+          (onSelect)="onDateSelect()"
+          [(ngModel)]="selectedDates"
+          [showButtonBar]="false"
+          selectionMode="range"
+          [inline]="true"
+        >
+        </p-calendar>
+      </div>
+
       <div class="card">
-        <p-table [value]="traineeLogs" scrollable="true" [scrollHeight]="'390px'" [rows]="4" [tableStyle]="{'min-width': '20rem',}" sortMode="multiple">
+        <p-table [value]="filteredAttendanceLogs" scrollable="true" [scrollHeight]="'390px'" [rows]="4" [tableStyle]="{'min-width': '20rem',}" sortMode="multiple">
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="date">
@@ -55,9 +90,9 @@
     </div>
     
     <div class="futureHolidays">
-        <p class="section-heading">Holidays</p>
+        <p class="section-heading-holidays">Holidays</p>
         <div class="scrollable-container">
-          <p-table [value]="holidays" scrollable="true" [scrollHeight]="'390px'"[tableStyle]="{'min-width': '10rem',}" id="holidayTable">
+          <p-table [value]="holidays" scrollable="true" [scrollHeight]="'390px'"[tableStyle]="{'min-width': '20rem',}" id="holidayTable">
             <ng-template pTemplate="header">
               <tr>
                 <th  style="width: 20px;">Date</th>

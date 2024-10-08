@@ -42,7 +42,16 @@
     border-radius: 8px;
     padding: 5px;
   }
-  .section-heading {
+  .section-heading-logs {
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 200px;
+  }
+  .section-heading-holidays {
     font-size: 24px;
     font-weight: bold;
     color: black;
@@ -280,12 +289,60 @@
   ::ng-deep .p-datatable .p-datatable-thead >tr >th
   {
     font-size: small;
-     padding: 10px 10px; 
+    padding: 10px 10px; 
     font-weight: bold;
   }
   ::ng-deep .p-datatable .p-datatable-tbody > tr > td
   {
-    padding: 20px 20px; 
+    padding: 12px 12px; 
     font-size: small;
     font-weight: bold;
   }
+
+/* Date range CSS */
+::ng-deep .p-datepicker table td {
+  padding: 0;
+} 
+::ng-deep .p-datepicker .p-datepicker-header {
+  padding: 0;
+  margin: 0;
+}
+::ng-deep .p-datepicker .p-datepicker-buttonbar {
+  padding: 0;
+}
+
+::ng-deep .p-datepicker {
+  z-index: 1050 !important; /* Adjust the z-index value as needed */
+}
+
+.calendar-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+}
+
+::ng-deep .reset-button .p-button {
+  color: white;
+  padding: 5px 10px;
+  background-color: var(--primary-color);
+}
+
+.filter-group{
+  display: flex;
+  gap: 10px;
+}
+
+.calendar-popup {
+  position: absolute;
+  z-index: 1000;
+  /* top: 100%;  */
+  left: 40%;
+}
+
+.calendar-button {
+  padding: 5px 10px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  position: relative;
+}
