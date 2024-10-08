@@ -92,7 +92,7 @@ export class CallenderComponent {
     this.holidayToEmit.emit(newHoliday);
     this.api.addHoliday(newHoliday)
     .subscribe(data => {
-      console.log(data);
+      // console.log(data);
     }); 
   }
 
@@ -104,7 +104,7 @@ export class CallenderComponent {
       const dateString = `${this.selectedDate.getFullYear()}-${this.selectedDate.getMonth() + 1}-${this.selectedDate.getDate()}`;
       this.api.removeHoliday(dateString)
       .subscribe(data => {
-        console.log(data);
+        // console.log(data);
       });
       this.fullHolidayDates = this.fullHolidayDates.filter(date => !this.areDatesEqual(date, this.selectedDate));
       this.halfHolidayDates = this.halfHolidayDates.filter(date => !this.areDatesEqual(date, this.selectedDate));

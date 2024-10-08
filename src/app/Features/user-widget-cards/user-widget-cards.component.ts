@@ -26,10 +26,10 @@ export class UserWidgetCardsComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUser = this.attendanceLogsService.getCurrentUser();
-    console.log('Current User:', this.currentUser);
+    // console.log('Current User:', this.currentUser);
     this.route.params.subscribe(params => {
       this.currentUser = params['id']; 
-      console.log(this.currentUser)
+      // console.log(this.currentUser)
       this.fetchCounts(this.currentUser);
     });
   }
@@ -42,7 +42,7 @@ export class UserWidgetCardsComponent implements OnInit {
       this.lateArrivals = count['lateArrivalDaysCount'];
       this.onTimeNum = count['onTimeDaysCount'];
       this.earlyDepartures = count['earlyDepartureDaysCount'];
-      console.log(count);
+      // console.log(count);
     });
   }
 }

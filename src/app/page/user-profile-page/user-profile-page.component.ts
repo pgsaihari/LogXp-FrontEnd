@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { SingleUserTableComponent } from "../../ui/single-user-table/single-user-table.component";
 import { UserWidgetCardsComponent } from "../../Features/user-widget-cards/user-widget-cards.component";
 import { NgxSpinnerComponent } from 'ngx-spinner';
@@ -18,15 +18,16 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-user-profile-page',
   standalone: true,
-
   imports: [TableModule,CommonModule,UserWidgetCardsComponent, NgxSpinnerComponent, SingleUserTableComponent, CalendarModule, FormsModule],
-
   templateUrl: './user-profile-page.component.html',
   styleUrl: './user-profile-page.component.css'
 })
+
 export class UserProfilePageComponent implements OnInit {
+  @ViewChild('calendarPopup') calendarPopup!: ElementRef; // Reference to the calendar popup
+
   traineeLogs: TraineeAttendanceLogs[] = [];
-    traineeCode: string | null = null;
+  traineeCode: string | null = null;
   items: MenuItem[] | undefined;
   activeItem: MenuItem | undefined;
   traineeDiv = true;
@@ -48,17 +49,16 @@ export class UserProfilePageComponent implements OnInit {
   constructor(private messageService: MessageService, private api:CalendarServiceService,  private traineeAttendancelogService: TraineeAttendancelogService,
     private authService: AuthService,   
     private route: ActivatedRoute,
-    private renderer: Renderer2,
-    private el: ElementRef  ) { }
+    private el: ElementRef) { }
   
   ngOnInit() {
     const currentUser = this.authService.getCurrentUser();
      this.route.params.subscribe(params => {
       this.currentUser = params['id']; 
-      console.log(this.currentUser)
+      // console.log(this.currentUser)
       this.getLogsByEmployeeCode(this.currentUser);
     });
-    console.log(this.traineeLogs);
+    // console.log(this.traineeLogs);
     this.loadCompanyHoliday();
 
     if (currentUser) {
@@ -71,18 +71,19 @@ export class UserProfilePageComponent implements OnInit {
     } else {
         console.error('No logged-in user found.');
     }
-
-    this.renderer.listen('window', 'click', (event) => {
-      if (this.showCalendar && !this.el.nativeElement.contains(event.target)) {
-        this.showCalendar = false;
-      }
-    });
-
   }
 
   // Toggle calendar visibility
   toggleCalendar() {
     this.showCalendar = !this.showCalendar;
+  }
+
+  // Close the calendar if clicking outside of it
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    if (this.showCalendar && this.calendarPopup && !this.calendarPopup.nativeElement.contains(event.target)) {
+      this.showCalendar = false; // Close the calendar if click is outside
+    }
   }
 
   // Reset the table to the unfiltered state
@@ -122,7 +123,7 @@ export class UserProfilePageComponent implements OnInit {
         return throwError(()=>new Error(error)); 
       }),
       finalize(() => {
-        console.log('Fetch trainee operation complete');
+        // console.log('Fetch trainee operation complete');
         
       })
     ).subscribe(
@@ -130,7 +131,7 @@ export class UserProfilePageComponent implements OnInit {
         this.traineeLogs = data.logs;
         this.filteredAttendanceLogs = this.traineeLogs;
         this.logsCount = data.count;
-        console.log('Trainee logs:', data);
+        // console.log('Trainee logs:', data);
       },
       
   );
@@ -149,21 +150,21 @@ export class UserProfilePageComponent implements OnInit {
     );
 }
   onTraineeClick() {
-    console.log('Trainee tab clicked');
+    // console.log('Trainee tab clicked');
     this.holidayDiv = false;
     this.traineeDiv = true;
     this.batchDiv = false;
   }
 
   onCalendarClick() {
-    console.log('Calendar tab clicked');
+    // console.log('Calendar tab clicked');
     this.holidayDiv = true;
     this.traineeDiv = false;
     this.batchDiv = false;
   }
 
   onBatchClick() {
-    console.log('Batch tab clicked');
+    // console.log('Batch tab clicked');
     this.holidayDiv = false;
     this.traineeDiv = false;
     this.batchDiv = true;

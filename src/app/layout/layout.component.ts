@@ -46,7 +46,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     try {
       // Check if user is logged in using AuthService
       const currentUser = this.authService.getCurrentUser();
-      console.log(currentUser);
+      // console.log(currentUser);
       if (currentUser) {
         this.isLogged = true;
         this.role = currentUser.role;
@@ -76,7 +76,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     try {
       this._destroying$.next(undefined);
       this._destroying$.complete();
-      console.log('Component destroyed and observables unsubscribed.');
+      // console.log('Component destroyed and observables unsubscribed.');
     } catch (error) {
       console.error('Error during ngOnDestroy:', error);
     }

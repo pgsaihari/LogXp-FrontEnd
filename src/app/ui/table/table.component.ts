@@ -120,7 +120,7 @@ export class TableComponent implements OnInit {
     this.selectedStatuses = [];
 
     // Optionally, you can call filterByDate() or other methods if needed
-    console.log('Date Range Cleared');
+    // console.log('Date Range Cleared');
     this.filterByDate();
   }
 
