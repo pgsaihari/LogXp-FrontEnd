@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
-        console.log('Login successful:', response);
+        // console.log('Login successful:', response);
         const user = this.authService.getCurrentUser();
         
         // Redirect based on user role
@@ -100,7 +100,7 @@ export class LoginComponent implements OnInit {
         this.spinner.hide();
       },
       error: (error) => { 
-        console.log(this.forgotEmail)
+        // console.log(this.forgotEmail)
         console.error('Failed to send OTP:', error);
         this.errorMessage = 'Failed to send OTP. Please try again.';
         this.spinner.hide();

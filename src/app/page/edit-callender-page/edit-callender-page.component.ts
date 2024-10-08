@@ -45,13 +45,13 @@ export class EditCallenderPageComponent implements OnInit {
   }
 
   onTraineeClick() {
-    console.log('Trainee tab clicked');
+    // console.log('Trainee tab clicked');
     this.holidayDiv = false;
     this.traineeDiv = true;
   }
 
   onCalendarClick() {
-    console.log('Calendar tab clicked');
+    // console.log('Calendar tab clicked');
     this.holidayDiv = true;
     this.traineeDiv = false;
   }

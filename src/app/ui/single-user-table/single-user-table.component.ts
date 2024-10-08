@@ -72,7 +72,7 @@ export class SingleUserTableComponent {
 
   toggleCalendar() {
     this.showCalendar = !this.showCalendar;
-    console.log('Show Calendar:', this.showCalendar);
+    // console.log('Show Calendar:', this.showCalendar);
   }
 
   ngOnInit(): void {
@@ -132,7 +132,7 @@ export class SingleUserTableComponent {
     this.currentTraineeLog.status = traineelog.status;
     this.currentTraineeLog.remark = traineelog.remark;
     this.traineeId = traineelog.id;
-    console.log(this.currentTraineeLog);
+    // console.log(this.currentTraineeLog);
   }
 
   get isFormValid(): boolean {
@@ -152,7 +152,7 @@ export class SingleUserTableComponent {
       .updateTraineeLog(Number(this.traineeId), updatedLog)
       .pipe(
         tap((response) => {
-          console.log('Update successful:', response.message);
+          // console.log('Update successful:', response.message);
           this.showMessage('success', 'Successful', 'Status and Remarks updated');
           this.visible = false;
 

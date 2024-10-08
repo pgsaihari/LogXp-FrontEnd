@@ -74,7 +74,7 @@ export class FormComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load batches' });
       },
       complete: () => {
-        console.log('Batch data fetch completed');
+        // console.log('Batch data fetch completed');
       }
     });
   }
@@ -83,11 +83,11 @@ export class FormComponent implements OnInit {
   onSubmit() {
     if (this.traineeForm.valid) {
       const formData = this.traineeForm.value;
-      console.log('Form Data:', formData);
+      // console.log('Form Data:', formData);
 
       this.traineeService.addTrainee(formData).subscribe({
         next: (response) => {
-          console.log('Trainee added successfully:', response.message);
+          // console.log('Trainee added successfully:', response.message);
           this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message });
           this.traineeForm.reset(); // Reset the form after successful submission
           this.traineeForm.patchValue({ isActive: true });  // Reset isActive to true

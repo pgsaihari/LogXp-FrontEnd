@@ -29,8 +29,8 @@ export class RoleGuard implements CanActivate {
       }
     }
 
-    console.log('User Role:', userRole);
-    console.log('Expected Role:', expectedRole);
+    // console.log('User Role:', userRole);
+    // console.log('Expected Role:', expectedRole);
 
     // Check if the user's role matches the expected role
     if (userRole === expectedRole) {

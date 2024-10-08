@@ -73,12 +73,12 @@ export class SideUserProfileComponent implements OnInit {
         return throwError(()=>new Error(error)); 
       }),
       finalize(() => {
-        console.log('Fetch trainee operation complete');
+        // console.log('Fetch trainee operation complete');
         
       })
     ).subscribe((data) => {
       this.trainee = data.trainee;
-      console.log('Trainee details:', this.trainee);
+      // console.log('Trainee details:', this.trainee);
       this.getBatches();
     });
     
@@ -93,14 +93,14 @@ export class SideUserProfileComponent implements OnInit {
         return throwError(()=>new Error(error)); 
       }),
       finalize(() => {
-        console.log('Fetch trainee operation complete');
+        // console.log('Fetch trainee operation complete');
         
       })
     ).subscribe(
       (data) => {
         this.traineeLogs = data.logs;
         this.logsCount = data.count;
-        console.log('Trainee logs:', data);
+        // console.log('Trainee logs:', data);
       },
       
   );
@@ -115,7 +115,7 @@ export class SideUserProfileComponent implements OnInit {
         return throwError(() => new Error(error));
       }),
       finalize(() => {
-        console.log('Fetch batches operation complete');
+        // console.log('Fetch batches operation complete');
       })
     ).subscribe((data) => {
       this.batches = data;
@@ -141,12 +141,12 @@ export class SideUserProfileComponent implements OnInit {
         return throwError(() => new Error(error));
       }),
       finalize(() => {
-        console.log('Fetch absence and leave data operation complete');
+        // console.log('Fetch absence and leave data operation complete');
       })
     ).subscribe(
       (data: AbsenceAndLate) => {
         this.attendanceCount = data; // Store the absence and leave data
-        console.log('Absence and Late data:', this.attendanceCount);
+        // console.log('Absence and Late data:', this.attendanceCount);
         this.numberOfDaysAbsent = this.attendanceCount.absentDaysCount;
         this.numberOfDaysLate = this.attendanceCount.lateArrivalDaysCount;
       }

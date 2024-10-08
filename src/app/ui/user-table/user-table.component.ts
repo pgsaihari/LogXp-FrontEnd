@@ -246,7 +246,7 @@ export class UserTableComponent implements OnInit {
       role: 'trainee' // Assuming the role is always 'trainee'
     };
   
-    console.log('User data before update:', user);
+    // console.log('User data before update:', user);
     this.userService.updateUser(user.userId, user).subscribe({
       next: () => {
         // Update trainee list with the updated user details
