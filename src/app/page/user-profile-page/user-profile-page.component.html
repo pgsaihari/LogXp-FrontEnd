@@ -40,25 +40,25 @@
       </div>
 
       <div class="card">
-        <p-table [value]="filteredAttendanceLogs" scrollable="true" [scrollHeight]="'390px'" [rows]="4" [tableStyle]="{'min-width': '20rem',}" sortMode="multiple">
+        <p-table [value]="filteredAttendanceLogs" scrollable="true" [scrollHeight]="'390px'" [rows]="4" [tableStyle]="{'min-width': '20rem',}" sortField="date" [sortOrder]="-1">
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="date">
                         Date <p-sortIcon field="date" />
                     </th>
-                    <th pSortableColumn="checkin">
+                    <th>
                         Check-In 
                     </th>
-                    <th pSortableColumn="checkout">
+                    <th>
                         Check-Out
                     </th>
-                    <th pSortableColumn="status">
-                        Status 
+                    <th>
+                        Status
                     </th>
-                    <th pSortableColumn="workhours">
+                    <th>
                         Work Hours 
                     </th>
-                    <th pSortableColumn="remark">
+                    <th>
                         Remark
                     </th>
                 </tr>
@@ -92,7 +92,7 @@
     <div class="futureHolidays">
         <p class="section-heading-holidays">Holidays</p>
         <div class="scrollable-container">
-          <p-table [value]="holidays" scrollable="true" [scrollHeight]="'390px'"[tableStyle]="{'min-width': '20rem',}" id="holidayTable">
+          <p-table [value]="holidays" scrollable="true" [scrollHeight]="'390px'" [tableStyle]="{'min-width': '20rem',}" id="holidayTable">
             <ng-template pTemplate="header">
               <tr>
                 <th  style="width: 20px;">Date</th>
