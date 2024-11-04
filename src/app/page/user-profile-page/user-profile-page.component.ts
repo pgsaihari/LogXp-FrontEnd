@@ -13,18 +13,19 @@ import { AuthService } from '../../core/services/auth.service';
 import { catchError, finalize, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-user-profile-page',
   standalone: true,
-  imports: [TableModule,CommonModule,UserWidgetCardsComponent, NgxSpinnerComponent, SingleUserTableComponent, CalendarModule, FormsModule],
+  imports: [TableModule,CommonModule,UserWidgetCardsComponent, NgxSpinnerComponent, SingleUserTableComponent, CalendarModule, FormsModule, DropdownModule],
   templateUrl: './user-profile-page.component.html',
   styleUrl: './user-profile-page.component.css'
 })
 
 export class UserProfilePageComponent implements OnInit {
-  @ViewChild('calendarPopup') calendarPopup!: ElementRef; // Reference to the calendar popup
+  @ViewChild('calendarPopup') calendarPopup!: ElementRef;
 
   traineeLogs: TraineeAttendanceLogs[] = [];
   traineeCode: string | null = null;
@@ -46,6 +47,9 @@ export class UserProfilePageComponent implements OnInit {
   filteredAttendanceLogs: TraineeAttendanceLogs[] = []; // Filtered data
   showCalendar: boolean = false;
 
+  selectedStatus: string = '';  // Stores the selected statuses from the filter
+  statusOptions: string[] = [];  // Options for status filter
+
   constructor(private messageService: MessageService, private api:CalendarServiceService,  private traineeAttendancelogService: TraineeAttendancelogService,
     private authService: AuthService,   
     private route: ActivatedRoute,
@@ -53,10 +57,11 @@ export class UserProfilePageComponent implements OnInit {
   
   ngOnInit() {
     const currentUser = this.authService.getCurrentUser();
-     this.route.params.subscribe(params => {
+      this.route.params.subscribe(params => {
       this.currentUser = params['id']; 
       // console.log(this.currentUser)
       this.getLogsByEmployeeCode(this.currentUser);
+      this.initializeStatusOptions();
     });
     // console.log(this.traineeLogs);
     this.loadCompanyHoliday();
@@ -70,6 +75,29 @@ export class UserProfilePageComponent implements OnInit {
         }
     } else {
         console.error('No logged-in user found.');
+    }
+  }
+
+  // Initialize status filter options
+  initializeStatusOptions(): void {
+    this.statusOptions = [
+      'Late Arrival and Early Departure',
+      'Late Arrival',
+      'Early Departure',
+      'On Leave',
+      'Present'
+    ];  
+  }
+
+  filterByStatus(): void {
+    if (this.selectedStatus) {  // If there's a selected status
+      this.filteredAttendanceLogs = this.traineeLogs.filter(log =>
+        log.status === this.selectedStatus  // Filter by the selected status
+      );
+      // console.log(this.filteredAttendanceLogs.length);
+      this.selectedDates = [];
+    } else {
+      this.filteredAttendanceLogs = [...this.traineeLogs];  // If no status selected, reset to all logs
     }
   }
 
@@ -102,6 +130,7 @@ export class UserProfilePageComponent implements OnInit {
         const logDate = new Date(log.date);
         return logDate >= startDate && logDate <= endDate;
       });
+      this.selectedStatus='';
     } else {
       this.filteredAttendanceLogs = [...this.traineeLogs]; // No dates selected, show all logs
     }
@@ -112,6 +141,7 @@ export class UserProfilePageComponent implements OnInit {
     this.showCalendar = false;
     this.selectedDates = [];
     this.filteredAttendanceLogs = [...this.traineeLogs];
+    this.selectedStatus = '';  // Reset the selected status for dropdown
   }
 
   getLogsByEmployeeCode(employeeCode: string): void {
@@ -119,19 +149,17 @@ export class UserProfilePageComponent implements OnInit {
      
       catchError((error) => {
         console.error('Error fetching trainee details:', error);
-       
         return throwError(()=>new Error(error)); 
       }),
       finalize(() => {
-        // console.log('Fetch trainee operation complete');
-        
+        // console.log('Fetch trainee operation complete');  
       })
     ).subscribe(
       (data) => {
         this.traineeLogs = data.logs;
         this.filteredAttendanceLogs = this.traineeLogs;
         this.logsCount = data.count;
-        // console.log('Trainee logs:', data);
+        // console.log('Trainee logs:', this.traineeLogs);
       },
       
   );
@@ -150,21 +178,18 @@ export class UserProfilePageComponent implements OnInit {
     );
 }
   onTraineeClick() {
-    // console.log('Trainee tab clicked');
     this.holidayDiv = false;
     this.traineeDiv = true;
     this.batchDiv = false;
   }
 
   onCalendarClick() {
-    // console.log('Calendar tab clicked');
     this.holidayDiv = true;
     this.traineeDiv = false;
     this.batchDiv = false;
   }
 
   onBatchClick() {
-    // console.log('Batch tab clicked');
     this.holidayDiv = false;
     this.traineeDiv = false;
     this.batchDiv = true;
@@ -213,5 +238,4 @@ export class UserProfilePageComponent implements OnInit {
       d1.getDate() === d2.getDate()
     );
   }
-  
 }

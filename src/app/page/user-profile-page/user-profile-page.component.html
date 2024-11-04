@@ -6,9 +6,11 @@
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2 class="section-heading-logs">Daily Logs</h2>
         <!-- Date Range Filter -->
-        <div class="flex-auto calendar-container">
+        <div class="calendar-container">
+          
           <div class = "filter-group">
-            <button pButton label="Date Range" icon="pi pi-calendar" class="calendar-button" (click)="toggleCalendar()"></button>
+            
+            <p-button label="Date Range" severity="danger" icon="pi pi-calendar" class="calendar-button" (click)="toggleCalendar()"></p-button>
             <p-button
             severity="danger"
             label="Reset"
@@ -40,7 +42,7 @@
       </div>
 
       <div class="card">
-        <p-table [value]="filteredAttendanceLogs" scrollable="true" [scrollHeight]="'390px'" [rows]="4" [tableStyle]="{'min-width': '20rem',}" sortField="date" [sortOrder]="-1">
+        <p-table [value]="filteredAttendanceLogs" scrollable="true" [scrollHeight]="'390px'" [rows]="4">
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="date">
@@ -52,8 +54,20 @@
                     <th>
                         Check-Out
                     </th>
-                    <th>
-                        Status
+                    <th class="status-heading">      
+                        <p-dropdown
+                          #dropdown
+                          [options]="statusOptions"
+                          [(ngModel)]="selectedStatus" 
+                          placeholder="Status"
+                          [autoZIndex]="true"
+                          [scrollHeight]="'300px'"
+                          [styleClass]="'custom-dropdown custom-dropdown-width'" 
+                          (onChange)="filterByStatus()"
+                          [filter]="true"
+                          [appendTo]="'body'"
+                        >
+                        </p-dropdown>
                     </th>
                     <th>
                         Work Hours 
@@ -63,7 +77,16 @@
                     </th>
                 </tr>
             </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="6" style="text-align: center; font-weight: bold; color: gray;">
+                    No data found
+                  </td>
+                </tr>
+            </ng-template>
             <ng-template pTemplate="body" let-log>
+              
               <tr>
                 <td style="width: 170px;">{{ log.date | date:'d MMM, y' }}</td>
                 <td style="width: 150px;">{{ log.loginTime | date : "hh:mm a" }}</td>

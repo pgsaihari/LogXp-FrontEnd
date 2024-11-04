@@ -299,7 +299,6 @@
     font-weight: bold;
   }
 
-/* Date range CSS */
 ::ng-deep .p-datepicker table td {
   padding: 0;
 } 
@@ -312,16 +311,23 @@
 }
 
 ::ng-deep .p-datepicker {
-  z-index: 1050 !important; /* Adjust the z-index value as needed */
+  z-index: 1050 !important;
 }
 
 .calendar-container{
   display: flex;
   flex-direction: row;
   justify-content: right;
+  padding-bottom: 0px;
 }
 
 ::ng-deep .reset-button .p-button {
+  color: white;
+  padding: 5px 10px;
+  background-color: var(--primary-color);
+}
+
+::ng-deep .calendar-button .p-button {
   color: white;
   padding: 5px 10px;
   background-color: var(--primary-color);
@@ -339,10 +345,30 @@
   left: 40%;
 }
 
-.calendar-button {
-  padding: 5px 10px;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
+::ng-deep .p-dropdown-item {
+  font-size: 14px;
+}
+
+::ng-deep .p-dropdown-input {
+  font-size: 14px;
+}
+
+table thead th {
+  overflow: visible !important;
   position: relative;
 }
+
+.custom-dropdown-width .p-dropdown-panel {
+  z-index: 1000;
+}
+
+.status-heading{
+  padding: 5px !important;
+}
+
+::ng-deep .custom-dropdown .p-dropdown-label {
+  max-width: 100px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
