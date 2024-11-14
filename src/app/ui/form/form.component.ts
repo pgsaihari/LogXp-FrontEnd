@@ -32,7 +32,7 @@ export class FormComponent implements OnInit {
   traineeForm = new FormGroup({
     employeeCode: new FormControl('', [
       Validators.required,
-      Validators.minLength(5), // Minimum length of 5 characters
+      Validators.minLength(4), // Minimum length of 5 characters
       Validators.maxLength(15), // Maximum length of 15 characters
       Validators.pattern('^[a-zA-Z0-9]*$') // Only alphanumeric characters allowed
     ]),
