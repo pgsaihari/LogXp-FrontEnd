@@ -7,7 +7,7 @@
       <input type="text" id="employee-code" formControlName="employeeCode" placeholder="Enter Trainee Code" required>
       <div *ngIf="traineeForm.controls['employeeCode'].invalid && traineeForm.controls['employeeCode'].touched">
         <small class="error" *ngIf="traineeForm.controls['employeeCode'].errors?.['required']">Trainee Id is required.</small>
-        <small class="error" *ngIf="traineeForm.controls['employeeCode'].errors?.['minlength']">Trainee Id must be at least 5 characters long.</small>
+        <small class="error" *ngIf="traineeForm.controls['employeeCode'].errors?.['minlength']">Trainee Id must be at least 4 characters long.</small>
         <small class="error" *ngIf="traineeForm.controls['employeeCode'].errors?.['maxlength']">Trainee Id cannot be more than 15 characters long.</small>
         <small class="error" *ngIf="traineeForm.controls['employeeCode'].errors?.['pattern']">Trainee Id must be alphanumeric.</small>
       </div>
