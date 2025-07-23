@@ -40,7 +40,7 @@ export class TraineeAttendancelogService {
   // setSelectedBatch(batch: Batch) {
   //   this.selectedBatchSubject.next(batch);
   // }
-  
+
   /**
    * Retrieves all trainee attendance logs.
    * @returns {Observable<TraineeAttendanceLogs[]>} - An observable containing a list of trainee attendance logs.
@@ -62,7 +62,7 @@ export class TraineeAttendancelogService {
   /**
    * Retrieves logs for a specific employee based on their employee code.
    * @param {string} employeeCode - The employee code for which logs are being retrieved.
-   * @returns {Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }>} 
+   * @returns {Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }>}
    * - An observable containing the logs, the count of logs, and a message.
    */
   getLogsByEmployeeCode(employeeCode: string): Observable<{ logs: TraineeAttendanceLogs[], count: number, message: string }> {
@@ -134,8 +134,8 @@ export class TraineeAttendancelogService {
    /**
    * FUNC : To make an API call to get the data of trainees with the status "Early Arrival" on a particular day, along with the count and a success message.
    * @param day
-   * @param month 
-   * @param year 
+   * @param month
+   * @param year
    * @returns Observable<EarlyArrivalLogs>
    */
    onTimeLogs(day:number, month:number, year:number): Observable<EarlyArrivalLogs>{
@@ -145,8 +145,8 @@ export class TraineeAttendancelogService {
   /**
    * FUNC : To make an API call to get the data of trainees with the status "Late Arrival" on a particular day, along with the count and a success message.
    * @param day
-   * @param month 
-   * @param year 
+   * @param month
+   * @param year
    * @returns Observable<LateArrivalsLog>
    */
   lateArrivalLogs(day:number, month:number, year:number): Observable<LateArrivalsLog>{
@@ -156,8 +156,8 @@ export class TraineeAttendancelogService {
   /**
    * FUNC : To make an API call to get the data of trainees with the status "Early Departure" on a particular day, along with the count and a success message.
    * @param day
-   * @param month 
-   * @param year 
+   * @param month
+   * @param year
    * @returns Observable<EarlyDepartureLog>
    */
   earlyDeparturesLogs(day:number, month:number, year:number): Observable<EarlyDepartureLog>{
@@ -167,8 +167,8 @@ export class TraineeAttendancelogService {
   /**
    * FUNC : To make an API call to get the data of trainees with the status "On Leave"(Absent) on a particular day, along with the count and a success message.
    * @param day
-   * @param month 
-   * @param year 
+   * @param month
+   * @param year
    * @returns Observable<AbsenteeLog>
    */
   absenteeLogs(day:number, month:number, year:number): Observable<AbsenteeLog>{
@@ -218,4 +218,12 @@ export class TraineeAttendancelogService {
   setPopupState(isShown: boolean) {
     this.popupStateSource.next(isShown);
   }
-}  
+
+  getPayrollAttendanceSummary(fromDate: Date, toDate: Date): Observable<any> {
+  const params = new HttpParams()
+    .set('fromDate', fromDate.toISOString())
+    .set('toDate', toDate.toISOString());
+
+  return this.http.get<any>(`${this.apiUrl}/monthly-summary`, { params });
+}
+}

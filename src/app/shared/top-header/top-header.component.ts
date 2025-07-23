@@ -4,15 +4,20 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AuthService } from '../../core/services/auth.service';
 import { Currentuser } from '../../core/interfaces/currentuser';
 import { FormsModule } from '@angular/forms';
+import { PayrollSummaryComponent } from "../../page/payroll-summary/payroll-summary.component";
 
 @Component({
   selector: 'app-top-header',
   templateUrl: './top-header.component.html',
-  imports: [NgIf, TooltipModule, FormsModule],
+  imports: [NgIf, TooltipModule, FormsModule, PayrollSummaryComponent],
   standalone: true,
   styleUrls: ['./top-header.component.css'],
 })
 export class TopHeaderComponent implements OnInit {
+
+     /** Variable to open and close the consolidated summary side panel */
+    isConsolidatedSummarySidePanelOpen: boolean = false;
+
   currentUser: Currentuser | null = {
     userId: 'string',
     name: 'string',
@@ -28,6 +33,9 @@ export class TopHeaderComponent implements OnInit {
   errorMessage: string = '';
 
   constructor(public authService: AuthService) {}
+
+
+
 
   ngOnInit(): void {
     this.getName();
@@ -60,7 +68,7 @@ export class TopHeaderComponent implements OnInit {
       this.errorMessage = 'New password and confirm password do not match';
       return;
     }
-    
+
     this.authService.changePassword(this.currentPassword, this.newPassword, this.confirmPassword).subscribe({
       next: () => {
         alert('Password changed successfully!');
@@ -75,11 +83,15 @@ export class TopHeaderComponent implements OnInit {
 
   // Logout function
   logout() {
-    this.authService.logout(); 
-    window.location.href = '/login'; 
+    this.authService.logout();
+    window.location.href = '/login';
   }
 
   getName() {
     this.currentUser = this.authService.getCurrentUser();
   }
+
+toggleSummaryPanel(): void {
+  this.isConsolidatedSummarySidePanelOpen = !this.isConsolidatedSummarySidePanelOpen;
+}
 }
