@@ -20,6 +20,9 @@
         <li (click)="openChangePasswordPopup()">
           <i class="fas fa-key"></i> Change Password
         </li>
+         <li (click)="toggleSummaryPanel()">
+          <i class="fas fa-key"></i> Download attendance summary
+        </li>
       </ul>
     </div>
   </div>
@@ -42,3 +45,10 @@
     </form>
   </div>
 </div>
+
+<!-- Monthly attendance summary side panel -->
+@if(isConsolidatedSummarySidePanelOpen){
+<app-payroll-summary
+  [(isPayrollSummaryComponentVisible)]="isConsolidatedSummarySidePanelOpen">
+</app-payroll-summary>
+}

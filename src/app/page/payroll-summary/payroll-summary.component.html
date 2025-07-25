@@ -1,0 +1,53 @@
+<!-- Use *ngIf to conditionally display the container -->
+ @if(isPayrollSummaryComponentVisible){
+<div class="container">
+    <!-- Close Button -->
+    <button class="close-btn" (click)="closeSummarySidePanel()">&#10005;</button>
+
+    <!-- Trainee Details Section -->
+    <div class="trainee-details">
+        <h3>Download Consolidated Summary</h3>
+
+        <!-- PrimeNG Date Range Form -->
+        <form [formGroup]="dateRangeForm" (ngSubmit)="onDownload()" class="p-fluid">
+            <div class="p-field">
+                <label for="fromDate">From Date</label>
+                <p-calendar
+                    id="fromDate"
+                    formControlName="fromDate"
+                    [showIcon]="true"
+                    dateFormat="yy-mm-dd"
+                    [maxDate]="maxDate"
+                    [showButtonBar]="true">
+                </p-calendar>
+            </div>
+
+            <div class="p-field">
+                <label for="toDate">To Date</label>
+                <p-calendar
+                    id="toDate"
+                    formControlName="toDate"
+                    [showIcon]="true"
+                    dateFormat="yy-mm-dd"
+                    [minDate]="dateRangeForm.value.fromDate"
+                    [maxDate]="maxDate"
+                    [showButtonBar]="true">
+                </p-calendar>
+            </div>
+
+            <button
+            style="margin-top: 3px;"
+  pButton
+  type="submit"
+  label="Download"
+  icon="pi pi-download"
+  [disabled]="!dateRangeForm.valid"
+  styleClass="primary-red-btn">
+</button>  <!-- Custom class -->
+
+
+            <!-- <p-progressSpinner *ngIf="isDownloading"></p-progressSpinner> -->
+        </form>
+    </div>
+</div>
+ }
