@@ -54,17 +54,19 @@ export class AddTraineesPageComponent {
     const workbook = XLSX.read(data, { type: 'array' });
     const firstSheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[firstSheetName];
-  
+
     const rows: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-  
-    // Skip the header row and map each row to a User object
-    const users: User[] = rows.slice(1).map((row: any[], index: number) => {
+
+    // Skip the header row and filter out empty rows
+    const validRows = rows.slice(1).filter(row => row.some(cell => cell !== undefined && cell !== null && cell.toString().trim() !== ''));
+
+    const users: User[] = validRows.map((row: any[], index: number) => {
       const userId = row[0]?.toString().trim();
       const name = row[1]?.toString().trim();
       const email = row[2]?.toString().trim();
       const isActive = row[3]?.toString().toLowerCase() === 'true';
       const batchId = Number(row[4]) || 0;
-  
+
       if (!userId || !name || !email || batchId === 0) {
         console.error(`Row ${index + 2} contains invalid data:`, row);
         return null;
@@ -74,22 +76,23 @@ export class AddTraineesPageComponent {
         userId,
         name,
         email,
-        isActive:true,
+        isActive: true,
         batchId,
         role: 'trainee' // Assign the role as 'trainee'
       };
     }).filter(user => user !== null);
-  
+
     if (users.length === 0) {
       this.showError(new Error('No valid data found in Excel sheet.'));
       return;
     }
-  
+
     this.userService.addUsers(users).subscribe({
       next: () => this.showSuccess(),
       error: (error) => this.showError(error)
     });
-    this.displayPopup=false
+
+    this.displayPopup = false;
   }
   
 
