@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
 
-    apiUrl: 'http://logxp.experionglobal.com/api/logXP'
+    apiUrl: 'https://logxp.experionglobal.com/api/logXP'
 
 };
 // sadasdasdasdasfasdA
