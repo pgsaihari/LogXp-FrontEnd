@@ -7,7 +7,9 @@
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  max-height: calc(100vh - 20px); /* Set max height relative to viewport height to avoid page scrolling */
+  max-height: calc(
+    100vh - 20px
+  ); /* Set max height relative to viewport height to avoid page scrolling */
 }
 
 .search-filter {
@@ -392,4 +394,15 @@ mat-list-option {
   font-weight: bold;
 }
 
+.batch-scroll-container {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 4px;
+}
 
+.batch-scroll-container mat-selection-list {
+  border: none !important;
+  box-shadow: none !important;
+}
